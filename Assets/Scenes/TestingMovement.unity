@@ -711,12 +711,16 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: '::'
   rb: {fileID: 1636764242}
-  speed: 10
+  speed: 4
   jumpingPower: 5
   groundLayer:
     serializedVersion: 2
     m_Bits: 8
   groundCheck: {fileID: 1792658150}
+  waterDrag: 0.95
+  horizontalAcceleration: 8
+  horizontalDeceleration: 0.77
+  buoyancyForce: 2
 --- !u!114 &1636764247
 MonoBehaviour:
   m_ObjectHideFlags: 0
