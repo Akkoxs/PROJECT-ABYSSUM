@@ -1,6 +1,5 @@
 using UnityEngine;
 using UnityEngine.InputSystem;
-
 public class PlayerController : MonoBehaviour
 {
     [Header("Player Component Reference")]
@@ -14,12 +13,28 @@ public class PlayerController : MonoBehaviour
     [SerializeField] LayerMask groundLayer;
     [SerializeField] Transform groundCheck;
 
+    [Header("Underwater Physics")]
+    [SerializeField] float waterDrag = 0.95f;
+    [SerializeField] float horizontalAcceleration = 3f;
+    [SerializeField] float horizontalDeceleration = 0.92f;
+    [SerializeField] float verticalAcceleration = 3f;
+    [SerializeField] float verticalDeceleration = 0.92f;
+
+    [Header("Buoyancy Bobbing")]
+    [SerializeField] float bobbingStrength = 0.5f;
+    [SerializeField] float bobbingSpeed = 1f;
+    [SerializeField] bool enableBobbing = true;
+
     private float horizontal;
+    private float vertical;
+    private float bobbingTimer = 0f;
 
     #region PLAYER_CONTROLS
     public void Move(InputAction.CallbackContext context)
     {
-        horizontal = context.ReadValue<Vector2>().x;
+        Vector2 input = context.ReadValue<Vector2>();
+        horizontal = input.x;
+        vertical = input.y;
     }
 
     public void Jump(InputAction.CallbackContext context)
@@ -36,19 +51,11 @@ public class PlayerController : MonoBehaviour
     }
     #endregion
 
-
-    [Header("Underwater Physics")]
-    [SerializeField] float jumpDrag = 0.95f; // floatiness when jumping
-    [SerializeField] float horizontalAcceleration = 1.5f; // acceleration float
-    [SerializeField] float horizontalDeceleration = 0.92f; // deceleration to cause a bit of slide
-    [SerializeField] float buoyancy = 2f; // tried this out but idk if it works it kinda conflicts with the jumpdrag
-
     private void FixedUpdate()
     {
         float targetVelocityX = horizontal * speed;
         float currentVelocityX = rb.linearVelocity.x;
 
-        //horizontal acceleration, decelerate if no input is detected
         if (horizontal != 0)
         {
             currentVelocityX = Mathf.Lerp(currentVelocityX, targetVelocityX, horizontalAcceleration * Time.fixedDeltaTime);
@@ -58,18 +65,28 @@ public class PlayerController : MonoBehaviour
             currentVelocityX *= horizontalDeceleration;
         }
 
-        rb.linearVelocity = new Vector2(currentVelocityX, rb.linearVelocity.y);
+        float targetVelocityY = vertical * speed;
+        float currentVelocityY = rb.linearVelocity.y;
 
-        //jump resistance
+        if (vertical != 0)
+        {
+            currentVelocityY = Mathf.Lerp(currentVelocityY, targetVelocityY, verticalAcceleration * Time.fixedDeltaTime);
+        }
+        else
+        {
+            currentVelocityY *= verticalDeceleration;
+        }
+
         rb.linearVelocity = new Vector2(
-            rb.linearVelocity.x,
-            rb.linearVelocity.y * jumpDrag
+            currentVelocityX * waterDrag,
+            currentVelocityY * waterDrag
         );
 
-        //wanted to make the player bounce a bit then fall when jumping like ur buoyant but idk doesn't really work
-        if (!IsGrounded())
+        if (enableBobbing && horizontal == 0 && vertical == 0 && Mathf.Abs(rb.linearVelocity.magnitude) < 0.5f)
         {
-            rb.AddForce(Vector2.up * buoyancy);
+            bobbingTimer += Time.fixedDeltaTime * bobbingSpeed;
+            float bobbingForce = Mathf.Sin(bobbingTimer) * bobbingStrength;
+            rb.AddForce(Vector2.up * bobbingForce, ForceMode2D.Force);
         }
     }
 }
