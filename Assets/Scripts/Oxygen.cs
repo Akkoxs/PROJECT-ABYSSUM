@@ -6,49 +6,110 @@ using System.Collections;
 public class Oxygen : MonoBehaviour
 {
 
-    public UnityEvent resetOxygen;
+    [SerializeField] private float currentOxygen; 
+    [SerializeField] private float maxOxygen = 100f;
+    [SerializeField] private float depletionRate = 0.5f; //ticks per second
+    [SerializeField] private float depletionTickDamage = 5f; //per second 
+    [SerializeField] private float depletionTickRate = 1f; 
+    [SerializeField] private Health playerHealth;
+    private bool isUnderwater;
+    private bool inSubmarine;
+
+    //public read only vars
+    public float CurrentOxygen => currentOxygen;
+    public float MaxOxygen => maxOxygen;
+    //public bool IsUnderwater => isUnderwater;
+
+    //Events 
+    public UnityEvent <float, float> oxygenChanged;
+    public UnityEvent oxygenDepleted;
+    public UnityEvent enteredSubmarine;
+    public UnityEvent exitedSubmarine;
+
+
+    Coroutine oxyTick = null;
+    Coroutine oxyDepleted = null;
 
     private void Awake()
     {
-        //Add ResetOxygen() as a listener of a EnteredOxygen Event (that is invoked at submarine & OxygenZone classes)
-    }
-
-    public void EnterWater()
-    {
-        
+        currentOxygen = maxOxygen;
     }
 
 
-    public void ExitWater()
+    public void EnterOxygenZone()
     {
-        
+        isUnderwater = false;
+        ResetOxygen();
+
+        if(oxyTick != null)
+        {
+            StopCoroutine(oxyTick);
+            oxyTick = null;
+        }
+
+        if (oxyDepleted != null)
+        {
+            StopCoroutine(oxyDepleted);
+            oxyDepleted = null;
+        }
     }
 
 
-    void Update()
+    public void ExitOxygenZone()
     {
-        
-        //Run OxygenTick() -> Oxygen always decreasing 
-        //Run Oxygen Depleted when we run out of oxygen
-        //Check to see if we go into a zone that allows us to ResetOxygen and does it. 
+        isUnderwater = true;
+
+        if (oxyTick == null)
+            oxyTick = StartCoroutine(OxygenTick());
+    }
+
+    public void EnterSubmarine() //IN PROG
+    {
+        inSubmarine = true;
+        //UI Oxybar = LINKED TO VESSEL and blank
+        EnterOxygenZone();
+    }
+
+    public void ExitSubmarine() //IN PROG
+    {
+        inSubmarine = false;
+        ExitOxygenZone();
     }
 
     public void ResetOxygen()
     {
-        //Invokes ResetOxygen event to let UI know
+        currentOxygen = maxOxygen;
+        oxygenChanged?.Invoke(currentOxygen, maxOxygen);
     }
 
     private IEnumerator OxygenTick()
     {
-        //Decreases oxygen incrementally for as long as you are underwater
-        yield return new WaitForSeconds(1f);
-    }
+        while (isUnderwater)
+        {
+            if (currentOxygen > 0f)
+            {
+                currentOxygen = Mathf.Max(0, currentOxygen - depletionRate * Time.deltaTime);
+                oxygenChanged?.Invoke(currentOxygen, maxOxygen);
+            }
 
+            else if (currentOxygen <= 0f && oxyDepleted == null)
+                oxyDepleted = StartCoroutine(OxygenDepletedDamage());
+
+            yield return null; 
+        }
+    }
 
     private IEnumerator OxygenDepletedDamage()
     {
-        //Decreases health incrementally by using IDamageable TakeDamage() on player when we have run out of Oxygen & we are underwater
-        yield return new WaitForSeconds(1f);
+        while (isUnderwater && currentOxygen <= 0)
+        {
+            if (playerHealth != null && !playerHealth.isDead)
+            {
+                oxygenDepleted?.Invoke(); 
+                playerHealth.TakeDamage(depletionTickDamage);   
+            }
+           yield return new WaitForSeconds(depletionTickRate);
+        }
     }
 
 }

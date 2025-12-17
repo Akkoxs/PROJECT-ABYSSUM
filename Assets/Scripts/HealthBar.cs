@@ -1,18 +1,16 @@
-using System.Collections;
 using UnityEngine;
 using UnityEngine.UI;
 
 public class HealthBar : MonoBehaviour
 {
-
     [SerializeField] private Slider slider; 
     [SerializeField] private Health health; 
+    [SerializeField] private UIHelper uiHelper;
     [SerializeField] private Image barFill;
     [SerializeField] private float flashDuration = 0.2f;
 
     private Color flashColor = Color.white; 
     private Color regColor;
-    private Coroutine flashCoroutine = null;
 
     public void Awake()
     {
@@ -33,18 +31,7 @@ public class HealthBar : MonoBehaviour
 
     private void UpdateHealth(float currentHealth, float maxHealth)
     {
-        slider.value = currentHealth/maxHealth;
-        
-        if(flashCoroutine == null)
-            flashCoroutine = StartCoroutine(BarFlash(flashDuration));
+        slider.value = currentHealth/maxHealth;      
+        StartCoroutine(uiHelper.BarFlash(flashDuration, flashColor, regColor, barFill));
     }
-
-    private IEnumerator BarFlash(float flashTime)
-    {
-        barFill.color = flashColor;  
-        yield return new WaitForSeconds(flashTime);
-        barFill.color = regColor;
-        flashCoroutine = null;
-    }
-
 }

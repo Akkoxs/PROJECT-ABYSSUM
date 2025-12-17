@@ -2,15 +2,35 @@ using UnityEngine;
 
 public class OxygenZone : MonoBehaviour
 {
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
+
+    [SerializeField] private Collider2D airProbe;
+    [SerializeField] private Oxygen oxy;
+
+    private Collider2D oxyCollider;
+
+
     void Start()
     {
-        
+        oxyCollider = GetComponent<Collider2D>();
+
+        if (airProbe.IsTouching(oxyCollider))
+            oxy.EnterOxygenZone();
+        else
+            oxy.ExitOxygenZone();
+    }
+    
+    private void OnTriggerEnter2D(Collider2D other)
+    {
+        Oxygen oxy = other.gameObject.GetComponent<Oxygen>();
+        if (oxy != null)
+            oxy.EnterOxygenZone();
     }
 
-    // Update is called once per frame
-    void Update()
+    private void OnTriggerExit2D(Collider2D other)
     {
-        
+        Oxygen oxy = other.gameObject.GetComponent<Oxygen>();
+        if (oxy != null)
+            oxy.ExitOxygenZone();
     }
+
 }
