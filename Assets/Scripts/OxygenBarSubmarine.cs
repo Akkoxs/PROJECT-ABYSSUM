@@ -1,10 +1,10 @@
 using UnityEngine;
 using UnityEngine.UI;
 
-public class OxygenBar : MonoBehaviour
+public class OxygenBarSubmarine : MonoBehaviour
 {
     [SerializeField] private Slider slider; 
-    [SerializeField] private Oxygen oxy; 
+    [SerializeField] private SubmarineOxygen oxy; 
     [SerializeField] private UIHelper uiHelper;
     [SerializeField] private Image barFill;
     [SerializeField] private Image flashFill;
@@ -25,7 +25,6 @@ public class OxygenBar : MonoBehaviour
     {
         oxy.oxygenChanged.RemoveListener(UpdateOxygen);
         oxy.oxygenDepleted.RemoveListener(OxygenDepleted);   
-   
     }
 
     private void UpdateOxygen(float currentOxygen, float maxOxygen)

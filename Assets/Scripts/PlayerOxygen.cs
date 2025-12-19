@@ -3,29 +3,27 @@ using UnityEngine.Events;
 using System.Collections;
 
 
-public class Oxygen : MonoBehaviour
+public class PlayerOxygen : MonoBehaviour
 {
-
     [SerializeField] private float currentOxygen; 
     [SerializeField] private float maxOxygen = 100f;
     [SerializeField] private float depletionRate = 0.5f; //ticks per second
     [SerializeField] private float depletionTickDamage = 5f; //per second 
     [SerializeField] private float depletionTickRate = 1f; 
-    [SerializeField] private Health playerHealth;
+    [SerializeField] private GameObject submarine;
     private bool isUnderwater;
-    private bool inSubmarine;
 
-    //public read only vars
+    private Health playerHealth;
+    private Submarine sub;
+    private SubmarineOxygen subOxy;
+
+    //public vars
     public float CurrentOxygen => currentOxygen;
     public float MaxOxygen => maxOxygen;
-    //public bool IsUnderwater => isUnderwater;
 
     //Events 
     public UnityEvent <float, float> oxygenChanged;
     public UnityEvent oxygenDepleted;
-    public UnityEvent enteredSubmarine;
-    public UnityEvent exitedSubmarine;
-
 
     Coroutine oxyTick = null;
     Coroutine oxyDepleted = null;
@@ -33,8 +31,17 @@ public class Oxygen : MonoBehaviour
     private void Awake()
     {
         currentOxygen = maxOxygen;
+        playerHealth = GetComponent<Health>();
+        sub = submarine.GetComponent<Submarine>();
+        subOxy = submarine.GetComponent<SubmarineOxygen>();
     }
 
+    private void Start()
+    {
+        sub.enteredSubmarine.AddListener(EnterSubmarine);
+        sub.exitedSubmarine.AddListener(ExitSubmarine);
+        subOxy.oxygenDepleted.AddListener(SubmarineLinkLogic);
+    }
 
     public void EnterOxygenZone()
     {
@@ -54,7 +61,6 @@ public class Oxygen : MonoBehaviour
         }
     }
 
-
     public void ExitOxygenZone()
     {
         isUnderwater = true;
@@ -63,16 +69,22 @@ public class Oxygen : MonoBehaviour
             oxyTick = StartCoroutine(OxygenTick());
     }
 
-    public void EnterSubmarine() //IN PROG
+    //Entering submarine when it has no oxygen is treated the same as being underwater
+    public void EnterSubmarine() 
     {
-        inSubmarine = true;
-        //UI Oxybar = LINKED TO VESSEL and blank
-        EnterOxygenZone();
+        if (subOxy.CurrentOxygen > 0)
+            EnterOxygenZone();
+        else   
+            ExitOxygenZone();
     }
 
-    public void ExitSubmarine() //IN PROG
+    public void ExitSubmarine()
     {
-        inSubmarine = false;
+        ExitOxygenZone();
+    }
+
+    private void SubmarineLinkLogic() //if the submarine depletes of oxygen while we are inside, it floods with water
+    {
         ExitOxygenZone();
     }
 
@@ -100,7 +112,7 @@ public class Oxygen : MonoBehaviour
     }
 
     private IEnumerator OxygenDepletedDamage()
-    {
+    {   
         while (isUnderwater && currentOxygen <= 0)
         {
             if (playerHealth != null && !playerHealth.isDead)
@@ -110,6 +122,7 @@ public class Oxygen : MonoBehaviour
             }
            yield return new WaitForSeconds(depletionTickRate);
         }
+        oxyDepleted = null;
     }
 
 }
