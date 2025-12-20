@@ -8,9 +8,20 @@ public class MouseAiming : MonoBehaviour
 
     [Header("Camera Reference")]
     [SerializeField] private Camera mainCamera;
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
+
+    [Header("Shooter Settings")]
+    [SerializeField] private GameObject projectilePrefab;
+    [SerializeField] private Transform projectileTransform;
+    [SerializeField] private float timeBetweenFiring;
+    private float timer;
+    private bool canFire;
+    private bool shoot;
+    private Vector3 mousePos;
+
     void Start()
     {
+        shoot = true;
+        canFire = true;
         Cursor.visible = false;
 
         if (mainCamera == null)
@@ -19,20 +30,46 @@ public class MouseAiming : MonoBehaviour
         }
     }
 
-    // Update is called once per frame
     void Update()
     {
-        Vector3 mousePos = mainCamera.ScreenToWorldPoint(Input.mousePosition);
+        mousePos = mainCamera.ScreenToWorldPoint(Input.mousePosition);
         mousePos.z = 0f;
         Vector2 direction = (mousePos - transform.position).normalized;
         Vector2 reticlePos = (Vector2)transform.position + (direction * aimRadius);
-        Debug.Log("direction: " + direction);
         if (reticle != null) { reticle.position = reticlePos; }
+
+        if (!canFire)
+        {
+            timer += Time.deltaTime;
+            if (timer > timeBetweenFiring)
+            {
+                canFire = true;
+                timer = 0;
+            }
+        }
+
+        if (canFire && shoot)
+        {
+            Projectile projectile = Instantiate(projectilePrefab, projectileTransform.position, Quaternion.identity).GetComponent<Projectile>();
+            projectile.InitializeProjectile(mousePos, mainCamera);
+            shoot = false;
+            canFire = false;
+        }
     }
 
     private void OnDrawGizmosSelected()
     {
         Gizmos.color = Color.yellow;
         Gizmos.DrawWireSphere(transform.position, aimRadius);
+    }
+
+    public Vector3 GetMousePos()
+    {
+        return mousePos;
+    }
+
+    public void TriggerShoot(bool shoot)
+    {
+        this.shoot = shoot;
     }
 }

@@ -9,7 +9,6 @@ public class Bobby : MonoBehaviour
     [Header("Buoyancy Bobbing")]
     [SerializeField] float bobbingStrength = 0.5f;
     [SerializeField] float bobbingSpeed = 1f;
-    [SerializeField] bool enableBobbing = true;
 
     private float bobbingTimer = 0f;
 

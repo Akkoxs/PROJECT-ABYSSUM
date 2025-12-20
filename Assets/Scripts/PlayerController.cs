@@ -4,6 +4,7 @@ public class PlayerController : MonoBehaviour
 {
     [Header("Player Component Reference")]
     [SerializeField] Rigidbody2D rb;
+    [SerializeField] private MouseAiming mouseAiming;
 
     [Header("Player Settings")]
     [SerializeField] float speed;
@@ -42,6 +43,14 @@ public class PlayerController : MonoBehaviour
         if (context.performed && IsGrounded())
         {
             rb.linearVelocity = new Vector2(rb.linearVelocity.x, jumpingPower);
+        }
+    }
+
+    public void Fire(InputAction.CallbackContext context)
+    {
+        if (context.performed) 
+        {
+            mouseAiming.TriggerShoot(true);
         }
     }
 
