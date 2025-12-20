@@ -44,12 +44,12 @@ public class OxygenBarPlayer : MonoBehaviour
 
     private void OxygenLink()
     {
-        linkLight.SetActive(true);
+        linkLight.SetActive(false);
     }
 
     private void OxygenUnlink()
     {
-        linkLight.SetActive(false);
+        linkLight.SetActive(true);
     }
 
 }
