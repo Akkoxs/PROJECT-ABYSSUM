@@ -3,7 +3,7 @@ using static UnityEditor.Searcher.SearcherWindow.Alignment;
 
 public class Bobby : MonoBehaviour
 {
-    [Header("Player Component Reference")]
+    [Header("Rigidbody Component Reference")]
     [SerializeField] Rigidbody2D rb;
 
     [Header("Buoyancy Bobbing")]

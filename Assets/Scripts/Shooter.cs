@@ -33,7 +33,6 @@ public class Shooter : MonoBehaviour
         if (canShoot)
         {
             Projectile projectile = Instantiate(projectilePrefab, transform.position, Quaternion.identity).GetComponent<Projectile>();
-            //projectile.InitializeProjectile(target, projectileSpeed);
             canShoot = false;
         }
     }
