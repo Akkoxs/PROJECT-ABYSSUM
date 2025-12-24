@@ -3,12 +3,12 @@ using UnityEngine.InputSystem;
 
 public class DropdownMenu : MonoBehaviour
 {
-    [SerializeField] private Transform panel;
-    [SerializeField] private Transform panelInPos;
-    [SerializeField] private Transform panelOutPos;
+    [SerializeField] private RectTransform panel;
+    [SerializeField] private RectTransform panelInPos;
+    [SerializeField] private RectTransform panelOutPos;
     [SerializeField] private float deploySpeed;
     [SerializeField] private UIHelper uiHelper;
-    private Transform target;
+    private RectTransform target;
     private Coroutine translateCoroutine;
     private bool panelDeployed = false;
 

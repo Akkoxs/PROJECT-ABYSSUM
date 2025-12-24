@@ -125,4 +125,11 @@ public class PlayerOxygen : MonoBehaviour
         oxyDepleted = null;
     }
 
+    public void SetMaxOxygen(float newMax)
+    {
+        maxOxygen = newMax; 
+        currentOxygen = Mathf.Min(currentOxygen, maxOxygen); //clamps
+        oxygenChanged?.Invoke(currentOxygen, maxOxygen);
+    }
+
 }

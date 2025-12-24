@@ -13,18 +13,26 @@ public class UIHelper : MonoBehaviour
     barFill.color = regColor;
  }    
 
- public IEnumerator Translate(Transform startPos, Transform endPos, float moveDuration) //move an object down from point A to B
-   {
-      float elapsed = 0f; 
-      Vector3 start = startPos.position;
-      Vector3 end = endPos.position;
+public IEnumerator Translate(RectTransform panel, RectTransform target, float moveDuration)
+{
+    float elapsed = 0f;
+    Vector2 start = panel.anchoredPosition;
+    Vector2 end = target.anchoredPosition;
 
-      while (elapsed < moveDuration)
-      {
-         startPos.position = Vector3.Lerp(start, end, elapsed/moveDuration);
-         elapsed += Time.deltaTime;
-         yield return null;
-      }
-      startPos.position = end; 
+    while (elapsed < moveDuration)
+    {
+        panel.anchoredPosition = Vector2.Lerp(start, end, elapsed / moveDuration);
+        elapsed += Time.deltaTime;
+        yield return null;
+    }
+
+    panel.anchoredPosition = end;
+}
+
+public Vector3 GetVectorFromAngle(float angle)
+   {
+      float angleRad = angle * (Mathf.PI/180f);
+      return new Vector3(Mathf.Cos(angleRad), Mathf.Sin(angleRad));
    }
+
 }

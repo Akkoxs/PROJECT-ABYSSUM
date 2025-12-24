@@ -92,4 +92,11 @@ public class SubmarineOxygen : MonoBehaviour
             yield return null; 
         }
     }
+
+    public void SetMaxOxygen(float newMax)
+    {
+        maxOxygen = newMax; 
+        currentOxygen = Mathf.Min(currentOxygen, maxOxygen); //clamp
+        oxygenChanged?.Invoke(currentOxygen, maxOxygen);
+    }
 }
