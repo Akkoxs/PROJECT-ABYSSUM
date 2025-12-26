@@ -10,7 +10,7 @@ public class SonarPing : MonoBehaviour
     [SerializeField] private float dissapearTimer = 0f;
     [SerializeField] private float dissapearTimerMax = 1f;
 
-    private void Start()
+    private void Awake()
     {
         image = GetComponent<Image>();
         color = new Color (1, 1, 1, 1f);

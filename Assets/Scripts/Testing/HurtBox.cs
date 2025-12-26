@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public class HurtBox : MonoBehaviour
+public class HurtBox : MonoBehaviour, IRadarDetectable
 {
     [SerializeField] GameObject sub;
 
@@ -15,4 +15,17 @@ public class HurtBox : MonoBehaviour
         if(subDamageable != null)
             subDamageable.TakeDamage(50f);
     }
+
+    //For testing, the HurtBox will be a Fauna
+    public string GetRadarDisplayName()
+    {
+        return null;
+    }
+
+    public RadarObjectType GetObjectType()
+    {
+        return RadarObjectType.Fauna;
+    } 
+
+
 }

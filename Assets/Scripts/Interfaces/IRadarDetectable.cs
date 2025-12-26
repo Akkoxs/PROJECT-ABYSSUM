@@ -1,10 +1,10 @@
 public interface IRadarDetectable
 {    
-    string GetRadarDisplayName();
+    string GetRadarDisplayName(); //returns display name 
     RadarObjectType GetObjectType();
 }
 
-public enum RadarObjectType
+public enum RadarObjectType //returns obj. type
 {
     Terrain,
     Fauna,

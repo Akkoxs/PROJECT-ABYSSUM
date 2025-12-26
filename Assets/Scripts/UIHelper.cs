@@ -34,5 +34,4 @@ public Vector3 GetVectorFromAngle(float angle)
       float angleRad = angle * (Mathf.PI/180f);
       return new Vector3(Mathf.Cos(angleRad), Mathf.Sin(angleRad));
    }
-
 }
