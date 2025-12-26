@@ -4,12 +4,13 @@ using UnityEngine.InputSystem;
 
 public class Submarine : MonoBehaviour
 {
-    [SerializeField] private Transform exitPoint; // Where player spawns when exiting
+    [SerializeField] private GameObject enterExitPoint; // Where player spawns when exiting
     [SerializeField] private Key interactKey = Key.E;
     [SerializeField] private GameObject player;
 
-    private SimplePlayerController playerController;
+    private PlayerController playerController;
     private SpriteRenderer playerSprite;
+    private EnterExitSubmarine ees;
     private bool playerInRange = false;
     private bool playerInside = false;
     private float moveSpeed = 5f;
@@ -22,13 +23,14 @@ public class Submarine : MonoBehaviour
     
     private void Start()
     {
-        playerController = player.GetComponent<SimplePlayerController>();
+        playerController = player.GetComponent<PlayerController>();
         playerSprite = player.GetComponent<SpriteRenderer>();
+        ees = enterExitPoint.GetComponent<EnterExitSubmarine>();
     }
 
     private void Update()
     {
-        if (playerInRange && !playerInside && Keyboard.current[interactKey].wasPressedThisFrame)
+        if (ees.playerInRange && !playerInside && Keyboard.current[interactKey].wasPressedThisFrame)
             EnterSubmarine();
 
         else if (playerInside && Keyboard.current[interactKey].wasPressedThisFrame)
@@ -48,18 +50,6 @@ public class Submarine : MonoBehaviour
         }
     }
     
-    private void OnTriggerEnter2D(Collider2D other)
-    {
-        if (other.CompareTag("Player"))
-            playerInRange = true;
-    }
-    
-    private void OnTriggerExit2D(Collider2D other)
-    {
-        if (other.CompareTag("Player"))
-            playerInRange = false;
-    }
-    
     public void EnterSubmarine()
     {        
         playerInside = true;
@@ -75,7 +65,7 @@ public class Submarine : MonoBehaviour
         
         playerInside = false;
         exitedSubmarine?.Invoke();
-        player.transform.position = exitPoint.position;
+        player.transform.position = enterExitPoint.transform.position;
         playerController.enabled = true;
         playerSprite.enabled = true;
         Debug.Log("Exited submarine!");
