@@ -1,11 +1,14 @@
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class Sonar : MonoBehaviour
 {
     [SerializeField] private UIHelper uiHelper;
     [SerializeField] private SonarPing pfSonarPOI;
     [SerializeField] private SonarPing pfSonarTerrain;
+    //[SerializeField] private GameObject pfSonarLabel;
     [SerializeField] private GameObject submarine;
     [SerializeField] private RectTransform radarRect;
 
@@ -16,6 +19,7 @@ public class Sonar : MonoBehaviour
     private Transform sweepTransform;
     private List<Collider2D> colliderList;
     private Submarine sub;
+    //private TextMeshPro label;
 
     [SerializeField] private float scanSpeed = 180f;
     [SerializeField] private float sonarRange = 500f; 
@@ -26,6 +30,7 @@ public class Sonar : MonoBehaviour
     {
         sweepTransform = transform.Find("Sweeper");
         sub = submarine.GetComponent<Submarine>();
+        //label = pfSonarLabel.GetComponent<TextMeshPro>();
         colliderList = new List<Collider2D>();
     }
 
@@ -67,7 +72,8 @@ public class Sonar : MonoBehaviour
 
                     if (objectType == RadarObjectType.Fauna || objectType == RadarObjectType.Artifact)
                     {
-                        CreatePing(hit.point, objectType);   
+                        string artifactName = hitObj.GetRadarDisplayName();
+                        CreatePing(hit.point, objectType, artifactName);   
                     }
                 }                   
             }
@@ -88,16 +94,17 @@ public class Sonar : MonoBehaviour
             {
                 if (hit.collider != null && !colliderList.Contains(hit.collider))
                 {
-                    CreatePing(hit.point, RadarObjectType.Terrain);
+                    CreatePing(hit.point, RadarObjectType.Terrain, null);
                 }
             }
         }
     }
 
-    private void CreatePing(Vector2 hitPoint, RadarObjectType objectType)
+    private void CreatePing(Vector2 hitPoint, RadarObjectType objectType, string artifactName)
     {
         SonarPing pingPrefab;
         Color pingColor;
+        string label = null;
 
         switch (objectType)
         {
@@ -109,6 +116,7 @@ public class Sonar : MonoBehaviour
             case RadarObjectType.Artifact:
                 pingPrefab = pfSonarPOI;
                 pingColor = Color.purple;
+                label = artifactName;
                 break;
 
             case RadarObjectType.Terrain:
@@ -120,6 +128,7 @@ public class Sonar : MonoBehaviour
         SonarPing sonarPing = Instantiate(pingPrefab, radarRect);
         sonarPing.transform.localPosition = WorldToRadarPosition(hitPoint);
         sonarPing.SetColor(pingColor);
+        sonarPing.SetText(label);
         sonarPing.SetDissapearTimer(360f / scanSpeed);//pings dissapear by 1 rotation
     }
 

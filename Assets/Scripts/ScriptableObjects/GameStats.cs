@@ -14,10 +14,10 @@ public class GameStats : ScriptableObject
     public float harpReloadSpeed; //placeholder
 
     [Header("Submarine")]
-    public float subMaxHealth; //placeholder
-    public float subMaxOxygen; //placeholder
+    public float subMaxHealth = 500f; //placeholder
+    public float subMaxOxygen = 500f; //placeholder
     public float subMoveSpeed; //placeholder
-    public float scanSpeed = 360f; 
+    public float scanSpeed = 180f; 
 
     [Header("Torpedos")]
     public float torpDamage; //placeholder

@@ -11,7 +11,6 @@ public class Submarine : MonoBehaviour
     private PlayerController playerController;
     private SpriteRenderer playerSprite;
     private EnterExitSubmarine ees;
-    private bool playerInRange = false;
     private bool playerInside = false;
     private float moveSpeed = 5f;
 

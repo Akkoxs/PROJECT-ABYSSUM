@@ -90,3 +90,4 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::SonarPing
   dissapearTimer: 0
   dissapearTimerMax: 0.8
+  pfPingLabel: {fileID: 1456796963597237632, guid: 0f13ea0b846702347a0d19f9c51dbdce, type: 3}

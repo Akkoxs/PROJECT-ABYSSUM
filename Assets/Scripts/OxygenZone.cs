@@ -13,17 +13,19 @@ public class OxygenZone : MonoBehaviour
     private PlayerOxygen playerOxy;
     private SubmarineOxygen subOxy;
     private Submarine submarine;
-
     private Collider2D oxyCollider;
+    private Rigidbody2D playerRB;
+    private Rigidbody2D subRB;
 
     void Start()
     {
         playerAirProbe = player.gameObject.GetComponentInChildren<Collider2D>();
         playerOxy = player.GetComponent<PlayerOxygen>();
+        playerRB = player.GetComponent<Rigidbody2D>();
         subOxy = sub.GetComponent<SubmarineOxygen>();
         submarine = sub.GetComponent<Submarine>();
         oxyCollider = GetComponent<Collider2D>();
-
+        subRB = sub.GetComponent<Rigidbody2D>();
 
         if (playerAirProbe.IsTouching(oxyCollider))
             playerOxy.EnterOxygenZone();
@@ -40,9 +42,11 @@ public class OxygenZone : MonoBehaviour
     {
         if (other == playerAirProbe)
             playerOxy.EnterOxygenZone();
+            playerRB.gravityScale = 1f;
 
         if (other == subAirProbe)
             subOxy.EnterOxygenZone();
+            subRB.gravityScale = 1f;
 
         //special case for when submarine runs out of air, player oxy starts dropping, and nothing resets playerOxy in the event of a submarine resurfacing
         if (other == subAirProbe && submarine.PlayerInside) 
@@ -53,9 +57,11 @@ public class OxygenZone : MonoBehaviour
     {
         if (other == playerAirProbe)
             playerOxy.ExitOxygenZone();
+            playerRB.gravityScale = 0f;
 
         if (other == subAirProbe)
             subOxy.ExitOxygenZone();
+            subRB.gravityScale = 0f;
     }
 
 }
