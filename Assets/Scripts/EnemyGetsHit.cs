@@ -42,19 +42,15 @@ public class EnemyGetsHit : MonoBehaviour
     {
         if (isBeingKnockedBack)
         {
-            // Apply water drag first (underwater resistance)
             rb.linearVelocity = new Vector2(
                 rb.linearVelocity.x * waterDrag,
                 rb.linearVelocity.y * waterDrag
             );
 
-            // Get current velocity magnitude
             float currentSpeed = rb.linearVelocity.magnitude;
-
-            // Check if velocity is low enough to stop knockback
             if (currentSpeed <= minVelocity)
             {
-                rb.linearVelocity = Vector2.zero; // Force complete stop
+                rb.linearVelocity = Vector2.zero; 
                 isBeingKnockedBack = false;
             }
         }

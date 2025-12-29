@@ -35,7 +35,6 @@ public class Projectile : MonoBehaviour
         {
             Vector2 tipPosition = (Vector2)transform.position + (Vector2)transform.right * tipOffset;
             Collider2D hitCollider = Physics2D.OverlapCircle(tipPosition, 0.1f, floorLayer);
-            Collider2D hitColliderEnemy = Physics2D.OverlapCircle(tipPosition, 0.1f, enemyLayer);
 
             if (hitCollider != null)
             {

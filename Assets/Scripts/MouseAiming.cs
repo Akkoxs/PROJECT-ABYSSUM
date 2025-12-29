@@ -20,7 +20,7 @@ public class MouseAiming : MonoBehaviour
 
     void Start()
     {
-        shoot = true;
+        //shoot = true;
         Cursor.visible = false;
 
         if (mainCamera == null)
