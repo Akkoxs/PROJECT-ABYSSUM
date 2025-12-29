@@ -41,13 +41,6 @@ public class PlayerController : MonoBehaviour
         vertical = input.y;
     }
 
-    public void SubmarineMove(InputAction.CallbackContext context)
-    {
-        Vector2 input = context.ReadValue<Vector2>();
-        subVertical = input.y;
-        subHorizontal = input.x;
-    }
-
     public void Jump(InputAction.CallbackContext context)
     {
         if (context.performed && IsGrounded())

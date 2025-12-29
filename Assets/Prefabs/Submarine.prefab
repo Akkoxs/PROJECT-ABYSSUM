@@ -186,6 +186,8 @@ GameObject:
   - component: {fileID: 1290532751599610700}
   - component: {fileID: 7065195129841400459}
   - component: {fileID: 5269097922120161920}
+  - component: {fileID: 4695054199279498030}
+  - component: {fileID: 320203838260726087}
   m_Layer: 0
   m_Name: Submarine
   m_TagString: Untagged
@@ -269,8 +271,11 @@ MonoBehaviour:
   enterExitPoint: {fileID: 2019140128829757796}
   interactKey: 19
   player: {fileID: 0}
-  submarineRb: {fileID: 7065195129841400459}
-  moveSpeed: 3
+  rb: {fileID: 0}
+  mouseAiming: {fileID: 0}
+  speed: 3
+  submarineInput: {fileID: 0}
+  playerInput: {fileID: 0}
   horizontalAcceleration: 2
   horizontalDeceleration: 0.9
   verticalAcceleration: 2
@@ -450,7 +455,7 @@ BoxCollider2D:
   m_Offset: {x: 0.009009957, y: 0.5943472}
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
-    pivot: {x: 0.43119264, y: -0.08450704}
+    pivot: {x: 0.5, y: 0.5}
     oldSize: {x: 1.09, y: 0.71}
     newSize: {x: 1, y: 1}
     adaptiveTilingThreshold: 0.5
@@ -501,6 +506,54 @@ MonoBehaviour:
   bobbingStrength: 0.5
   bobbingSpeed: 1
   verticalDamping: 0.98
+--- !u!114 &4695054199279498030
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3711125862220502543}
+  m_Enabled: 0
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 62899f850307741f2a39c98a8b639597, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Unity.InputSystem::UnityEngine.InputSystem.PlayerInput
+  m_Actions: {fileID: -944628639613478452, guid: a8821aacaa0f9c24e9eda2c0dedda2a9, type: 3}
+  m_NotificationBehavior: 0
+  m_UIInputModule: {fileID: 0}
+  m_DeviceLostEvent:
+    m_PersistentCalls:
+      m_Calls: []
+  m_DeviceRegainedEvent:
+    m_PersistentCalls:
+      m_Calls: []
+  m_ControlsChangedEvent:
+    m_PersistentCalls:
+      m_Calls: []
+  m_ActionEvents: []
+  m_NeverAutoSwitchControlSchemes: 0
+  m_DefaultControlScheme: Keyboard&Mouse
+  m_DefaultActionMap: 
+  m_SplitScreenIndex: -1
+  m_Camera: {fileID: 0}
+--- !u!114 &320203838260726087
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3711125862220502543}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 45416210cd4df564b89a86a61f8ead7e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::MouseAiming
+  reticle: {fileID: 0}
+  aimRadius: 3
+  mainCamera: {fileID: 0}
+  projectilePrefab: {fileID: 8044487839321092788, guid: e5733a24a4fce0540a07ace4f5428b45, type: 3}
+  projectileTransform: {fileID: 0}
+  timeBetweenFiring: 0
 --- !u!1 &6497886273176012459
 GameObject:
   m_ObjectHideFlags: 0
