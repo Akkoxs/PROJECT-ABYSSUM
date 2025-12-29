@@ -431,7 +431,7 @@ MonoBehaviour:
   jumpingPower: 5
   groundLayer:
     serializedVersion: 2
-    m_Bits: 8
+    m_Bits: 64
   groundCheck: {fileID: 7114918887403613292}
   waterDrag: 0.95
   horizontalAcceleration: 8

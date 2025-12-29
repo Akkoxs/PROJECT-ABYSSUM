@@ -3,16 +3,18 @@
 --- !u!78 &1
 TagManager:
   serializedVersion: 3
-  tags: []
+  tags:
+  - Enemy
+  - Projectile
   layers:
   - Default
   - TransparentFX
   - Ignore Raycast
-  - Floor
+  - Enemy
   - Water
   - UI
-  - POI (Artifact & Enemy)
-  - Terrain
+  - Floor
+  - 
   - 
   - 
   - 

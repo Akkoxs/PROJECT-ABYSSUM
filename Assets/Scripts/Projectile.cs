@@ -15,6 +15,7 @@ public class Projectile : MonoBehaviour
 
     [Header("Collision Settings")]
     [SerializeField] private LayerMask floorLayer;
+    [SerializeField] private LayerMask enemyLayer;
     [SerializeField] private float tipOffset;
 
 
@@ -34,12 +35,20 @@ public class Projectile : MonoBehaviour
         {
             Vector2 tipPosition = (Vector2)transform.position + (Vector2)transform.right * tipOffset;
             Collider2D hitCollider = Physics2D.OverlapCircle(tipPosition, 0.1f, floorLayer);
+            Collider2D hitColliderEnemy = Physics2D.OverlapCircle(tipPosition, 0.1f, enemyLayer);
 
             if (hitCollider != null)
             {
                 StickToSurface();
                 return;
             }
+            
+            //if (hitColliderEnemy != null)
+            //{
+            //    Debug.Log("here in hit collider enemy: " + hitColliderEnemy);
+            //    Destroy(this.gameObject, 0f);
+            //    return;
+            //}
 
             float currentSpeed = rb.linearVelocity.magnitude;
             float newSpeed = currentSpeed - (waterDrag * Time.fixedDeltaTime);
@@ -68,6 +77,11 @@ public class Projectile : MonoBehaviour
         rb.bodyType = RigidbodyType2D.Kinematic;
 
         Destroy(gameObject, 1f);
+    }
+
+    private void StickToEnemy()
+    {
+        //todo make stick to enemy so it's not all fucky.
     }
 
     private void OnDrawGizmos()

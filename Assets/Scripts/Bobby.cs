@@ -1,23 +1,33 @@
 using UnityEngine;
-using static UnityEditor.Searcher.SearcherWindow.Alignment;
 
 public class Bobby : MonoBehaviour
 {
-    [Header("Rigidbody Component Reference")]
-    [SerializeField] Rigidbody2D rb;
+    [Header("Buoyancy Settings")]
+    [SerializeField] private float bobbingStrength = 10f;
+    [SerializeField] private float bobbingSpeed = 2f;
+    [SerializeField] private float verticalDamping = 0.98f; 
 
-    [Header("Buoyancy Bobbing")]
-    [SerializeField] float bobbingStrength = 0.5f;
-    [SerializeField] float bobbingSpeed = 1f;
-
+    private Rigidbody2D rb;
     private float bobbingTimer = 0f;
 
-    // Update is called once per frame
+    void Start()
+    {
+        rb = GetComponent<Rigidbody2D>();
+    }
+
     void FixedUpdate()
     {
+        rb.linearVelocity = new Vector2(rb.linearVelocity.x, rb.linearVelocity.y * verticalDamping);
+
+        if (rb.linearVelocity.magnitude < 0.5f)
+        {
             bobbingTimer += Time.fixedDeltaTime * bobbingSpeed;
             float bobbingForce = Mathf.Sin(bobbingTimer) * bobbingStrength;
             rb.AddForce(Vector2.up * bobbingForce, ForceMode2D.Force);
-        
+        }
+        else
+        {
+            bobbingTimer = 0f;
+        }
     }
 }
