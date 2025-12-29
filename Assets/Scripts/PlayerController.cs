@@ -30,12 +30,22 @@ public class PlayerController : MonoBehaviour
     private float vertical;
     private float bobbingTimer = 0f;
 
+    private float subHorizontal;
+    private float subVertical;
+
     #region PLAYER_CONTROLS
     public void Move(InputAction.CallbackContext context)
     {
         Vector2 input = context.ReadValue<Vector2>();
         horizontal = input.x;
         vertical = input.y;
+    }
+
+    public void SubmarineMove(InputAction.CallbackContext context)
+    {
+        Vector2 input = context.ReadValue<Vector2>();
+        subVertical = input.y;
+        subHorizontal = input.x;
     }
 
     public void Jump(InputAction.CallbackContext context)

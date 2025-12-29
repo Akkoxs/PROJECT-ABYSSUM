@@ -136,6 +136,8 @@ GameObject:
   - component: {fileID: 2268685487159305399}
   - component: {fileID: 5336883611615615912}
   - component: {fileID: 8881802823708470294}
+  - component: {fileID: 978710058455205109}
+  - component: {fileID: 1371547361418350414}
   m_Layer: 0
   m_Name: Player
   m_TagString: Player
@@ -459,3 +461,47 @@ MonoBehaviour:
   projectilePrefab: {fileID: 0}
   projectileTransform: {fileID: 0}
   timeBetweenFiring: 1
+--- !u!114 &978710058455205109
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8849392445168222747}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b8b595e0a5361e846ab6ced3d09f72e9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PlayerOxygen
+  currentOxygen: 0
+  maxOxygen: 100
+  depletionRate: 0.5
+  depletionTickDamage: 5
+  depletionTickRate: 1
+  submarine: {fileID: 0}
+  oxygenChanged:
+    m_PersistentCalls:
+      m_Calls: []
+  oxygenDepleted:
+    m_PersistentCalls:
+      m_Calls: []
+--- !u!114 &1371547361418350414
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8849392445168222747}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c80e7e3454d3dd143bf0c7e74bd4aa8a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Health
+  maxHealth: 100
+  currentHealth: 0
+  healthChanged:
+    m_PersistentCalls:
+      m_Calls: []
+  died:
+    m_PersistentCalls:
+      m_Calls: []
