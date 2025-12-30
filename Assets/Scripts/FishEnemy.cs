@@ -40,6 +40,7 @@ public class FishEnemy : MonoBehaviour
     private enum FishState { Patrol, Charging, Retreating, Pausing }
     private FishState currentState = FishState.Patrol;
     private float stateTimer = 0f;
+    private Health playerHealth; 
 
     private float patrolDirection;
     private bool isInvulnerable = false;
@@ -49,6 +50,8 @@ public class FishEnemy : MonoBehaviour
     void Start()
     {
         patrolDirection = initialDirection;
+        playerHealth = playerTransform.gameObject.GetComponent<Health>();
+        playerHealth.died.AddListener(Die);
 
         rb = GetComponent<Rigidbody2D>();
         if (rb != null)
@@ -247,5 +250,10 @@ public class FishEnemy : MonoBehaviour
 
         Gizmos.color = Color.green;
         Gizmos.DrawWireSphere(transform.position, minAttackDistance);
+    }
+
+    void Die()
+    {
+        Destroy(gameObject);
     }
 }
