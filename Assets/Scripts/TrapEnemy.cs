@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public class TrapEnemy : MonoBehaviour
+public class TrapEnemy : MonoBehaviour, IRadarDetectable
 {
     [Header("Player Reference")]
     [SerializeField] private Transform playerTransform;
@@ -38,6 +38,7 @@ public class TrapEnemy : MonoBehaviour
 
     private Rigidbody2D rb;
     private SpriteRenderer spriteRenderer;
+    private Health health;
 
     // State machine
     private enum TrapState { Dormant, Activating, Patrol, Charging, Retreating, Pausing }
@@ -53,7 +54,7 @@ public class TrapEnemy : MonoBehaviour
     void Start()
     {
         patrolDirection = initialDirection;
-
+        health = GetComponent<Health>();
         rb = GetComponent<Rigidbody2D>();
         if (rb != null)
         {
@@ -121,6 +122,11 @@ public class TrapEnemy : MonoBehaviour
         }
 
         stateTimer -= Time.deltaTime;
+
+        if (health.CurrentHealth <= 0)
+        {
+            Destroy(gameObject);
+        }
     }
 
     void FixedUpdate()
@@ -302,5 +308,15 @@ public class TrapEnemy : MonoBehaviour
         // Min attack distance
         Gizmos.color = Color.green;
         Gizmos.DrawWireSphere(transform.position, minAttackDistance);
+    }
+
+    public RadarObjectType GetObjectType()
+    {
+        return RadarObjectType.Artifact;
+    }
+
+    public string GetRadarDisplayName()
+    {
+        return "HP+";
     }
 }

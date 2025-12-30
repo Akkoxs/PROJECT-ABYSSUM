@@ -1,9 +1,7 @@
-using System.Runtime.CompilerServices;
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.InputSystem;
 using UnityEngine.Rendering.Universal;
-using static UnityEditor.Searcher.SearcherWindow.Alignment;
 
 public class Submarine : MonoBehaviour
 {
@@ -17,7 +15,7 @@ public class Submarine : MonoBehaviour
 
     [Header("Submarine Movement")]
     [SerializeField] private Rigidbody2D rb;
-    [SerializeField] private MouseAiming mouseAiming;
+    [SerializeField] private MouseAimingSubmarine mouseAiming;
     [SerializeField] private float speed = 3f;
     [SerializeField] private PlayerInput submarineInput;
     [SerializeField] private PlayerInput playerInput;

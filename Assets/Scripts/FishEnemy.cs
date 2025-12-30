@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public class FishEnemy : MonoBehaviour
+public class FishEnemy : MonoBehaviour, IRadarDetectable
 {
     [Header("Player Reference")]
     [SerializeField] private Transform playerTransform;
@@ -40,7 +40,7 @@ public class FishEnemy : MonoBehaviour
     private enum FishState { Patrol, Charging, Retreating, Pausing }
     private FishState currentState = FishState.Patrol;
     private float stateTimer = 0f;
-    private Health playerHealth; 
+    private Health health; 
 
     private float patrolDirection;
     private bool isInvulnerable = false;
@@ -50,8 +50,7 @@ public class FishEnemy : MonoBehaviour
     void Start()
     {
         patrolDirection = initialDirection;
-        playerHealth = playerTransform.gameObject.GetComponent<Health>();
-        playerHealth.died.AddListener(Die);
+        health = GetComponent<Health>();
 
         rb = GetComponent<Rigidbody2D>();
         if (rb != null)
@@ -128,6 +127,12 @@ public class FishEnemy : MonoBehaviour
                 break;
         }
         stateTimer -= Time.deltaTime;
+
+        if(health.CurrentHealth <= 0)
+        {
+            Destroy(gameObject);
+        }
+
     }
 
     void FixedUpdate()
@@ -256,4 +261,15 @@ public class FishEnemy : MonoBehaviour
     {
         Destroy(gameObject);
     }
+
+    public RadarObjectType GetObjectType()
+    {
+        return RadarObjectType.Fauna;
+    }
+
+    public string GetRadarDisplayName()
+    {
+        return null;
+    }
+
 }
