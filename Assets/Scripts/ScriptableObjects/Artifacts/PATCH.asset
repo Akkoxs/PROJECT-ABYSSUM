@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::ArtifactStats
   artifactName: PATCH
   artifactType: 2
-  icon: {fileID: 2680991004341052549, guid: 20ce6efa1e4cb85458c45ec2dc1b084d, type: 3}
+  icon: {fileID: -9189021199632021654, guid: 4c1c68b2d12a0da49a190c57a931711a, type: 3}
   sellValue: 2000
   spawnLevels: 0100000002000000030000000400000005000000
   statEffects: []

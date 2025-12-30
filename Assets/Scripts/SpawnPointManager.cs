@@ -52,6 +52,9 @@ public class SpawnPointManager : MonoBehaviour
     {
         List<ArtifactSpawnPoint> validSpawns = GetAvailableSpawnPointsForLevels(artifact.spawnLevels);
         
+        if(validSpawns.Count == 0)
+            return null;
+
         return validSpawns[Random.Range(0, validSpawns.Count)];
     }
 

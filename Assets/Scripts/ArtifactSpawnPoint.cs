@@ -38,26 +38,6 @@ public class ArtifactSpawnPoint : MonoBehaviour
         else
             Debug.Log("Artifact out of bounds");
             spawnLevel = 5;
-
-
-
-        // if (currPos < gameManager.L1_THRESH && currPos > gameManager.L2_THRESH)
-        //     spawnLevel = 1;
-
-        // else if (currPos < gameManager.L2_THRESH && currPos > gameManager.L3_THRESH)
-        //     spawnLevel = 2;
-
-        // else if (currPos < gameManager.L3_THRESH && currPos > gameManager.L4_THRESH)
-        //     spawnLevel = 3;
-
-        // else if (currPos < gameManager.L4_THRESH && currPos > gameManager.L5_THRESH)
-        //     spawnLevel = 4;
-
-        // else if (currPos < gameManager.L5_THRESH)
-        //     spawnLevel = 5;
-    
-        // else
-        //     Debug.Log("Artifact out of bounds");
     }
 
     public void SetOccupied(bool occupied)

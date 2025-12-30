@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::ArtifactStats
   artifactName: TORP+
   artifactType: 9
-  icon: {fileID: 2680991004341052549, guid: 20ce6efa1e4cb85458c45ec2dc1b084d, type: 3}
+  icon: {fileID: -4515780030797135162, guid: cd939500f53b3ab429c3a7c203982cc3, type: 3}
   sellValue: 10000
   spawnLevels: 0400000005000000
   statEffects:

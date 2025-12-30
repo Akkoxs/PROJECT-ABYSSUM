@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::ArtifactStats
   artifactName: OXY
   artifactType: 3
-  icon: {fileID: 2680991004341052549, guid: 20ce6efa1e4cb85458c45ec2dc1b084d, type: 3}
+  icon: {fileID: 4493892189788064739, guid: 53108bc0200767649a49dc614f88f32c, type: 3}
   sellValue: 2000
   spawnLevels: 0100000002000000030000000400000005000000
   statEffects: []

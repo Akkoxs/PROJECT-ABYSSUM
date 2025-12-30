@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::ArtifactStats
   artifactName: MED
   artifactType: 1
-  icon: {fileID: 2680991004341052549, guid: 20ce6efa1e4cb85458c45ec2dc1b084d, type: 3}
+  icon: {fileID: 4710818436996882487, guid: f1db7fe7af665d940b2edbd68e1acaa5, type: 3}
   sellValue: 2000
   spawnLevels: 0100000002000000030000000400000005000000
   statEffects: []

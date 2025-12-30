@@ -9,7 +9,8 @@ public class GameManager : MonoBehaviour
     public static GameManager Instance {get; private set;} //singleton
 
     [Header("Core")]
-    [SerializeField ]private UpgradeTracker upgradeTracker;
+    [SerializeField] private UpgradeTracker upgradeTracker;
+    [SerializeField] private GameStats gameStats;
     private ArtifactApplicator artifactApp;
     private SpawnPointManager spManager;
 
@@ -65,15 +66,15 @@ public class GameManager : MonoBehaviour
     {
         playerHealth = player.GetComponent<Health>();
         artifactApp = GetComponent<ArtifactApplicator>();
-        //upgradeTracker = GetComponent<UpgradeTracker>();
         spManager = GetComponent<SpawnPointManager>();
-
-
     }
 
     private void Start()
     {
         SpawnInitialArtifacts();
+        upgradeTracker.ResetAll();
+        gameStats.ResetStats();
+
     }
 
     private void OnEnable()
@@ -115,39 +116,56 @@ public class GameManager : MonoBehaviour
     private void SpawnArtifactBasedonNeeds() //The based on needs function doesnt really exist yet 
     {
         ArtifactStats selectedArtifact = null;
+        ArtifactSpawnPoint spawnPoint = null;
+        int maxAttempts = 20;
+        int attempts = 0;
 
         if (artifactsActive.Count >= maxArtifactsInWorld)
             return;
 
-        float roll = Random.value;
-
-        if (roll < upgradeArtifactSpawnWeight) //spawn upgrade artifact 
+        while (spawnPoint == null && attempts < maxAttempts)
         {
-            List<ArtifactStats> upgradeArtifacts = GetUpgradeArtifacts();
+            attempts++;
+            float roll = Random.value;
 
-            if(upgradeArtifacts.Count > 0)
-                selectedArtifact = upgradeArtifacts[Random.Range(0, upgradeArtifacts.Count)];
+            if (roll < upgradeArtifactSpawnWeight) //spawn upgrade artifact 
+            {
+                List<ArtifactStats> upgradeArtifacts = GetUpgradeArtifacts();
 
-            else //in scenario that all upgrades are maxed 
+                if(upgradeArtifacts.Count > 0)
+                    selectedArtifact = upgradeArtifacts[Random.Range(0, upgradeArtifacts.Count)];
+
+                else //in scenario that all upgrades are maxed 
+                {
+                    List<ArtifactStats> replenishArtifacts = GetReplenishArtifacts();
+                    selectedArtifact = replenishArtifacts[Random.Range(0, replenishArtifacts.Count)];
+                }
+            }
+        
+            else //spawn replenish artifact
             {
                 List<ArtifactStats> replenishArtifacts = GetReplenishArtifacts();
-                selectedArtifact = replenishArtifacts[Random.Range(0, replenishArtifacts.Count)];
+
+                if (replenishArtifacts.Count > 0)
+                    selectedArtifact = replenishArtifacts[Random.Range(0, replenishArtifacts.Count)];
+
             }
+
+            spawnPoint = spManager.GetSpawnPointForArtifact(selectedArtifact);
+
+            if (spawnPoint == null) //reset selected Artifact to try again
+            {
+                selectedArtifact = null;
+            }
+            
+            if(spawnPoint != null && selectedArtifact != null)
+            {
+                SpawnArtifact(selectedArtifact, spawnPoint);
+            }
+
+            //List<ArtifactStats> spawnableArtifacts = GetAllSpawnableArtifacts();
+            //selectedArtifact = spawnableArtifacts[Random.Range(0, spawnableArtifacts.Count)];
         }
-
-        else //spawn replenish artifact
-        {
-            List<ArtifactStats> replenishArtifacts = GetReplenishArtifacts();
-
-            if (replenishArtifacts.Count > 0)
-                selectedArtifact = replenishArtifacts[Random.Range(0, replenishArtifacts.Count)];
-
-        }
-
-        List<ArtifactStats> spawnableArtifacts = GetAllSpawnableArtifacts();
-        selectedArtifact = spawnableArtifacts[Random.Range(0, spawnableArtifacts.Count)];
-        ArtifactSpawnPoint spawnPoint = spManager.GetSpawnPointForArtifact(selectedArtifact);
-        SpawnArtifact(selectedArtifact, spawnPoint);
     }
 
     private void SpawnArtifact(ArtifactStats selectedArtifact, ArtifactSpawnPoint spawnPoint)

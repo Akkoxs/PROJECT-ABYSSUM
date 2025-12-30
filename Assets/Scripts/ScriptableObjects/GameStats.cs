@@ -4,22 +4,41 @@ using UnityEngine;
 public class GameStats : ScriptableObject
 {
     [Header("Diver")]
-    public float diverMaxHealth = 100f;
-    public float diverMaxOxygen = 100f;
-    public float diverMoveSpeed; //placeholder 
+    public float diverMaxHealth;
+    public float diverMaxOxygen;
+    public float diverMoveSpeed; 
 
     [Header("Submarine")]
-    public float subMaxHealth = 500f; //placeholder
-    public float subMaxOxygen = 500f; //placeholder
-    public float subMoveSpeed; //placeholder
-    public float scanSpeed = 135f; 
+    public float subMaxHealth; 
+    public float subMaxOxygen; 
+    public float subMoveSpeed;
+    public float scanSpeed; 
 
     [Header("Harpoon")]
-    public float harpDamage; //placeholder
-    public float harpSpeed; //placeholder
-    public float harpReloadSpeed; //placeholder
+    public float harpDamage; 
+    public float harpSpeed; 
+    public float harpReloadSpeed; 
 
     [Header("Torpedos")]
-    public float torpDamage; //placeholder
-    public float torpSpeed; //placholder
+    public float torpDamage; 
+    public float torpSpeed; 
+
+    public void ResetStats() //DEFAULT STATS
+    {
+        diverMaxHealth= 100f;
+        diverMaxOxygen = 100f;
+        diverMoveSpeed = 5f;
+
+        subMaxHealth = 500f;
+        subMaxOxygen = 500f;
+        subMoveSpeed = 10f;
+        scanSpeed = 135f;
+
+        harpDamage = 20f;
+        harpSpeed = 5f;
+        harpReloadSpeed = 2f;
+
+        torpDamage = 50f;
+        torpSpeed = 7f;
+    }
 }

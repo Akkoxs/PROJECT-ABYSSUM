@@ -59,17 +59,17 @@ public class UpgradeTracker : ScriptableObject
 
     public bool IsUpgradableArtifact(ArtifactType type)
     {
-        if (type == ArtifactType.MEDKIT &&
-            type == ArtifactType.HULL_PATCH_KIT &&
-            type == ArtifactType.TORP_RACK &&
-            type == ArtifactType.OXY_TANKS)
-            return false;
-            
-        else if(GetArtifactLevel(type) < maxLevel)
-            return true;
+        switch (type)
+        {
+            case ArtifactType.MEDKIT:
+            case ArtifactType.HULL_PATCH_KIT:
+            case ArtifactType.TORP_RACK:
+            case ArtifactType.OXY_TANKS:
+                return false;
 
-        else
-            return false;
+            default:
+                return true;
+        }
     }
     
     public void IncrementArtifactLevel(ArtifactType type)
