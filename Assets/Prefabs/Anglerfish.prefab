@@ -231,7 +231,7 @@ MonoBehaviour:
   attackRange: 7.5
   patrolSpeed: 2
   initialDirection: 1
-  chargeSpeed: 10
+  chargeSpeed: 25
   retreatSpeed: 4
   chargeDuration: 0.6
   retreatDuration: 0.4
