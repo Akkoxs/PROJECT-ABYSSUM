@@ -499,6 +499,7 @@ MonoBehaviour:
   reticle: {fileID: 0}
   aimRadius: 2.06
   harpoonAnimator: {fileID: 2094560857799501282}
+  needHarpoonAnimator: 1
   mainCamera: {fileID: 0}
   projectilePrefab: {fileID: 0}
   projectileTransform: {fileID: 0}

@@ -7,7 +7,6 @@ public class HarpoonGunAiming : MonoBehaviour
     private Vector3 mousePos;
     private float angleThreshold = 15f;
 
-    // Update is called once per frame
     void Update()
     {
         mousePos = mouseAiming.GetMousePos();
@@ -25,6 +24,5 @@ public class HarpoonGunAiming : MonoBehaviour
                 spriteRenderer.flipY = false;
                 spriteRenderer.transform.localPosition = new Vector3(-0.063f, spriteRenderer.transform.localPosition.y, spriteRenderer.transform.localPosition.z);
             }
-        
     }
 }

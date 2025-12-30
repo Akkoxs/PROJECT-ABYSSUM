@@ -10,6 +10,8 @@ public class Submarine : MonoBehaviour
     [SerializeField] private Key interactKey = Key.E;
     [SerializeField] private GameObject player;
     [SerializeField] private GameObject harpoonGun;
+    [SerializeField] private SpriteRenderer spriteRenderer;
+    [SerializeField] private Animator subAnimator;
 
     [Header("Submarine Movement")]
     [SerializeField] private Rigidbody2D rb;
@@ -127,6 +129,17 @@ public class Submarine : MonoBehaviour
                 currentVelocityX * waterDrag,
                 currentVelocityY * waterDrag
             );
+
+            if (horizontal < 0)
+            {
+                spriteRenderer.flipX = false;
+            }
+            else if (horizontal > 0)
+            {
+                spriteRenderer.flipX = true;
+            }
+            subAnimator.SetInteger("horizontal", (int)horizontal);
+            subAnimator.SetInteger("vertical", (int)vertical);
         }
     }
 

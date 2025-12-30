@@ -62,10 +62,11 @@ public class MouseAiming : MonoBehaviour
             {
                 Debug.Log("DONT NEED HARPOON GUN ANIMATOR ON SUBMARINE");
             }
-
-
             shoot = false;
             canFire = false;
+        } else if (!canFire && shoot)
+        {
+            shoot = false;
         }
     }
 
