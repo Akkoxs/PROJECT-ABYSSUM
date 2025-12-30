@@ -223,7 +223,7 @@ GameObject:
   - component: {fileID: 4375190347105797388}
   m_Layer: 10
   m_Name: Submarine
-  m_TagString: Untagged
+  m_TagString: Submarine
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -308,7 +308,7 @@ MonoBehaviour:
   harpoonGun: {fileID: 0}
   spriteRenderer: {fileID: 2615663404707731530}
   subAnimator: {fileID: 4375190347105797388}
-  lightContainer: {fileID: 0}
+  lightContainer: {fileID: 2295054788987313635}
   rb: {fileID: 7065195129841400459}
   mouseAiming: {fileID: 320203838260726087}
   speed: 3

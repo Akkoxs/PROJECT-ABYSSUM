@@ -4,7 +4,9 @@ public class FishEnemy : MonoBehaviour
 {
     [Header("Player Reference")]
     [SerializeField] private Transform playerTransform;
+    [SerializeField] private Transform subTransform;
     [SerializeField] private Animator animator;
+    private Transform mainTransform;
 
     [Header("Detection")]
     [SerializeField] private float detectionRange = 8f;
@@ -15,12 +17,12 @@ public class FishEnemy : MonoBehaviour
     [SerializeField] private float initialDirection = 1f;
 
     [Header("Attack Settings")]
-    [SerializeField] private float chargeSpeed = 8f; // Speed when lunging at player
-    [SerializeField] private float retreatSpeed = 4f; // Speed when backing off
-    [SerializeField] private float chargeDuration = 0.8f; // How long to charge forward
-    [SerializeField] private float retreatDuration = 0.6f; // How long to retreat
-    [SerializeField] private float pauseBetweenBites = 0.5f; // Pause before next bite
-    [SerializeField] private float minAttackDistance = 1.5f; // Stop charging when this close
+    [SerializeField] private float chargeSpeed = 10f;
+    [SerializeField] private float retreatSpeed = 4f;
+    [SerializeField] private float chargeDuration = 0.6f;
+    [SerializeField] private float retreatDuration = 0.4f;
+    [SerializeField] private float pauseBetweenBites = 0.1f;
+    [SerializeField] private float minAttackDistance = 1.5f;
 
     [Header("Underwater Physics")]
     [SerializeField] private float acceleration = 3f;
@@ -29,7 +31,7 @@ public class FishEnemy : MonoBehaviour
 
     [Header("Combat")]
     [SerializeField] private float damageAmount = 10f;
-    [SerializeField] private float invulnerabilityDuration = 2f; // How long fish is invulnerable after being hit
+    [SerializeField] private float invulnerabilityDuration = 2f;
 
     private Rigidbody2D rb;
     private SpriteRenderer spriteRenderer;
@@ -58,7 +60,6 @@ public class FishEnemy : MonoBehaviour
 
         spriteRenderer = GetComponent<SpriteRenderer>();
 
-        // Auto-find player if not assigned
         if (playerTransform == null)
         {
             GameObject player = GameObject.FindGameObjectWithTag("Player");
@@ -67,18 +68,34 @@ public class FishEnemy : MonoBehaviour
                 playerTransform = player.transform;
             }
         }
+
+        if (subTransform == null)
+        {
+            GameObject submarine = GameObject.FindGameObjectWithTag("Submarine");
+            if (submarine != null)
+            {
+                subTransform = submarine.transform;
+            }
+        }
     }
 
     void Update()
     {
-        if (playerTransform == null)
+        if (subTransform.gameObject.GetComponent<Submarine>().PlayerInside)
+        {
+            mainTransform = subTransform;
+        } else
+        {
+            mainTransform = playerTransform;
+        }
+        if (mainTransform == null)
         {
             currentState = FishState.Patrol;
         }
 
-        // Handle invulnerability timer
         if (isInvulnerable)
         {
+            animator.SetBool("nohit", true);
             invulnerabilityTimer -= Time.deltaTime;
             if (invulnerabilityTimer <= 0f)
             {
@@ -87,9 +104,8 @@ public class FishEnemy : MonoBehaviour
             }
         }
 
-        float distanceToPlayer = Vector2.Distance(transform.position, playerTransform.position);
+        float distanceToPlayer = Vector2.Distance(transform.position, mainTransform.position);
 
-        // State machine
         switch (currentState)
         {
             case FishState.Patrol:
@@ -108,28 +124,21 @@ public class FishEnemy : MonoBehaviour
                 HandlePausing(distanceToPlayer);
                 break;
         }
-
-        // Update state timer
         stateTimer -= Time.deltaTime;
     }
 
     void FixedUpdate()
     {
-        // Smoothly accelerate/decelerate to target velocity
         Vector2 currentVelocity = rb.linearVelocity;
 
         if (targetVelocity.magnitude > 0.1f)
         {
-            // Accelerate toward target
             currentVelocity = Vector2.Lerp(currentVelocity, targetVelocity, acceleration * Time.fixedDeltaTime);
         }
         else
         {
-            // Decelerate when no target
             currentVelocity *= deceleration;
         }
-
-        // Apply water drag
         rb.linearVelocity = currentVelocity * waterDrag;
     }
 
@@ -137,16 +146,13 @@ public class FishEnemy : MonoBehaviour
     {
         targetVelocity = new Vector2(patrolDirection * patrolSpeed, 0f);
 
-        // Flip sprite
         if (spriteRenderer != null)
         {
-            spriteRenderer.flipX = patrolDirection > 0; // For left-facing sprites
+            spriteRenderer.flipX = patrolDirection > 0;
         }
 
-        // Check if player is in detection range
         if (distanceToPlayer <= detectionRange)
         {
-            // Start attacking
             currentState = FishState.Charging;
             stateTimer = chargeDuration;
         }
@@ -154,24 +160,20 @@ public class FishEnemy : MonoBehaviour
 
     void HandleCharging(float distanceToPlayer)
     {
-        // Calculate direction to player
-        Vector2 directionToPlayer = (playerTransform.position - transform.position).normalized;
+        Vector2 directionToPlayer = (mainTransform.position - transform.position).normalized;
         targetVelocity = directionToPlayer * chargeSpeed;
 
-        // Flip sprite based on direction
         if (spriteRenderer != null)
         {
-            spriteRenderer.flipX = directionToPlayer.x > 0; // For charging
+            spriteRenderer.flipX = directionToPlayer.x > 0;
         }
 
-        // Check if close enough or time ran out
         if (distanceToPlayer <= minAttackDistance || stateTimer <= 0f)
         {
             currentState = FishState.Retreating;
             stateTimer = retreatDuration;
         }
 
-        // If player too far, return to patrol
         if (distanceToPlayer > detectionRange)
         {
             currentState = FishState.Patrol;
@@ -180,35 +182,30 @@ public class FishEnemy : MonoBehaviour
 
     void HandleRetreating()
     {
-        // Move away from player
-        Vector2 directionFromPlayer = (transform.position - playerTransform.position).normalized;
+        Vector2 directionFromPlayer = (transform.position - mainTransform.position).normalized;
         targetVelocity = directionFromPlayer * retreatSpeed;
 
-        // When retreat time is up, pause before next bite
         if (stateTimer <= 0f)
         {
             currentState = FishState.Pausing;
             stateTimer = pauseBetweenBites;
-            targetVelocity = Vector2.zero; // Stop during pause
+            targetVelocity = Vector2.zero;
         }
     }
 
     void HandlePausing(float distanceToPlayer)
     {
-        targetVelocity = Vector2.zero; // Stay still
+        targetVelocity = Vector2.zero;
 
-        // After pause, decide next action
         if (stateTimer <= 0f)
         {
             if (distanceToPlayer <= attackRange)
             {
-                // Start another bite
                 currentState = FishState.Charging;
                 stateTimer = chargeDuration;
             }
             else
             {
-                // Return to patrol
                 currentState = FishState.Patrol;
             }
         }
@@ -216,33 +213,24 @@ public class FishEnemy : MonoBehaviour
 
     void OnCollisionEnter2D(Collision2D collision)
     {
-        // Check if hit by projectile while not invulnerable
         if (collision.gameObject.CompareTag("Projectile") && !isInvulnerable)
         {
-            // Start invulnerability period
             isInvulnerable = true;
             invulnerabilityTimer = invulnerabilityDuration;
-
+            animator.SetTrigger("hurt");
             Debug.Log("Fish hit! Now invulnerable for " + invulnerabilityDuration + " seconds");
 
-            // Reset to patrol after being hit
             currentState = FishState.Patrol;
-
-            // Optional: Add visual feedback (flashing, color change, etc.)
-            // StartCoroutine(FlashSprite());
-            animator.SetBool("nohit", true);
         }
 
-        // Handle damage to player
         IDamageable damageable = collision.gameObject.GetComponent<IDamageable>();
 
         if (damageable != null)
         {
             damageable.TakeDamage(damageAmount);
-            animator.SetTrigger("hurt");
+            collision.gameObject.GetComponent<Animator>().SetTrigger("hit");
         }
 
-        // Reverse patrol direction on wall collision
         if (collision.gameObject.layer == LayerMask.NameToLayer("Terrain") || collision.gameObject.layer == LayerMask.NameToLayer("Floor"))
         {
             patrolDirection *= -1f;
@@ -251,15 +239,12 @@ public class FishEnemy : MonoBehaviour
 
     void OnDrawGizmosSelected()
     {
-        // Detection range
         Gizmos.color = Color.yellow;
         Gizmos.DrawWireSphere(transform.position, detectionRange);
 
-        // Attack range
         Gizmos.color = Color.red;
         Gizmos.DrawWireSphere(transform.position, attackRange);
 
-        // Min attack distance
         Gizmos.color = Color.green;
         Gizmos.DrawWireSphere(transform.position, minAttackDistance);
     }

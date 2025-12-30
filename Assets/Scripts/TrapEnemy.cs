@@ -1,169 +1,306 @@
 using UnityEngine;
 
-public class TrapEnemy : MonoBehaviour, IRadarDetectable
+public class TrapEnemy : MonoBehaviour
 {
-    [Header("General")]
-    [SerializeField] private GameObject player;
+    [Header("Player Reference")]
+    [SerializeField] private Transform playerTransform;
+    [SerializeField] private Animator animator;
+
+    [Header("Activation")]
+    [SerializeField] private float activationRange = 5f; // Distance to activate trap
+    [SerializeField] private string activationAnimationTrigger = "activate"; // Animation trigger name
+    [SerializeField] private float activationDelay = 0.5f; // Time before trap starts moving after activation
+
+    [Header("Detection")]
+    [SerializeField] private float detectionRange = 8f;
+    [SerializeField] private float attackRange = 5f;
+
+    [Header("Patrol Settings")]
+    [SerializeField] private float patrolSpeed = 2f;
+    [SerializeField] private float initialDirection = 1f;
+
+    [Header("Attack Settings")]
+    [SerializeField] private float chargeSpeed = 10f;
+    [SerializeField] private float retreatSpeed = 4f;
+    [SerializeField] private float chargeDuration = 0.6f;
+    [SerializeField] private float retreatDuration = 0.4f;
+    [SerializeField] private float pauseBetweenBites = 0.1f;
+    [SerializeField] private float minAttackDistance = 1.5f;
+
+    [Header("Underwater Physics")]
+    [SerializeField] private float acceleration = 3f;
+    [SerializeField] private float deceleration = 0.92f;
+    [SerializeField] private float waterDrag = 0.95f;
 
     [Header("Combat")]
-    [SerializeField] private float enemyDamage = 10f;
+    [SerializeField] private float damageAmount = 10f;
+    [SerializeField] private float invulnerabilityDuration = 2f;
 
-    [Header("Detection Settings")]
-    [SerializeField] private float triggerDistance = 2f;
-    [SerializeField] private float detectionCheckInterval = 0.1f;
+    private Rigidbody2D rb;
+    private SpriteRenderer spriteRenderer;
 
-    [Header("Transform Settings")]
-    [SerializeField] private float transformDuration = 1f;
-
-    [Header("Animation Settings")]
-    [SerializeField] private Animator animator;
-    [SerializeField] private string transformTrigger = "Transform";
-    [SerializeField] private string attackTrigger = "Attack";
-
-    [Header("Movement")]
-    [SerializeField] private float moveSpeed = 10f;
-
-    [Header("Attack Cooldown")]
-    [SerializeField] private float hitCooldown = 1f;
-
-    private Transform playerTransform;
-    private float detectionTimer = 0f;
+    // State machine
+    private enum TrapState { Dormant, Activating, Patrol, Charging, Retreating, Pausing }
+    private TrapState currentState = TrapState.Dormant;
     private float stateTimer = 0f;
 
-    private enum EnemyState { Idle, Transforming, Attacking, HitCooldown }
-    public enum AnimState {Idle, Transforming, Swimming, Biting,}
+    private float patrolDirection;
+    private bool isInvulnerable = false;
+    private float invulnerabilityTimer = 0f;
+    private Vector2 targetVelocity = Vector2.zero;
+    private bool isActivated = false;
 
-    private EnemyState currentState = EnemyState.Idle;
-    public AnimState currentAnimState = AnimState.Idle;
-
-    private void Start()
+    void Start()
     {
-        if (player != null)
+        patrolDirection = initialDirection;
+
+        rb = GetComponent<Rigidbody2D>();
+        if (rb != null)
         {
-            playerTransform = player.transform;
+            rb.gravityScale = 0f;
+            rb.constraints = RigidbodyConstraints2D.FreezeRotation;
+            rb.linearDamping = 0f;
         }
-        
-        if (animator == null)
+
+        spriteRenderer = GetComponent<SpriteRenderer>();
+
+        if (playerTransform == null)
         {
-            animator = GetComponent<Animator>();
+            GameObject player = GameObject.FindGameObjectWithTag("Player");
+            if (player != null)
+            {
+                playerTransform = player.transform;
+            }
         }
     }
 
-    private void Update()
+    void Update()
     {
         if (playerTransform == null) return;
 
+        // Handle invulnerability
+        if (isInvulnerable)
+        {
+            animator.SetBool("nohit", true);
+            invulnerabilityTimer -= Time.deltaTime;
+            if (invulnerabilityTimer <= 0f)
+            {
+                isInvulnerable = false;
+                animator.SetBool("nohit", false);
+            }
+        }
+
+        float distanceToPlayer = Vector2.Distance(transform.position, playerTransform.position);
+
+        // State machine
         switch (currentState)
         {
-            case EnemyState.Idle:
-                CheckForPlayer();
+            case TrapState.Dormant:
+                HandleDormant(distanceToPlayer);
                 break;
-            case EnemyState.Transforming:
-                HandleTransform();
+
+            case TrapState.Activating:
+                HandleActivating();
                 break;
-            case EnemyState.Attacking:
-                AttackPlayer();
+
+            case TrapState.Patrol:
+                HandlePatrol(distanceToPlayer);
                 break;
-            case EnemyState.HitCooldown:
-                HandleCooldown();
+
+            case TrapState.Charging:
+                HandleCharging(distanceToPlayer);
+                break;
+
+            case TrapState.Retreating:
+                HandleRetreating();
+                break;
+
+            case TrapState.Pausing:
+                HandlePausing(distanceToPlayer);
                 break;
         }
+
+        stateTimer -= Time.deltaTime;
     }
 
-    private void CheckForPlayer()
+    void FixedUpdate()
     {
-        detectionTimer += Time.deltaTime;
-        if (detectionTimer < detectionCheckInterval) return;
-        detectionTimer = 0f;
+        Vector2 currentVelocity = rb.linearVelocity;
 
-        float distance = Vector2.Distance(transform.position, playerTransform.position);
-
-        if (distance <= triggerDistance)
+        if (targetVelocity.magnitude > 0.1f)
         {
-            StartTransform();
+            currentVelocity = Vector2.Lerp(currentVelocity, targetVelocity, acceleration * Time.fixedDeltaTime);
+        }
+        else
+        {
+            currentVelocity *= deceleration;
+        }
+        rb.linearVelocity = currentVelocity * waterDrag;
+    }
+
+    void HandleDormant(float distanceToPlayer)
+    {
+        // Stay completely still
+        targetVelocity = Vector2.zero;
+        rb.linearVelocity = Vector2.zero;
+
+        // Check if player is close enough to activate
+        if (distanceToPlayer <= activationRange)
+        {
+            currentState = TrapState.Activating;
+            stateTimer = activationDelay;
+            isActivated = true;
+
+            // Trigger activation animation
+            if (animator != null)
+            {
+                animator.SetTrigger(activationAnimationTrigger);
+            }
+
+            Debug.Log("Trap activated!");
         }
     }
 
-    private void StartTransform()
+    void HandleActivating()
     {
-        currentState = EnemyState.Transforming;
-        stateTimer = 0f;
-        
-        if (animator != null)
+        // Stay still during activation animation
+        targetVelocity = Vector2.zero;
+
+        float distanceToPlayer = Vector2.Distance(transform.position, playerTransform.position);
+
+        // After activation delay, decide what to do based on player distance
+        if (stateTimer <= 0f)
         {
-            animator.SetTrigger(transformTrigger);
+            if (distanceToPlayer <= attackRange)
+            {
+                // Player is close - start attacking immediately
+                currentState = TrapState.Charging;
+                stateTimer = chargeDuration;
+                Debug.Log("Trap activated - player close, charging!");
+            }
+            else
+            {
+                // Player is far - start patrolling
+                currentState = TrapState.Patrol;
+                Debug.Log("Trap activated - patrolling!");
+            }
         }
     }
 
-    private void HandleTransform()
+    void HandlePatrol(float distanceToPlayer)
     {
-        stateTimer += Time.deltaTime;
+        targetVelocity = new Vector2(patrolDirection * patrolSpeed, 0f);
 
-        if (stateTimer >= transformDuration)
+        if (spriteRenderer != null)
         {
-            StartAttack();
+            spriteRenderer.flipX = patrolDirection > 0;
+        }
+
+        // Only start charging if player is within attack range (not detection range)
+        if (distanceToPlayer <= attackRange)
+        {
+            currentState = TrapState.Charging;
+            stateTimer = chargeDuration;
         }
     }
 
-    private void StartAttack()
+    void HandleCharging(float distanceToPlayer)
     {
-        currentState = EnemyState.Attacking;
-        
-        if (animator != null)
+        Vector2 directionToPlayer = (playerTransform.position - transform.position).normalized;
+        targetVelocity = directionToPlayer * chargeSpeed;
+
+        if (spriteRenderer != null)
         {
-            animator.SetTrigger(attackTrigger);
+            spriteRenderer.flipX = directionToPlayer.x > 0;
+        }
+
+        if (distanceToPlayer <= minAttackDistance || stateTimer <= 0f)
+        {
+            currentState = TrapState.Retreating;
+            stateTimer = retreatDuration;
+        }
+
+        // Return to patrol if player gets too far
+        if (distanceToPlayer > attackRange * 1.5f)
+        {
+            currentState = TrapState.Patrol;
         }
     }
 
-    private void AttackPlayer()
+    void HandleRetreating()
     {
-        Vector2 direction = (playerTransform.position - transform.position).normalized;
-        transform.position += (Vector3)direction * moveSpeed * Time.deltaTime;
+        Vector2 directionFromPlayer = (transform.position - playerTransform.position).normalized;
+        targetVelocity = directionFromPlayer * retreatSpeed;
 
-        float angle = Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg;
-        transform.rotation = Quaternion.Euler(0, 0, angle - 90);
-    }
-
-    private void OnCollisionEnter2D(Collision2D collision)
-    {
-        if (currentState != EnemyState.Attacking) return;
-
-        if (collision.collider.TryGetComponent<IDamageable>(out var damageable))
+        if (stateTimer <= 0f)
         {
-            damageable.TakeDamage(enemyDamage);
-            StartCooldown();
+            currentState = TrapState.Pausing;
+            stateTimer = pauseBetweenBites;
+            targetVelocity = Vector2.zero;
         }
     }
 
-    private void StartCooldown()
+    void HandlePausing(float distanceToPlayer)
     {
-        currentState = EnemyState.HitCooldown;
-        stateTimer = 0f;
-    }
+        targetVelocity = Vector2.zero;
 
-    private void HandleCooldown()
-    {
-        stateTimer += Time.deltaTime;
-
-        if (stateTimer >= hitCooldown)
+        if (stateTimer <= 0f)
         {
-            StartAttack();
+            if (distanceToPlayer <= attackRange)
+            {
+                currentState = TrapState.Charging;
+                stateTimer = chargeDuration;
+            }
+            else
+            {
+                currentState = TrapState.Patrol;
+            }
         }
     }
 
-    public RadarObjectType GetObjectType()
+    void OnCollisionEnter2D(Collision2D collision)
     {
-        return RadarObjectType.Artifact;
+        if (collision.gameObject.CompareTag("Projectile") && !isInvulnerable && isActivated)
+        {
+            isInvulnerable = true;
+            invulnerabilityTimer = invulnerabilityDuration;
+            animator.SetTrigger("hurt");
+            Debug.Log("Trap hit! Now invulnerable for " + invulnerabilityDuration + " seconds");
+
+            currentState = TrapState.Patrol;
+        }
+
+        IDamageable damageable = collision.gameObject.GetComponent<IDamageable>();
+
+        if (damageable != null && isActivated)
+        {
+            damageable.TakeDamage(damageAmount);
+            animator.SetTrigger("attack");
+            collision.gameObject.GetComponent<Animator>().SetTrigger("hit");
+        }
+
+        if (collision.gameObject.layer == LayerMask.NameToLayer("Terrain") || collision.gameObject.layer == LayerMask.NameToLayer("Floor"))
+        {
+            patrolDirection *= -1f;
+        }
     }
 
-    public string GetRadarDisplayName()
+    void OnDrawGizmosSelected()
     {
-        return null;
-    }
+        // Activation range
+        Gizmos.color = Color.cyan;
+        Gizmos.DrawWireSphere(transform.position, activationRange);
 
-    private void OnDrawGizmosSelected()
-    {
+        // Detection range
         Gizmos.color = Color.yellow;
-        Gizmos.DrawWireSphere(transform.position, triggerDistance);
+        Gizmos.DrawWireSphere(transform.position, detectionRange);
+
+        // Attack range
+        Gizmos.color = Color.red;
+        Gizmos.DrawWireSphere(transform.position, attackRange);
+
+        // Min attack distance
+        Gizmos.color = Color.green;
+        Gizmos.DrawWireSphere(transform.position, minAttackDistance);
     }
 }
