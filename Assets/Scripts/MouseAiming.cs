@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 
 public class MouseAiming : MonoBehaviour
@@ -5,6 +6,8 @@ public class MouseAiming : MonoBehaviour
     [Header("Aiming Settings")]
     [SerializeField] private Transform reticle;
     [SerializeField] private float aimRadius = 3f;
+    [SerializeField] private Animator harpoonAnimator;
+    [SerializeField] private bool needHarpoonAnimator;
 
     [Header("Camera Reference")]
     [SerializeField] private Camera mainCamera;
@@ -50,6 +53,17 @@ public class MouseAiming : MonoBehaviour
         {
             Projectile projectile = Instantiate(projectilePrefab, projectileTransform.position, Quaternion.identity).GetComponent<Projectile>();
             projectile.InitializeProjectile(mousePos, mainCamera);
+
+            try
+            {
+                if (needHarpoonAnimator) harpoonAnimator.SetTrigger("shoot");
+            }
+            catch (NullReferenceException e)
+            {
+                Debug.Log("DONT NEED HARPOON GUN ANIMATOR ON SUBMARINE");
+            }
+
+
             shoot = false;
             canFire = false;
         }

@@ -12,6 +12,7 @@ public class Projectile : MonoBehaviour
     [SerializeField] private float force;
     [SerializeField] private float minVelocity; 
     [SerializeField] private float waterDrag;
+    [SerializeField] private Animator harpoonAnimator;
 
     [Header("Collision Settings")]
     [SerializeField] private LayerMask floorLayer;
@@ -26,7 +27,8 @@ public class Projectile : MonoBehaviour
         Vector3 rotation = transform.position - mousePos;
         rb.linearVelocity = new Vector2(direction.x, direction.y).normalized * force;
         float rot = Mathf.Atan2(rotation.y, rotation.x) * Mathf.Rad2Deg;
-        transform.rotation = Quaternion.Euler(0, 0, rot + 180);
+        transform.rotation = Quaternion.Euler(0, 0, rot);
+        harpoonAnimator.SetBool("fly", true);
     }
 
     void Update()

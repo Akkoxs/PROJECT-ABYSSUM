@@ -9,6 +9,7 @@ public class Submarine : MonoBehaviour
     [SerializeField] private GameObject enterExitPoint; // Where player spawns when exiting
     [SerializeField] private Key interactKey = Key.E;
     [SerializeField] private GameObject player;
+    [SerializeField] private GameObject harpoonGun;
 
     [Header("Submarine Movement")]
     [SerializeField] private Rigidbody2D rb;
@@ -87,6 +88,7 @@ public class Submarine : MonoBehaviour
         playerSprite.enabled = false;
         playerMouseAiming.enabled = false;
         playerInput.enabled = false;
+        harpoonGun.SetActive(false);
         submarineInput.enabled = true;
         mouseAiming.enabled = true;
 
@@ -97,35 +99,6 @@ public class Submarine : MonoBehaviour
     {
         if (playerInside)
         {
-            //float targetVelocityX = horizontal * moveSpeed;
-            //float currentVelocityX = rb.linearVelocity.x;
-
-            //if (horizontal != 0)
-            //{
-            //    currentVelocityX = Mathf.Lerp(currentVelocityX, targetVelocityX, horizontalAcceleration * Time.fixedDeltaTime);
-            //}
-            //else
-            //{
-            //    currentVelocityX *= horizontalDeceleration;
-            //}
-
-            //float targetVelocityY = vertical * moveSpeed;
-            //float currentVelocityY = rb.linearVelocity.y;
-
-            //if (vertical != 0)
-            //{
-            //    currentVelocityY = Mathf.Lerp(currentVelocityY, targetVelocityY, verticalAcceleration * Time.fixedDeltaTime);
-            //}
-            //else
-            //{
-            //    currentVelocityY *= verticalDeceleration;
-            //}
-
-            //rb.linearVelocity = new Vector2(
-            //    currentVelocityX * waterDrag,
-            //    currentVelocityY * waterDrag
-            //);
-
             float targetVelocityX = horizontal * speed;
             float currentVelocityX = rb.linearVelocity.x;
 
@@ -165,11 +138,12 @@ public class Submarine : MonoBehaviour
         exitedSubmarine?.Invoke();
         player.transform.position = enterExitPoint.transform.position;
         playerController.enabled = true;
-        playerInput.enabled = true;
         submarineInput.enabled = false;
+        playerInput.enabled = true;
         playerSprite.enabled = true;
         playerMouseAiming.enabled = true;
         mouseAiming.enabled = false;
+        harpoonGun.SetActive(true);
         rb.linearVelocity = Vector2.zero;
         Debug.Log("Exited submarine!");
     }

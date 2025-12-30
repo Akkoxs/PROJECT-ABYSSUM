@@ -5,8 +5,10 @@ public class PlayerController : MonoBehaviour
     [Header("Player Component Reference")]
     [SerializeField] Rigidbody2D rb;
     [SerializeField] private MouseAiming mouseAiming;
+    [SerializeField] private Animator animator;
+    [SerializeField] private SpriteRenderer spriteRenderer;
 
-    [Header("Player Settings")]
+    [Header("Player Speed Settings")]
     [SerializeField] float speed;
     [SerializeField] float jumpingPower;
 
@@ -21,7 +23,7 @@ public class PlayerController : MonoBehaviour
     [SerializeField] float verticalAcceleration = 3f;
     [SerializeField] float verticalDeceleration = 0.92f;
 
-    [Header("Buoyancy Bobbing")]
+    [Header("Bobby")]
     [SerializeField] float bobbingStrength = 0.5f;
     [SerializeField] float bobbingSpeed = 1f;
     [SerializeField] bool enableBobbing = true;
@@ -29,9 +31,6 @@ public class PlayerController : MonoBehaviour
     private float horizontal;
     private float vertical;
     private float bobbingTimer = 0f;
-
-    private float subHorizontal;
-    private float subVertical;
 
     #region PLAYER_CONTROLS
     public void Move(InputAction.CallbackContext context)
@@ -63,6 +62,35 @@ public class PlayerController : MonoBehaviour
     }
     #endregion
 
+    private void FlipSpriteTowardsMouse()
+    {
+        Vector3 mousePos = mouseAiming.GetMousePos();
+        Vector3 direction = mousePos - transform.position;
+
+        if (direction.x < 0)
+        {
+            spriteRenderer.flipX = false;
+        }
+        else if (direction.x > 0)
+        {
+            spriteRenderer.flipX = true;
+        }
+
+        if (direction.y < 0)
+        {
+            spriteRenderer.flipY = true;
+        }
+        else if (direction.y > 0)
+        {
+            spriteRenderer.flipY = false;
+        }
+    }
+
+    private void Update()
+    {
+        FlipSpriteTowardsMouse();
+    }
+
     private void FixedUpdate()
     {
         float targetVelocityX = horizontal * speed;
@@ -88,6 +116,9 @@ public class PlayerController : MonoBehaviour
         {
             currentVelocityY *= verticalDeceleration;
         }
+
+        bool isMoving = (horizontal != 0 || vertical != 0);
+        animator.SetBool("moving", isMoving);
 
         rb.linearVelocity = new Vector2(
             currentVelocityX * waterDrag,
