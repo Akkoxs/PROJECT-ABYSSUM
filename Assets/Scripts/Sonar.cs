@@ -42,7 +42,9 @@ public class Sonar : MonoBehaviour
             sweepTransform.eulerAngles -= new Vector3(0, 0, scanSpeed * Time.deltaTime);
             float currentRotation = (sweepTransform.eulerAngles.z % 360) - 180;
 
-            if (previousRotation < 0 && currentRotation >= 0) //half rotation
+            if ((previousRotation < -90 && currentRotation >= -90) ||
+                (previousRotation < 0 && currentRotation >= 0) ||
+                (previousRotation < 90 && currentRotation >= 90))
             {
                 colliderList.Clear();
             }
@@ -62,6 +64,7 @@ public class Sonar : MonoBehaviour
         foreach (RaycastHit2D hit in hits)
         {
             if (hit.collider != null && !colliderList.Contains(hit.collider)) // hit something that we havent alr hit
+            //if (hit.collider != null) // hit something that we havent alr hit
             {
                 colliderList.Add(hit.collider);
                 IRadarDetectable hitObj = hit.collider.gameObject.GetComponent<IRadarDetectable>(); 

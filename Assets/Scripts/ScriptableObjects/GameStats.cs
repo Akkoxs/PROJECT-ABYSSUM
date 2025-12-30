@@ -27,11 +27,11 @@ public class GameStats : ScriptableObject
     {
         diverMaxHealth= 100f;
         diverMaxOxygen = 100f;
-        diverMoveSpeed = 5f;
+        diverMoveSpeed = 12.5f;
 
-        subMaxHealth = 500f;
+        subMaxHealth = 750f;
         subMaxOxygen = 500f;
-        subMoveSpeed = 10f;
+        subMoveSpeed = 20f;
         scanSpeed = 135f;
 
         harpDamage = 10f;
@@ -39,6 +39,6 @@ public class GameStats : ScriptableObject
         harpReloadSpeed = 2f;
 
         torpDamage = 50f;
-        torpSpeed = 7f;
+        torpSpeed = 20f;
     }
 }

@@ -13,7 +13,7 @@ public class ArtifactSpawnPoint : MonoBehaviour
     //Expose
     [SerializeField] public int SpawnLevel => spawnLevel;
     public bool IsOccupied => isOccupied;
-    public Vector2 SpawnPosition => (Vector2)transform.position + Random.insideUnitCircle * spawnRadius;
+    public Vector2 SpawnPosition => (Vector2)transform.position - new Vector2 (0f, 3f);
 
     private void Start()
     {
