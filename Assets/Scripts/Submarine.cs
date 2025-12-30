@@ -2,6 +2,7 @@ using System.Runtime.CompilerServices;
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.InputSystem;
+using UnityEngine.Rendering.Universal;
 using static UnityEditor.Searcher.SearcherWindow.Alignment;
 
 public class Submarine : MonoBehaviour
@@ -12,6 +13,7 @@ public class Submarine : MonoBehaviour
     [SerializeField] private GameObject harpoonGun;
     [SerializeField] private SpriteRenderer spriteRenderer;
     [SerializeField] private Animator subAnimator;
+    [SerializeField] private GameObject lightContainer;
 
     [Header("Submarine Movement")]
     [SerializeField] private Rigidbody2D rb;
@@ -31,6 +33,7 @@ public class Submarine : MonoBehaviour
     private SpriteRenderer playerSprite;
     private EnterExitSubmarine ees;
     private MouseAiming playerMouseAiming;
+    private ShadowCaster2D playerShadow;
     private bool playerInside = false;
     private float horizontal;
     private float vertical;
@@ -46,8 +49,10 @@ public class Submarine : MonoBehaviour
         playerController = player.GetComponent<PlayerController>();
         playerSprite = player.GetComponent<SpriteRenderer>();
         playerMouseAiming = player.GetComponent<MouseAiming>();
+        playerShadow = player.GetComponent<ShadowCaster2D>();
         ees = enterExitPoint.GetComponent<EnterExitSubmarine>();
         rb = this.GetComponent<Rigidbody2D>();
+
         mouseAiming.enabled = false;
         submarineInput.enabled = false;
         rb.linearDamping = 0f;
@@ -89,6 +94,7 @@ public class Submarine : MonoBehaviour
         playerController.enabled = false;
         playerSprite.enabled = false;
         playerMouseAiming.enabled = false;
+        playerShadow.enabled = false;
         playerInput.enabled = false;
         harpoonGun.SetActive(false);
         submarineInput.enabled = true;
@@ -133,10 +139,12 @@ public class Submarine : MonoBehaviour
             if (horizontal < 0)
             {
                 spriteRenderer.flipX = false;
+                FlipLightContainer(true);
             }
             else if (horizontal > 0)
             {
                 spriteRenderer.flipX = true;
+                FlipLightContainer(false);
             }
             subAnimator.SetInteger("horizontal", (int)horizontal);
             subAnimator.SetInteger("vertical", (int)vertical);
@@ -152,6 +160,7 @@ public class Submarine : MonoBehaviour
         player.transform.position = enterExitPoint.transform.position;
         playerController.enabled = true;
         submarineInput.enabled = false;
+        playerShadow.enabled = true;
         playerInput.enabled = true;
         playerSprite.enabled = true;
         playerMouseAiming.enabled = true;
@@ -164,6 +173,13 @@ public class Submarine : MonoBehaviour
     public void SetMoveSpeed(float newSpeed)
     {
         speed = newSpeed;
+    }
+
+    private void FlipLightContainer(bool isFlipped)
+    {
+        Vector3 scale = lightContainer.transform.localScale;
+        scale.x = isFlipped ? 1 : -1;
+        lightContainer.transform.localScale = scale;
     }
 
 

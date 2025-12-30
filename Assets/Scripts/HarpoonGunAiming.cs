@@ -4,6 +4,7 @@ public class HarpoonGunAiming : MonoBehaviour
 {
     [SerializeField] private MouseAiming mouseAiming;
     [SerializeField] private SpriteRenderer spriteRenderer;
+    [SerializeField] private GameObject lightContainer;
     private Vector3 mousePos;
     private float angleThreshold = 15f;
 
@@ -18,11 +19,13 @@ public class HarpoonGunAiming : MonoBehaviour
             {
                 spriteRenderer.flipY = true;
                 spriteRenderer.transform.localPosition = new Vector3(0.063f, spriteRenderer.transform.localPosition.y, spriteRenderer.transform.localPosition.z);
+                lightContainer.transform.localPosition = new Vector3(0.063f, lightContainer.transform.localPosition.y, lightContainer.transform.localPosition.z);
             }
             else
             {
                 spriteRenderer.flipY = false;
                 spriteRenderer.transform.localPosition = new Vector3(-0.063f, spriteRenderer.transform.localPosition.y, spriteRenderer.transform.localPosition.z);
+                lightContainer.transform.localPosition = new Vector3(-0.063f, lightContainer.transform.localPosition.y, lightContainer.transform.localPosition.z);
             }
     }
 }
