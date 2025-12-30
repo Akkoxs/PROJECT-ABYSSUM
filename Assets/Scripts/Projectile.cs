@@ -66,6 +66,7 @@ public class Projectile : MonoBehaviour
         if (collision.gameObject.TryGetComponent<IDamageable>(out var damageInterface))
         {
             damageInterface.TakeDamage(10f);
+
         }
     }
 

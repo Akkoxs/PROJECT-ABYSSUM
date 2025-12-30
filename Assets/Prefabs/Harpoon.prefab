@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 1696710909050320437}
   - component: {fileID: 3831572644774570345}
   - component: {fileID: 8929952864594373508}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: Harpoon
   m_TagString: Projectile
   m_Icon: {fileID: 0}
@@ -142,7 +142,7 @@ GameObject:
   - component: {fileID: 7618606518220937801}
   - component: {fileID: 1624427402474083690}
   - component: {fileID: 8849165821937594639}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: Visual
   m_TagString: Untagged
   m_Icon: {fileID: 0}

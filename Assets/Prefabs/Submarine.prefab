@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 1726034583748796276}
   - component: {fileID: 3294705913223454776}
   - component: {fileID: 6523851873615388140}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: Enter/ExitPoint
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -101,7 +101,7 @@ GameObject:
   m_Component:
   - component: {fileID: 2548893575489888066}
   - component: {fileID: 1480253263067706029}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: Collider Part 2
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -189,7 +189,7 @@ GameObject:
   - component: {fileID: 4695054199279498030}
   - component: {fileID: 320203838260726087}
   - component: {fileID: 4375190347105797388}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: Submarine
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -390,34 +390,34 @@ CompositeCollider2D:
   m_ColliderPaths:
   - m_Collider: {fileID: 1480253263067706029}
     m_ColliderPaths:
-    - - X: 4860392
-        Y: 12539709
-      - X: -13452021
-        Y: 12539709
-      - X: -13452021
-        Y: 2119166
-      - X: 4860392
-        Y: 2119166
+    - - X: 14135995
+        Y: 36470564
+      - X: -39123940
+        Y: 36470564
+      - X: -39123940
+        Y: 6163396
+      - X: 14135995
+        Y: 6163396
   - m_Collider: {fileID: 1290532751599610700}
     m_ColliderPaths:
-    - - X: 13829416
-        Y: 17515944
-      - X: -13297828
-        Y: 17515944
-      - X: -13297828
-        Y: 12295818
-      - X: 13829416
-        Y: 12295818
+    - - X: 40221564
+        Y: 50943480
+      - X: -38675488
+        Y: 50943480
+      - X: -38675488
+        Y: 35761232
+      - X: 40221564
+        Y: 35761232
   m_CompositePaths:
     m_Paths:
-    - - {x: 0.4860099, y: 0.2119166}
-      - {x: 0.4860686, y: 1.2295818}
-      - {x: 1.3829416, y: 1.2296112}
-      - {x: 1.3829123, y: 1.7515944}
-      - {x: -1.3297828, y: 1.7515652}
-      - {x: -1.3298122, y: 1.2539709}
-      - {x: -1.3452021, y: 1.2539417}
-      - {x: -1.3451728, y: 0.2119166}
+    - - {x: 1.4135702, y: 0.6163396}
+      - {x: 1.4136289, y: 3.5761232}
+      - {x: 4.0221562, y: 3.5761523}
+      - {x: 4.022127, y: 5.094348}
+      - {x: -3.867549, y: 5.094319}
+      - {x: -3.8675785, y: 3.6470563}
+      - {x: -3.912394, y: 3.6470273}
+      - {x: -3.912365, y: 0.6163396}
   m_VertexDistance: 0.0005
   m_OffsetDistance: 0.00005
   m_UseDelaunayMesh: 0
@@ -480,7 +480,7 @@ Rigidbody2D:
   m_Simulated: 1
   m_UseFullKinematicContacts: 0
   m_UseAutoMass: 0
-  m_Mass: 1
+  m_Mass: 350
   m_LinearDamping: 0
   m_AngularDamping: 0.05
   m_GravityScale: 0
@@ -592,7 +592,7 @@ GameObject:
   m_Component:
   - component: {fileID: 2059896760135411221}
   - component: {fileID: 3949212347066195352}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: AirProbe
   m_TagString: Untagged
   m_Icon: {fileID: 0}

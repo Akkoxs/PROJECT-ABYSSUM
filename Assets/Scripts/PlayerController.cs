@@ -120,10 +120,7 @@ public class PlayerController : MonoBehaviour
         bool isMoving = (horizontal != 0 || vertical != 0);
         animator.SetBool("moving", isMoving);
 
-        rb.linearVelocity = new Vector2(
-            currentVelocityX * waterDrag,
-            currentVelocityY * waterDrag
-        );
+        rb.linearVelocity = new Vector2(currentVelocityX * waterDrag, currentVelocityY * waterDrag);
 
         if (enableBobbing && horizontal == 0 && vertical == 0 && Mathf.Abs(rb.linearVelocity.magnitude) < 0.5f)
         {
