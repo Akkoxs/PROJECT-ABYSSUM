@@ -85,4 +85,9 @@ public class MouseAiming : MonoBehaviour
     {
         this.shoot = shoot;
     }
+
+    public void SetReloadSpeed(float newReloadSpeed)
+    {
+        timeBetweenFiring = newReloadSpeed;
+    }
 }

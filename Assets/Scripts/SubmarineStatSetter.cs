@@ -44,12 +44,14 @@ public void ApplyStats()
         // {
         //     torp.SetDamage(stats.torpDamage);
         //     torp.SetSpeed(stats.torpSpeed);
+        // Damage => 
+        // Speed => 
         // }
 
-        // if (controller != null)
-        // {
-        //     controller.SetMoveSpeed(stats.subMoveSpeed);
-        // }
+         if (controller != null)
+        {
+        controller.SetMoveSpeed(stats.subMoveSpeed);
+        }
     }
 
 public void ApplyUpgrade(GameStats newStats)

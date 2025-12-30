@@ -13,6 +13,7 @@ public class Projectile : MonoBehaviour
     [SerializeField] private float minVelocity; 
     [SerializeField] private float waterDrag;
     [SerializeField] private Animator harpoonAnimator;
+    [SerializeField] private float harpDamage = 10f;
 
     [Header("Collision Settings")]
     [SerializeField] private LayerMask floorLayer;
@@ -65,8 +66,7 @@ public class Projectile : MonoBehaviour
     {
         if (collision.gameObject.TryGetComponent<IDamageable>(out var damageInterface))
         {
-            damageInterface.TakeDamage(10f);
-
+            damageInterface.TakeDamage(harpDamage);
         }
     }
 
@@ -94,5 +94,15 @@ public class Projectile : MonoBehaviour
         this.mousePos = mousePos;
         this.mainCamera = mainCamera;
         isMoving = true;
+    }
+
+    public void SetHarpDamage(float newDamage)
+    {
+        harpDamage = newDamage;
+    }
+
+    public void SetHarpForce(float newForce)
+    {
+        force = newForce;
     }
 }

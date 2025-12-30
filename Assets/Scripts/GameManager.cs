@@ -35,7 +35,9 @@ public class GameManager : MonoBehaviour
     
     [Header("General")]
     [SerializeField] GameObject player;
+    [SerializeField] GameObject sub;
     private Health playerHealth; 
+    private Health subHealth;
 
     private Dictionary<GameObject, ArtifactSpawnPoint> artifactsActive = new Dictionary<GameObject, ArtifactSpawnPoint>();
 
@@ -66,6 +68,7 @@ public class GameManager : MonoBehaviour
     private void Awake()
     {
         playerHealth = player.GetComponent<Health>();
+        subHealth = sub.GetComponent<Health>();
         artifactApp = GetComponent<ArtifactApplicator>();
         spManager = GetComponent<SpawnPointManager>();
         AddMoney(currentMoney);
@@ -82,11 +85,13 @@ public class GameManager : MonoBehaviour
     private void OnEnable()
     {
         playerHealth.died.AddListener(EndGame);
+        subHealth.died.AddListener(EndGame);
     }
 
     private void OnDisable()
     {
         playerHealth.died.RemoveListener(EndGame);
+        subHealth.died.RemoveListener(EndGame);
     }
 
     //COLLECTION
@@ -211,7 +216,7 @@ public class GameManager : MonoBehaviour
     {
         //aint no way you're winning lmao
         Debug.Log("You Win!");
-        SceneManager.LoadScene(SceneManager.GetActiveScene().name);
+        RestartGame();
     }
 
     private void EndGame()
@@ -219,7 +224,7 @@ public class GameManager : MonoBehaviour
         //plcaeholder crap
         Time.timeScale = 0f;
         Debug.Log("Game Over!");
-        SceneManager.LoadScene(SceneManager.GetActiveScene().name);
+        RestartGame();
     } 
 
     private void RestartGame()

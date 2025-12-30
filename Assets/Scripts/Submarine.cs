@@ -161,5 +161,10 @@ public class Submarine : MonoBehaviour
         Debug.Log("Exited submarine!");
     }
 
+    public void SetMoveSpeed(float newSpeed)
+    {
+        speed = newSpeed;
+    }
+
 
 }

@@ -1,21 +1,25 @@
+using System.Drawing;
 using UnityEngine;
 
 public class PlayerStatSetter : MonoBehaviour
 {
 
 [SerializeField] private GameStats stats;
+[SerializeField] private GameObject pfHarpoon;
 
 private Health health;
 private PlayerOxygen playerOxy;
-//private Harpoon harp;
-//private PlayerMovement controller;
+private Projectile harp;
+private MouseAiming aim;
+private PlayerController controller;
 
 private void Awake()
     {
         health = GetComponent<Health>();
         playerOxy = GetComponent<PlayerOxygen>();
-        //harp = GetComponent<Harpoon>();
-        //controller = GetComponent<PlayerMovement>();
+        harp = pfHarpoon.GetComponent<Projectile>();
+        aim = GetComponent<MouseAiming>();
+        controller = GetComponent<PlayerController>();
 
         ApplyStats();
     }
@@ -32,18 +36,21 @@ public void ApplyStats()
             playerOxy.SetMaxOxygen(stats.diverMaxOxygen);
         }
 
-        //FOR FUTURE 
-        // if (harp != null)
-        // {
-        //     harp.SetDamage(stats.harpDamage);
-        //     harp.SetSpeed(stats.harpSpeed);
-        //     harp.SetReloadSpeed(stats.harpReloadSpeed);
-        // }
+        if (harp != null)
+        {
+            harp.SetHarpDamage(stats.harpDamage);
+            harp.SetHarpForce(stats.harpSpeed);
+        }
 
-        // if (controller != null)
-        // {
-        //     controller.SetMoveSpeed(stats.diverMoveSpeed);
-        // }
+        if (aim != null)
+        {
+            aim.SetReloadSpeed(stats.harpReloadSpeed);
+        }
+
+        if (controller != null)
+        {
+            controller.SetMoveSpeed(stats.diverMoveSpeed);
+        }
     }
 
 public void ApplyUpgrade(GameStats newStats)

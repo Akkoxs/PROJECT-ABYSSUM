@@ -129,4 +129,9 @@ public class PlayerController : MonoBehaviour
             rb.AddForce(Vector2.up * bobbingForce, ForceMode2D.Force);
         }
     }
+
+    public void SetMoveSpeed(float newSpeed)
+    {
+        newSpeed = speed;
+    }
 }

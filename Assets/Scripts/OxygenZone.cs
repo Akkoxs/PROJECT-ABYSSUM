@@ -41,12 +41,16 @@ public class OxygenZone : MonoBehaviour
     private void OnTriggerEnter2D(Collider2D other)
     {
         if (other == playerAirProbe)
+        {
             playerOxy.EnterOxygenZone();
             playerRB.gravityScale = 1f;
+        }
 
         if (other == subAirProbe)
+        {
             subOxy.EnterOxygenZone();
             subRB.gravityScale = 1f;
+        }
 
         //special case for when submarine runs out of air, player oxy starts dropping, and nothing resets playerOxy in the event of a submarine resurfacing
         if (other == subAirProbe && submarine.PlayerInside) 
@@ -56,12 +60,16 @@ public class OxygenZone : MonoBehaviour
     private void OnTriggerExit2D(Collider2D other)
     {
         if (other == playerAirProbe)
+        {
             playerOxy.ExitOxygenZone();
             playerRB.gravityScale = 0f;
+        }
 
         if (other == subAirProbe)
+        {
             subOxy.ExitOxygenZone();
             subRB.gravityScale = 0f;
+        }
     }
 
 }
