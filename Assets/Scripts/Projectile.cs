@@ -46,7 +46,7 @@ public class Projectile : MonoBehaviour
             }
            
             float currentSpeed = rb.linearVelocity.magnitude;
-            float newSpeed = currentSpeed - (waterDrag * Time.fixedDeltaTime);
+            float newSpeed = currentSpeed - (waterDrag * Time.deltaTime);
 
             if (newSpeed <= minVelocity)
             {
@@ -67,6 +67,7 @@ public class Projectile : MonoBehaviour
         if (collision.gameObject.TryGetComponent<IDamageable>(out var damageInterface))
         {
             damageInterface.TakeDamage(harpDamage);
+            Destroy(gameObject, 0.2f);
         }
     }
 

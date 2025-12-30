@@ -10,11 +10,11 @@ GameObject:
   m_Component:
   - component: {fileID: 7084081555496658541}
   - component: {fileID: 1701952337512243298}
-  - component: {fileID: 2987375922403878111}
   - component: {fileID: 244154776968237181}
   - component: {fileID: 7325344946342912182}
   - component: {fileID: 148439035309631993}
   - component: {fileID: 7966292825631397916}
+  - component: {fileID: 1255282568750798713}
   m_Layer: 0
   m_Name: Smallfish
   m_TagString: Untagged
@@ -32,7 +32,7 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalScale: {x: 3.4627085, y: 3.4627085, z: 3.4627085}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
@@ -95,29 +95,6 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
---- !u!114 &2987375922403878111
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2395534887309443490}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 362bf7ee4679a8b448563b85692aa2d5, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::FishEnemy
-  playerTransform: {fileID: 0}
-  followSpeed: 3
-  maxFollowDistance: 5
-  minFollowDistance: 0.5
-  patrolSpeed: 2
-  initialDirection: 1
-  damageAmount: 10
-  knockbackForce: 10
-  knockbackDuration: 0.5
-  smoothMovement: 1
-  patrolDirection: 0
 --- !u!95 &244154776968237181
 Animator:
   serializedVersion: 7
@@ -128,7 +105,7 @@ Animator:
   m_GameObject: {fileID: 2395534887309443490}
   m_Enabled: 1
   m_Avatar: {fileID: 0}
-  m_Controller: {fileID: -6882766647779022039, guid: d2f83e243c1fc2548afcbb3f57d0459e, type: 3}
+  m_Controller: {fileID: 9100000, guid: 3231e933722752d4d9683768a08a5cd6, type: 2}
   m_CullingMode: 0
   m_UpdateMode: 0
   m_ApplyRootMotion: 0
@@ -152,7 +129,7 @@ Rigidbody2D:
   m_Simulated: 1
   m_UseFullKinematicContacts: 0
   m_UseAutoMass: 0
-  m_Mass: 1
+  m_Mass: 100
   m_LinearDamping: 0
   m_AngularDamping: 0.05
   m_GravityScale: 1
@@ -179,7 +156,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c80e7e3454d3dd143bf0c7e74bd4aa8a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Health
-  maxHealth: 100
+  maxHealth: 30
   currentHealth: 0
   healthChanged:
     m_PersistentCalls:
@@ -233,3 +210,32 @@ BoxCollider2D:
   m_AutoTiling: 0
   m_Size: {x: 0.55, y: 0.27}
   m_EdgeRadius: 0
+--- !u!114 &1255282568750798713
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2395534887309443490}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 362bf7ee4679a8b448563b85692aa2d5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::FishEnemy
+  playerTransform: {fileID: 0}
+  detectionRange: 10
+  attackRange: 7
+  patrolSpeed: 2
+  initialDirection: 1
+  chargeSpeed: 8
+  retreatSpeed: 4
+  chargeDuration: 0.8
+  retreatDuration: 0.6
+  pauseBetweenBites: 0.5
+  minAttackDistance: 1.5
+  acceleration: 3
+  deceleration: 0.92
+  waterDrag: 0.95
+  damageAmount: 10
+  knockbackForce: 10
+  knockbackDeceleration: 15
