@@ -35,7 +35,7 @@ public class GameStats : ScriptableObject
         scanSpeed = 135f;
 
         harpDamage = 10f;
-        harpSpeed = 20f;
+        harpSpeed = 10f;
         harpReloadSpeed = 2f;
 
         torpDamage = 50f;
