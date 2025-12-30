@@ -36,8 +36,10 @@ public class ArtifactSpawnPoint : MonoBehaviour
         else if (currPos > gameManager.L5_THRESH)
             spawnLevel = 5;
         else
+        {
             Debug.Log("Artifact out of bounds");
             spawnLevel = 5;
+        }
     }
 
     public void SetOccupied(bool occupied)
@@ -62,7 +64,7 @@ public class ArtifactSpawnPoint : MonoBehaviour
         Gizmos.DrawWireSphere(transform.position, spawnRadius);
 
          if (isOccupied)
-            Gizmos.DrawSphere(transform.position, 0.3f);
+            Gizmos.DrawSphere(transform.position, spawnRadius);
     }
 
 }

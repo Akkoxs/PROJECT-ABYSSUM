@@ -26,6 +26,7 @@ public class GameManager : MonoBehaviour
     [SerializeField] private Transform pfArtifactParent;
     [SerializeField] private int maxArtifactsInWorld = 5;
     [SerializeField] private float upgradeArtifactSpawnWeight = 0.8f;
+    [SerializeField] private float SurfaceThreshold = 1f;
     [SerializeField] private float L1_Threshold = 1f;
     [SerializeField] private float L2_Threshold = 2f;
     [SerializeField] private float L3_Threshold = 3f;
@@ -67,6 +68,7 @@ public class GameManager : MonoBehaviour
         playerHealth = player.GetComponent<Health>();
         artifactApp = GetComponent<ArtifactApplicator>();
         spManager = GetComponent<SpawnPointManager>();
+        AddMoney(currentMoney);
     }
 
     private void Start()
@@ -249,6 +251,7 @@ public class GameManager : MonoBehaviour
 
     private void OnDrawGizmos()
     {
+        DrawThresholdGizmo(SurfaceThreshold, Color.azure, "Surface");
         DrawThresholdGizmo(L1_Threshold, Color.green, "L1");
         DrawThresholdGizmo(L2_Threshold, Color.cyan, "L2");
         DrawThresholdGizmo(L3_Threshold, Color.yellow, "L3");
