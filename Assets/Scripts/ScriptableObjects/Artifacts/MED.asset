@@ -1,0 +1,26 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e0121b29d3454ca44a2cf96722af99e6, type: 3}
+  m_Name: MED
+  m_EditorClassIdentifier: Assembly-CSharp::ArtifactStats
+  artifactName: MED
+  artifactType: 1
+  icon: {fileID: 2680991004341052549, guid: 20ce6efa1e4cb85458c45ec2dc1b084d, type: 3}
+  sellValue: 2000
+  spawnLevels: 0100000002000000030000000400000005000000
+  statEffects: []
+  replenishPlayerHealth: 1
+  replenishSubHealth: 0
+  replenishPlayerOxygen: 0
+  replenishSubOxygen: 0
+  replenishTorpedo: 0
+  grantExtraTorpedo: 0

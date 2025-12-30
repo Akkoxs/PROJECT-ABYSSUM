@@ -22,16 +22,16 @@ private void Awake()
         ApplyStats();
     }
 
-private void ApplyStats()
+public void ApplyStats()
     {
         if (health != null)
         {
-            health.SetMaxHealth(stats.diverMaxHealth, true);
+            health.SetMaxHealth(stats.subMaxHealth, true);
         }
 
         if (subOxy != null)
         {
-            subOxy.SetMaxOxygen(stats.diverMaxOxygen);
+            subOxy.SetMaxOxygen(stats.subMaxOxygen);
         }
 
     //FOR FUTURE 

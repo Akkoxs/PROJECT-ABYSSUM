@@ -20,7 +20,7 @@ private void Awake()
         ApplyStats();
     }
 
-private void ApplyStats()
+public void ApplyStats()
     {
         if (health != null)
         {

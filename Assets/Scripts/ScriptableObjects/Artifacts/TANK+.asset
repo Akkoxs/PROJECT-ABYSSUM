@@ -1,0 +1,28 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e0121b29d3454ca44a2cf96722af99e6, type: 3}
+  m_Name: TANK+
+  m_EditorClassIdentifier: Assembly-CSharp::ArtifactStats
+  artifactName: TANK+
+  artifactType: 6
+  icon: {fileID: 2680991004341052549, guid: 20ce6efa1e4cb85458c45ec2dc1b084d, type: 3}
+  sellValue: 4500
+  spawnLevels: 010000000200000003000000
+  statEffects:
+  - stat: 0
+    value: 0
+  replenishPlayerHealth: 0
+  replenishSubHealth: 0
+  replenishPlayerOxygen: 1
+  replenishSubOxygen: 0
+  replenishTorpedo: 0
+  grantExtraTorpedo: 0
