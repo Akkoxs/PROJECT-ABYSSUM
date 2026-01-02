@@ -50,11 +50,13 @@ public class TrapEnemy : MonoBehaviour, IRadarDetectable
     private float invulnerabilityTimer = 0f;
     private Vector2 targetVelocity = Vector2.zero;
     private bool isActivated = false;
+    private BoxCollider2D boxCollider2D;
 
     void Start()
     {
         patrolDirection = initialDirection;
         health = GetComponent<Health>();
+        boxCollider2D = GetComponent<BoxCollider2D>();
         rb = GetComponent<Rigidbody2D>();
         if (rb != null)
         {
@@ -182,6 +184,7 @@ public class TrapEnemy : MonoBehaviour, IRadarDetectable
                 // Player is close - start attacking immediately
                 currentState = TrapState.Charging;
                 stateTimer = chargeDuration;
+                boxCollider2D.enabled = true;
                 Debug.Log("Trap activated - player close, charging!");
             }
             else
@@ -278,11 +281,11 @@ public class TrapEnemy : MonoBehaviour, IRadarDetectable
 
         IDamageable damageable = collision.gameObject.GetComponent<IDamageable>();
 
-        if (damageable != null && isActivated)
+        if (damageable != null && isActivated && !playerTransform.gameObject.GetComponent<PlayerController>().isInvulnerable)
         {
             damageable.TakeDamage(damageAmount);
             animator.SetTrigger("attack");
-            collision.gameObject.GetComponent<Animator>().SetTrigger("hit");
+            
         }
 
         if (collision.gameObject.layer == LayerMask.NameToLayer("Terrain") || collision.gameObject.layer == LayerMask.NameToLayer("Floor"))

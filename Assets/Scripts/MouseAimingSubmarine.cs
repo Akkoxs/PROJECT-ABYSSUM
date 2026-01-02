@@ -6,8 +6,6 @@ public class MouseAimingSubmarine : MonoBehaviour
     [Header("Aiming Settings")]
     [SerializeField] private Transform reticle;
     [SerializeField] private float aimRadius = 3f;
-    [SerializeField] private Animator harpoonAnimator;
-    [SerializeField] private bool needHarpoonAnimator;
 
     [Header("Camera Reference")]
     [SerializeField] private Camera mainCamera;

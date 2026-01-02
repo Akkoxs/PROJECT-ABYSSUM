@@ -47,10 +47,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 309990b9fb5eb134197a225f7a00873a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: '::'
-  force: 10
+  force: 30
   minVelocity: 0.1
   waterDrag: 1.5
   harpoonAnimator: {fileID: 8849165821937594639}
+  harpDamage: 10
   floorLayer:
     serializedVersion: 2
     m_Bits: 64

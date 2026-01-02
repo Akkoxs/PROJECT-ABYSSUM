@@ -15,6 +15,7 @@ GameObject:
   - component: {fileID: 148439035309631993}
   - component: {fileID: 7966292825631397916}
   - component: {fileID: 2901092333161125296}
+  - component: {fileID: 4269557804163604851}
   m_Layer: 3
   m_Name: Anglerfish
   m_TagString: Enemy
@@ -171,7 +172,7 @@ BoxCollider2D:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2395534887309443490}
-  m_Enabled: 1
+  m_Enabled: 0
   serializedVersion: 3
   m_Density: 1
   m_Material: {fileID: 0}
@@ -198,7 +199,7 @@ BoxCollider2D:
   m_UsedByEffector: 0
   m_CompositeOperation: 0
   m_CompositeOrder: 0
-  m_Offset: {x: 0, y: 0}
+  m_Offset: {x: 0.08933151, y: 0.09854388}
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
     pivot: {x: 0.5, y: 0.5}
@@ -208,7 +209,7 @@ BoxCollider2D:
     drawMode: 0
     adaptiveTiling: 0
   m_AutoTiling: 0
-  m_Size: {x: 0.55, y: 0.27}
+  m_Size: {x: 1.9265964, y: 1.6837492}
   m_EdgeRadius: 0
 --- !u!114 &2901092333161125296
 MonoBehaviour:
@@ -224,21 +225,33 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::TrapEnemy
   playerTransform: {fileID: 0}
   animator: {fileID: 244154776968237181}
-  activationRange: 5
+  activationRange: 6.03
   activationAnimationTrigger: playerClose
   activationDelay: 0.5
   detectionRange: 8
   attackRange: 7.5
-  patrolSpeed: 2
+  patrolSpeed: 20
   initialDirection: 1
   chargeSpeed: 25
   retreatSpeed: 4
   chargeDuration: 0.6
   retreatDuration: 0.4
-  pauseBetweenBites: 0.1
-  minAttackDistance: 2.16
+  pauseBetweenBites: 0.25
+  minAttackDistance: 3
   acceleration: 3
   deceleration: 0.92
   waterDrag: 0.95
-  damageAmount: 10
-  invulnerabilityDuration: 2
+  damageAmount: 15
+  invulnerabilityDuration: 1.1
+--- !u!114 &4269557804163604851
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2395534887309443490}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 08e3114e13663b14b810a194918b1d12, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: '::'

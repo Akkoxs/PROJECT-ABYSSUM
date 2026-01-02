@@ -11,6 +11,7 @@ public class PlayerController : MonoBehaviour
     [Header("Player Speed Settings")]
     [SerializeField] float speed;
     [SerializeField] float jumpingPower;
+    [SerializeField] float knockbackForce = 10f;
 
     [Header("Grounding")]
     [SerializeField] LayerMask groundLayer;
@@ -31,9 +32,13 @@ public class PlayerController : MonoBehaviour
     private float horizontal;
     private float vertical;
     private float bobbingTimer = 0f;
+    private bool isBeingKnockedBack = false;
+    public bool isInvulnerable = false;
+    private float invulnerabilityTimer = 0f;
+    private float invulnerabilityDuration = 1.2f;
 
     #region PLAYER_CONTROLS
-    public void Move(InputAction.CallbackContext context)
+    public void Move(InputAction.CallbackContext context )
     {
         Vector2 input = context.ReadValue<Vector2>();
         horizontal = input.x;
@@ -89,6 +94,21 @@ public class PlayerController : MonoBehaviour
     private void Update()
     {
         FlipSpriteTowardsMouse();
+        Invulnerability();
+    }
+
+    private void Invulnerability()
+    {
+        if (isInvulnerable)
+        {
+            animator.SetBool("nohit", true);
+            invulnerabilityTimer -= Time.deltaTime;
+            if (invulnerabilityTimer <= 0f)
+            {
+                isInvulnerable = false;
+                animator.SetBool("nohit", false);
+            }
+        }
     }
 
     private void FixedUpdate()
@@ -127,6 +147,16 @@ public class PlayerController : MonoBehaviour
             bobbingTimer += Time.fixedDeltaTime * bobbingSpeed;
             float bobbingForce = Mathf.Sin(bobbingTimer) * bobbingStrength;
             rb.AddForce(Vector2.up * bobbingForce, ForceMode2D.Force);
+        }
+    }
+
+    private void OnCollisionEnter2D(Collision2D collision)
+    {
+        if (collision.gameObject.CompareTag("Enemy") && !isInvulnerable)
+        {
+            animator.SetTrigger("hurt");
+            isInvulnerable = true;
+            invulnerabilityTimer = invulnerabilityDuration;
         }
     }
 
