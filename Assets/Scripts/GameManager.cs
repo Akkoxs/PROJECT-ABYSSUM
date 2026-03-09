@@ -127,8 +127,9 @@ public class GameManager : MonoBehaviour
         int maxAttempts = 20;
         int attempts = 0;
 
-        if (artifactsActive.Count >= maxArtifactsInWorld)
+        if (artifactsActive.Count >= maxArtifactsInWorld){
             return;
+        }
 
         while (spawnPoint == null && attempts < maxAttempts)
         {
@@ -157,7 +158,6 @@ public class GameManager : MonoBehaviour
                     selectedArtifact = replenishArtifacts[Random.Range(0, replenishArtifacts.Count)];
 
             }
-
             spawnPoint = spManager.GetSpawnPointForArtifact(selectedArtifact);
 
             if (spawnPoint == null) //reset selected Artifact to try again
@@ -178,10 +178,16 @@ public class GameManager : MonoBehaviour
     private void SpawnArtifact(ArtifactStats selectedArtifact, ArtifactSpawnPoint spawnPoint)
     {
         Vector2 spawnPos = spawnPoint.SpawnPosition;
+        Debug.Log($"Spawning {selectedArtifact.artifactName} at {spawnPos}");
+        
         GameObject artifactObj = Instantiate(pfArtifact, spawnPos, Quaternion.identity, pfArtifactParent);
+        Debug.Log($"Instantiated: {artifactObj != null}");
 
         Artifact artifact = artifactObj.GetComponent<Artifact>();
+        Debug.Log($"Artifact component found: {artifact != null}");
+        
         artifact.SetStats(selectedArtifact);
+        Debug.Log($"Stats set, scale: {artifactObj.transform.localScale}");
 
         spawnPoint.SetOccupied(true);
         artifactsActive.Add(artifactObj, spawnPoint);

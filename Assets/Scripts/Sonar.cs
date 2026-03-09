@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
+using UnityEngine.Animations;
 using UnityEngine.UI;
 
 public class Sonar : MonoBehaviour
@@ -10,6 +11,7 @@ public class Sonar : MonoBehaviour
     [SerializeField] private SonarPing pfSonarTerrain;
     [SerializeField] private GameObject submarine;
     [SerializeField] private RectTransform radarRect;
+    [SerializeField] private RectTransform artifactDetects;
 
     //layer masks
     [SerializeField] private LayerMask layerMaskPOI; //must configure 
@@ -17,83 +19,109 @@ public class Sonar : MonoBehaviour
 
     private Transform sweepTransform;
     private List<Collider2D> colliderList;
+    private HashSet<int> detectedInstanceIDs = new HashSet<int>(); //hash set for storing detected obj.
     private Submarine sub;
 
     [SerializeField] private float scanSpeed = 180f;
     [SerializeField] private float sonarRange = 500f; 
     [SerializeField] private int terrainRaysPerFrame = 10;
     [SerializeField] private float terrainRaySpread = 15f; //15 deg cone
+    [SerializeField] private float poiDetectionRadius = 7f; //for the raycast overlap circles to detect Artifact
+
+    private float totalRotation = 0f;
+    private float lastClearRotation = 0f;
+    private float lastSweepAngle;
 
     private void Awake()
     {
         sweepTransform = transform.Find("Sweeper");
         sub = submarine.GetComponent<Submarine>();
         colliderList = new List<Collider2D>();
+        lastSweepAngle = sweepTransform.eulerAngles.z; //new
     }
 
-    private void Update()
+private void Update()
     {
-        float previousRotation = (sweepTransform.eulerAngles.z % 360) - 180;
-        sweepTransform.eulerAngles -= new Vector3(0, 0, scanSpeed * Time.deltaTime);
-        float currentRotation = (sweepTransform.eulerAngles.z % 360) - 180;
+        float rotationThisFrame = scanSpeed * Time.deltaTime;
+        totalRotation += rotationThisFrame;
+        sweepTransform.eulerAngles -= new Vector3(0, 0, rotationThisFrame);
 
-        if ((previousRotation < -90 && currentRotation >= -90) ||
-            (previousRotation < 0 && currentRotation >= 0) ||
-            (previousRotation < 90 && currentRotation >= 90))
+    if (totalRotation - lastClearRotation >= 360f) //clear once per rot.
+    {
+        lastClearRotation += 360f;
+        detectedInstanceIDs.Clear();
+    }
+
+        float currentAngle = sweepTransform.eulerAngles.z;
+
+        DetectTerrain(currentAngle);
+        DetectPOIArc(lastSweepAngle, currentAngle);
+
+        lastSweepAngle = currentAngle;
+    }
+
+private void DetectPOIArc(float fromAngle, float toAngle)
+    {
+        // How many rays to cast across the arc this frame, # of rays is dependent on framrate so its gotta be ~60fps for good performance. 
+        int raysThisFrame = Mathf.Max(1, Mathf.CeilToInt(Mathf.Abs(scanSpeed * Time.deltaTime) / 2f));
+
+        for (int i = 0; i <= raysThisFrame; i++)
         {
-            colliderList.Clear();
+            float t = raysThisFrame == 0 ? 0f : (float)i / raysThisFrame; //if raysThisFrame == 0, t=0f, else t=float(i)/raysThisFrame;
+            float angle = Mathf.LerpAngle(fromAngle, toAngle, t);
+
+            DetectPOI(angle);
         }
-
-        float baseAngle = sweepTransform.eulerAngles.z;
-
-        DetectPOI(baseAngle);
-        DetectTerrain(baseAngle);   
     }
 
-    private void DetectPOI(float angle)
+private void DetectPOI(float angle)
+{
+    Vector2 direction = uiHelper.GetVectorFromAngle(angle);
+    
+    // sample multiple points along the ray, put overlap circle raycasts along the line segment to have a better chance at hitting Artifact colliders
+    int steps = 12;
+    for (int i = 1; i <= steps; i++)
     {
-        Vector2 direction = uiHelper.GetVectorFromAngle(angle);
-        RaycastHit2D[] hits = Physics2D.RaycastAll(submarine.transform.position, direction, sonarRange, layerMaskPOI);
-            
-        foreach (RaycastHit2D hit in hits)
+        float distance = sonarRange * ((float)i / steps);
+        Vector2 samplePoint = (Vector2)submarine.transform.position + direction * distance;
+        
+        Collider2D[] hits = Physics2D.OverlapCircleAll(samplePoint, poiDetectionRadius, layerMaskPOI);
+        
+        foreach (Collider2D col in hits)
         {
-            if (hit.collider != null && !colliderList.Contains(hit.collider)) // hit something that we havent alr hit
-            //if (hit.collider != null) // hit something that we havent alr hit
+            if (col == null) continue;
+            
+            int instanceID = col.gameObject.GetInstanceID();
+            if (detectedInstanceIDs.Contains(instanceID)) continue;
+            
+            detectedInstanceIDs.Add(instanceID);
+            
+            IRadarDetectable hitObj = col.gameObject.GetComponent<IRadarDetectable>();
+            if (hitObj != null)
             {
-                colliderList.Add(hit.collider);
-                IRadarDetectable hitObj = hit.collider.gameObject.GetComponent<IRadarDetectable>(); 
-
-                if (hitObj != null) //hit something detectable
+                RadarObjectType objectType = hitObj.GetObjectType();
+                if (objectType == RadarObjectType.Fauna || objectType == RadarObjectType.Artifact)
                 {
-                    RadarObjectType objectType = hitObj.GetObjectType();
-
-                    if (objectType == RadarObjectType.Fauna || objectType == RadarObjectType.Artifact)
-                    {
-                        string artifactName = hitObj.GetRadarDisplayName();
-                        CreatePing(hit.point, objectType, artifactName);   
-                    }
-                }                   
+                    CreatePing(col.transform.position, objectType, hitObj.GetRadarDisplayName());
+                }
             }
         }
     }
+}
 
-    private void DetectTerrain(float angle) //angle = base starting angle  
+    private void DetectTerrain(float angle)
     {
         for (int i = 0; i < terrainRaysPerFrame; i++)
         {
-            float angleOffset = -terrainRaySpread / 2 + (terrainRaySpread / (terrainRaysPerFrame - 1))* i; //for placement of next ray
-            float rayAngle = angle + angleOffset; 
-
+            float angleOffset = -terrainRaySpread / 2 + (terrainRaySpread / (terrainRaysPerFrame - 1)) * i; //for placement of next ray 
+            float rayAngle = angle + angleOffset;
             Vector2 direction = uiHelper.GetVectorFromAngle(rayAngle);
-            RaycastHit2D[] hits = Physics2D.RaycastAll(submarine.transform.position, direction, sonarRange, layerMaskTerrain);
 
-            foreach (RaycastHit2D hit in hits)
+            List<Vector2> hitPoints = GetTerrainHitPoints(submarine.transform.position, direction, sonarRange);
+
+            foreach (Vector2 point in hitPoints)
             {
-                Debug.Log(hit);
-                if (hit.collider != null) //&& !colliderList.Contains(hit.collider)
-                {
-                    CreatePing(hit.point, RadarObjectType.Terrain, null);
-                }
+                CreatePing(point, RadarObjectType.Terrain, null);
             }
         }
     }
@@ -123,7 +151,21 @@ public class Sonar : MonoBehaviour
                 pingColor = Color.white;
                 break;
         }
-        SonarPing sonarPing = Instantiate(pingPrefab, radarRect);
+        
+        //this is to ensure that artifact labels render ABOVE the terrain points 
+        RectTransform parent = radarRect; 
+        Vector2 radarPos = WorldToRadarPosition(hitPoint);
+
+        if (objectType == RadarObjectType.Artifact)
+        {
+            if (!artifactDetects.rect.Contains(radarPos))
+            {
+                return; // don't spawn if outside bounds
+            }
+            parent = artifactDetects;
+        }
+        
+        SonarPing sonarPing = Instantiate(pingPrefab, parent);
         sonarPing.transform.localPosition = WorldToRadarPosition(hitPoint);
         sonarPing.SetColor(pingColor);
         sonarPing.SetText(label);
@@ -145,6 +187,32 @@ public class Sonar : MonoBehaviour
         float radarDistance = (distance / sonarRange) * radarRadius;
 
         return direction * radarDistance;
+    }
+
+    //this is for handling the fact that all terrain is technically 1 collider because of the composite tilemap collider. So we can see internal tunnels and stuff.
+    private List<Vector2> GetTerrainHitPoints(Vector2 origin, Vector2 direction, float maxRange)
+    {
+        List<Vector2> hitPoints = new List<Vector2>();
+        float distanceTravelled = 0f;
+        Vector2 currentOrigin = origin;
+
+        //for every hit surface, we are starting a new raycast from this point onwards to get the next hit and so forth, until the max sonar range is reached
+        while (distanceTravelled < maxRange)
+        {
+            float remainingRange = maxRange - distanceTravelled;
+            RaycastHit2D hit = Physics2D.Raycast(currentOrigin, direction, remainingRange, layerMaskTerrain);
+
+            if (hit.collider == null) break;
+
+            hitPoints.Add(hit.point);
+
+            //start the next ray a bit after  
+            float nudge = 0.05f;
+            currentOrigin = hit.point + direction * nudge;
+            distanceTravelled += hit.distance + nudge;
+        }
+
+        return hitPoints;
     }
 
     private void OnDrawGizmos()
@@ -175,9 +243,6 @@ public class Sonar : MonoBehaviour
                     Gizmos.color = Color.red;
                     Gizmos.DrawSphere(hit.point, 0.3f);
 
-                    // Draw the surface normal at hit point
-                    Gizmos.color = Color.blue;
-                    Gizmos.DrawLine(hit.point, hit.point + hit.normal * 2f);
                 }
 
                 // Draw remaining ray after last hit in grey

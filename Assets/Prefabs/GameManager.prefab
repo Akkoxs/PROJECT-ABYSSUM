@@ -1,0 +1,170 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1 &8295158500735575965
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 3341211761784656175}
+  - component: {fileID: 1549918836319956186}
+  - component: {fileID: 1871385801995912193}
+  - component: {fileID: 5475922938036877375}
+  m_Layer: 0
+  m_Name: GameManager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &3341211761784656175
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8295158500735575965}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -1.63238, y: -2.06866, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1549918836319956186
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8295158500735575965}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6e562a788ca34f44ca586200968027f0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::GameOver
+  upgradeTracker: {fileID: 11400000, guid: 51a236027bf2b054fbbdf0b3088082bc, type: 2}
+  gameStats: {fileID: 11400000, guid: d6696a0b6a2341b4d808ef4c84e82e42, type: 2}
+  artifactDictionary:
+  - {fileID: 11400000, guid: 495b825f1a1c6fa4e8dc90da38fbea26, type: 2}
+  - {fileID: 11400000, guid: 04c5754e7ea030d4f9a6574978c347b2, type: 2}
+  - {fileID: 11400000, guid: 5eaac0dbc03be1e4e8c5081378d34f1e, type: 2}
+  - {fileID: 11400000, guid: f2e1f92d0dd2b07499d1dc13c81f5563, type: 2}
+  - {fileID: 11400000, guid: 662dd42ac969ce0428255056f4c1fcdc, type: 2}
+  - {fileID: 11400000, guid: 164ce0cdcc751e241ae64d6731e2846b, type: 2}
+  - {fileID: 11400000, guid: 4c43ea145a7eb6744806a661898a5da8, type: 2}
+  - {fileID: 11400000, guid: 5656aea00346a744c9aeb29e27eb68a0, type: 2}
+  - {fileID: 11400000, guid: 7055fc395ae61aa49b3dccb04cdbe27b, type: 2}
+  - {fileID: 11400000, guid: db5437a00053c4247b56b6d87b26c721, type: 2}
+  - {fileID: 11400000, guid: 5457b36610650d148ba283f71c4a0e39, type: 2}
+  - {fileID: 11400000, guid: b10b1f1d793f83d45bb202860407aa4e, type: 2}
+  - {fileID: 11400000, guid: 0688befac9b1d594c81401bc7fc0bbde, type: 2}
+  - {fileID: 11400000, guid: 2254df84ace0a7249b4cba9fbdbf9180, type: 2}
+  currentMoney: 0
+  totalDebt: 1000000
+  pfArtifact: {fileID: 2277606919776719219, guid: 00b711705c26b37468434b28f768c766, type: 3}
+  pfArtifactParent: {fileID: 0}
+  maxArtifactsInWorld: 5
+  upgradeArtifactSpawnWeight: 0.8
+  SurfaceThreshold: 4
+  L1_Threshold: -45
+  L2_Threshold: -75
+  L3_Threshold: -115
+  L4_Threshold: -157
+  L5_Threshold: -195
+  player: {fileID: 0}
+  sub: {fileID: 0}
+  onMoneyChanged:
+    m_PersistentCalls:
+      m_Calls: []
+  onArtifactCollected:
+    m_PersistentCalls:
+      m_Calls: []
+--- !u!114 &1871385801995912193
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8295158500735575965}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 125fdaab0d92a42439fccff991b24e40, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::ArtifactApplicator
+  gameStats: {fileID: 11400000, guid: d6696a0b6a2341b4d808ef4c84e82e42, type: 2}
+  upgradeTracker: {fileID: 11400000, guid: 51a236027bf2b054fbbdf0b3088082bc, type: 2}
+  player: {fileID: 0}
+  sub: {fileID: 0}
+  sonar: {fileID: 0}
+  onStatUpgraded:
+    m_PersistentCalls:
+      m_Calls: []
+  onReplenished:
+    m_PersistentCalls:
+      m_Calls: []
+--- !u!114 &5475922938036877375
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8295158500735575965}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7a9b5dd993a99b249911dbc017708e16, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::SpawnPointManager
+  artifactSpawns:
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}

@@ -1,8 +1,11 @@
 using UnityEngine;
+using TMPro;
 
 public class Artifact : MonoBehaviour, IRadarDetectable
 {
     [SerializeField] private ArtifactStats artifactStats;
+    [SerializeField] private float spriteScale;
+    [SerializeField] private ArtifactPopup pfArtifactPopup;
     private SpriteRenderer spriteRenderer;
     private GameManager gameManager;
     private BoxCollider2D collider;
@@ -30,12 +33,17 @@ public class Artifact : MonoBehaviour, IRadarDetectable
         spriteRenderer = GetComponent<SpriteRenderer>();  //render when stats are set 
         collider = GetComponent<BoxCollider2D>();
         spriteRenderer.sprite = artifactStats.icon;
-        FitSpriteToBounds(spriteRenderer);
+        transform.localScale = Vector3.one * spriteScale;
     }
 
     public void PickUp()
     {
         isCollected = true;
+
+        //spawn popup
+        ArtifactPopup popup = Instantiate(pfArtifactPopup, transform.position, Quaternion.identity);
+        popup.Setup(artifactStats.artifactName, artifactStats.sellValue);
+
         gameManager.CollectArtifact(this);
         Destroy(gameObject);
     }
@@ -49,34 +57,5 @@ public class Artifact : MonoBehaviour, IRadarDetectable
     {
         return artifactStats.artifactName;
     }
-
-    private Vector2 GetColliderWorldSize()
-    {
-        if (collider == null)
-            return Vector2.one;
-
-        Vector2 localSize = collider.size;
-        Vector3 scale = transform.lossyScale;
-
-        return new Vector2(localSize.x * scale.x, localSize.y * scale.y);
-    }
-
-
-    private void FitSpriteToBounds(SpriteRenderer sr)
-    {
-        if (sr.sprite == null || collider == null) 
-            return;
-
-        Vector2 colliderSize = GetColliderWorldSize();
-        Vector2 spriteSize = sr.sprite.bounds.size;
-
-        float scaleX = colliderSize.x / spriteSize.x;
-        float scaleY = colliderSize.y / spriteSize.y;
-
-        float scale = Mathf.Min(scaleX, scaleY);
-
-        sr.transform.localScale = Vector3.one * scale;
-    }
-
 
 }
