@@ -8,7 +8,6 @@ public class Sonar : MonoBehaviour
     [SerializeField] private UIHelper uiHelper;
     [SerializeField] private SonarPing pfSonarPOI;
     [SerializeField] private SonarPing pfSonarTerrain;
-    //[SerializeField] private GameObject pfSonarLabel;
     [SerializeField] private GameObject submarine;
     [SerializeField] private RectTransform radarRect;
 
@@ -19,7 +18,6 @@ public class Sonar : MonoBehaviour
     private Transform sweepTransform;
     private List<Collider2D> colliderList;
     private Submarine sub;
-    //private TextMeshPro label;
 
     [SerializeField] private float scanSpeed = 180f;
     [SerializeField] private float sonarRange = 500f; 
@@ -30,30 +28,26 @@ public class Sonar : MonoBehaviour
     {
         sweepTransform = transform.Find("Sweeper");
         sub = submarine.GetComponent<Submarine>();
-        //label = pfSonarLabel.GetComponent<TextMeshPro>();
         colliderList = new List<Collider2D>();
     }
 
     private void Update()
     {
-        if(sub.PlayerInside)
+        float previousRotation = (sweepTransform.eulerAngles.z % 360) - 180;
+        sweepTransform.eulerAngles -= new Vector3(0, 0, scanSpeed * Time.deltaTime);
+        float currentRotation = (sweepTransform.eulerAngles.z % 360) - 180;
+
+        if ((previousRotation < -90 && currentRotation >= -90) ||
+            (previousRotation < 0 && currentRotation >= 0) ||
+            (previousRotation < 90 && currentRotation >= 90))
         {
-            float previousRotation = (sweepTransform.eulerAngles.z % 360) - 180;
-            sweepTransform.eulerAngles -= new Vector3(0, 0, scanSpeed * Time.deltaTime);
-            float currentRotation = (sweepTransform.eulerAngles.z % 360) - 180;
-
-            if ((previousRotation < -90 && currentRotation >= -90) ||
-                (previousRotation < 0 && currentRotation >= 0) ||
-                (previousRotation < 90 && currentRotation >= 90))
-            {
-                colliderList.Clear();
-            }
-
-            float baseAngle = sweepTransform.eulerAngles.z;
-
-            DetectPOI(baseAngle);
-            DetectTerrain(baseAngle);   
+            colliderList.Clear();
         }
+
+        float baseAngle = sweepTransform.eulerAngles.z;
+
+        DetectPOI(baseAngle);
+        DetectTerrain(baseAngle);   
     }
 
     private void DetectPOI(float angle)
@@ -95,7 +89,8 @@ public class Sonar : MonoBehaviour
 
             foreach (RaycastHit2D hit in hits)
             {
-                if (hit.collider != null && !colliderList.Contains(hit.collider))
+                Debug.Log(hit);
+                if (hit.collider != null) //&& !colliderList.Contains(hit.collider)
                 {
                     CreatePing(hit.point, RadarObjectType.Terrain, null);
                 }
@@ -150,6 +145,52 @@ public class Sonar : MonoBehaviour
         float radarDistance = (distance / sonarRange) * radarRadius;
 
         return direction * radarDistance;
+    }
+
+    private void OnDrawGizmos()
+    {
+        if (!Application.isPlaying || sweepTransform == null) return;
+
+        float baseAngle = sweepTransform.eulerAngles.z;
+
+        for (int i = 0; i < terrainRaysPerFrame; i++)
+        {
+            float angleOffset = -terrainRaySpread / 2 + (terrainRaySpread / (terrainRaysPerFrame - 1)) * i;
+            float rayAngle = baseAngle + angleOffset;
+
+            Vector2 direction = uiHelper.GetVectorFromAngle(rayAngle);
+            Vector2 origin = submarine.transform.position;
+
+            RaycastHit2D[] hits = Physics2D.RaycastAll(origin, direction, sonarRange, layerMaskTerrain);
+
+            if (hits.Length > 0)
+            {
+                // Draw ray up to first hit in yellow
+                Gizmos.color = Color.yellow;
+                Gizmos.DrawLine(origin, hits[0].point);
+
+                foreach (RaycastHit2D hit in hits)
+                {
+                    // Draw hit point as a sphere
+                    Gizmos.color = Color.red;
+                    Gizmos.DrawSphere(hit.point, 0.3f);
+
+                    // Draw the surface normal at hit point
+                    Gizmos.color = Color.blue;
+                    Gizmos.DrawLine(hit.point, hit.point + hit.normal * 2f);
+                }
+
+                // Draw remaining ray after last hit in grey
+                Gizmos.color = Color.grey;
+                Gizmos.DrawLine(hits[hits.Length - 1].point, origin + direction * sonarRange);
+            }
+            else
+            {
+                // No hit, draw full ray in green
+                Gizmos.color = Color.green;
+                Gizmos.DrawLine(origin, origin + direction * sonarRange);
+            }
+        }
     }
 
 }
