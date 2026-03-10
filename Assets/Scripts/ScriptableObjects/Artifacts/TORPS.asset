@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::ArtifactStats
   artifactName: TORPS
   artifactType: 0
-  icon: {fileID: 5043358974462476461, guid: 982b2ea9abf6b644ab912479714f9b5d, type: 3}
+  icon: {fileID: 3577854754834437724, guid: 921100f4f2fa0e149a9ab15083aedf65, type: 3}
   sellValue: 2500
   spawnLevels: 0100000002000000030000000400000005000000
   statEffects: []

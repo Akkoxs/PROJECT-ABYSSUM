@@ -74,40 +74,40 @@ private void DetectPOIArc(float fromAngle, float toAngle)
         }
     }
 
-private void DetectPOI(float angle)
-{
-    Vector2 direction = uiHelper.GetVectorFromAngle(angle);
-    
-    // sample multiple points along the ray, put overlap circle raycasts along the line segment to have a better chance at hitting Artifact colliders
-    int steps = 12;
-    for (int i = 1; i <= steps; i++)
+    private void DetectPOI(float angle)
     {
-        float distance = sonarRange * ((float)i / steps);
-        Vector2 samplePoint = (Vector2)submarine.transform.position + direction * distance;
+        Vector2 direction = uiHelper.GetVectorFromAngle(angle);
         
-        Collider2D[] hits = Physics2D.OverlapCircleAll(samplePoint, poiDetectionRadius, layerMaskPOI);
-        
-        foreach (Collider2D col in hits)
+        // sample multiple points along the ray, put overlap circle raycasts along the line segment to have a better chance at hitting Artifact colliders
+        int steps = 12;
+        for (int i = 1; i <= steps; i++)
         {
-            if (col == null) continue;
+            float distance = sonarRange * ((float)i / steps);
+            Vector2 samplePoint = (Vector2)submarine.transform.position + direction * distance;
             
-            int instanceID = col.gameObject.GetInstanceID();
-            if (detectedInstanceIDs.Contains(instanceID)) continue;
+            Collider2D[] hits = Physics2D.OverlapCircleAll(samplePoint, poiDetectionRadius, layerMaskPOI);
             
-            detectedInstanceIDs.Add(instanceID);
-            
-            IRadarDetectable hitObj = col.gameObject.GetComponent<IRadarDetectable>();
-            if (hitObj != null)
+            foreach (Collider2D col in hits)
             {
-                RadarObjectType objectType = hitObj.GetObjectType();
-                if (objectType == RadarObjectType.Fauna || objectType == RadarObjectType.Artifact)
+                if (col == null) continue;
+                
+                int instanceID = col.gameObject.GetInstanceID();
+                if (detectedInstanceIDs.Contains(instanceID)) continue;
+                
+                detectedInstanceIDs.Add(instanceID);
+                
+                IRadarDetectable hitObj = col.gameObject.GetComponent<IRadarDetectable>();
+                if (hitObj != null)
                 {
-                    CreatePing(col.transform.position, objectType, hitObj.GetRadarDisplayName());
+                    RadarObjectType objectType = hitObj.GetObjectType();
+                    if (objectType == RadarObjectType.Fauna || objectType == RadarObjectType.Artifact || objectType == RadarObjectType.Player)
+                    {
+                        CreatePing(col.transform.position, objectType, hitObj.GetRadarDisplayName());
+                    }
                 }
             }
         }
     }
-}
 
     private void DetectTerrain(float angle)
     {
@@ -145,6 +145,11 @@ private void DetectPOI(float angle)
                 label = artifactName;
                 break;
 
+            case RadarObjectType.Player:
+                pingPrefab = pfSonarPOI;
+                pingColor = Color.cyan;
+                break;
+
             case RadarObjectType.Terrain:
             default:
                 pingPrefab = pfSonarTerrain;
@@ -156,7 +161,7 @@ private void DetectPOI(float angle)
         RectTransform parent = radarRect; 
         Vector2 radarPos = WorldToRadarPosition(hitPoint);
 
-        if (objectType == RadarObjectType.Artifact)
+        if (objectType == RadarObjectType.Artifact || objectType == RadarObjectType.Player)
         {
             if (!artifactDetects.rect.Contains(radarPos))
             {
