@@ -219,7 +219,6 @@ GameObject:
   - component: {fileID: 7065195129841400459}
   - component: {fileID: 5269097922120161920}
   - component: {fileID: 4695054199279498030}
-  - component: {fileID: 320203838260726087}
   - component: {fileID: 4375190347105797388}
   - component: {fileID: 6221624823304325863}
   m_Layer: 10
@@ -575,26 +574,6 @@ MonoBehaviour:
   m_DefaultActionMap: Player
   m_SplitScreenIndex: -1
   m_Camera: {fileID: 0}
---- !u!114 &320203838260726087
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3711125862220502543}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 45416210cd4df564b89a86a61f8ead7e, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::MouseAiming
-  reticle: {fileID: 0}
-  aimRadius: 3
-  harpoonAnimator: {fileID: 0}
-  needHarpoonAnimator: 0
-  mainCamera: {fileID: 0}
-  projectilePrefab: {fileID: 8044487839321092788, guid: 3fc29d8590bf18849b53f2fd704bd36c, type: 3}
-  projectileTransform: {fileID: 0}
-  timeBetweenFiring: 5
 --- !u!95 &4375190347105797388
 Animator:
   serializedVersion: 7

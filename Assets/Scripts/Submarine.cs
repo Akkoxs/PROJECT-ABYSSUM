@@ -1,3 +1,4 @@
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.InputSystem;
@@ -18,7 +19,6 @@ public class Submarine : MonoBehaviour
     [SerializeField] private MouseAimingSubmarine mouseAiming;
     [SerializeField] private float speed = 3f;
     [SerializeField] private PlayerInput submarineInput;
-    [SerializeField] private PlayerInput playerInput;
 
     [Header("Underwater Physics")]
     [SerializeField] private float horizontalAcceleration = 2f;
@@ -44,6 +44,8 @@ public class Submarine : MonoBehaviour
 
     private void Start()
     {
+        player = GameObject.FindGameObjectWithTag("Player");
+        harpoonGun = player.GetComponentInChildren<HarpoonGunAiming>().gameObject;
         playerController = player.GetComponent<PlayerController>();
         playerSprite = player.GetComponent<SpriteRenderer>();
         playerMouseAiming = player.GetComponent<MouseAiming>();
@@ -51,8 +53,8 @@ public class Submarine : MonoBehaviour
         ees = enterExitPoint.GetComponent<EnterExitSubmarine>();
         rb = this.GetComponent<Rigidbody2D>();
 
-        mouseAiming.enabled = false;
-        submarineInput.enabled = false;
+        //mouseAiming.enabled = false;
+        //submarineInput.enabled = false;
         rb.linearDamping = 0f;
         rb.angularDamping = 0f;
     }
@@ -81,6 +83,13 @@ public class Submarine : MonoBehaviour
             mouseAiming.TriggerShoot(true);
         }
     }
+    public void Aim(InputAction.CallbackContext context)
+    {
+        if (playerInside)
+        {
+            mouseAiming.OnAim(context);
+        }
+    }
     #endregion
 
     public void EnterSubmarine()
@@ -91,7 +100,6 @@ public class Submarine : MonoBehaviour
         playerSprite.enabled = false;
         playerMouseAiming.enabled = false;
         playerShadow.enabled = false;
-        playerInput.enabled = false;
         harpoonGun.SetActive(false);
         submarineInput.enabled = true;
         mouseAiming.enabled = true;
@@ -101,8 +109,7 @@ public class Submarine : MonoBehaviour
 
     private void FixedUpdate()
     {
-        if (playerInside)
-        {
+
             float targetVelocityX = horizontal * speed;
             float currentVelocityX = rb.linearVelocity.x;
 
@@ -144,7 +151,7 @@ public class Submarine : MonoBehaviour
             }
             subAnimator.SetInteger("horizontal", (int)horizontal);
             subAnimator.SetInteger("vertical", (int)vertical);
-        }
+        
     }
 
     public void ExitSubmarine()
@@ -157,7 +164,6 @@ public class Submarine : MonoBehaviour
         playerController.enabled = true;
         submarineInput.enabled = false;
         playerShadow.enabled = true;
-        playerInput.enabled = true;
         playerSprite.enabled = true;
         playerMouseAiming.enabled = true;
         mouseAiming.enabled = false;

@@ -61,6 +61,11 @@ public class PlayerController : MonoBehaviour
         }
     }
 
+    public void Aim(InputAction.CallbackContext context)
+    {
+        mouseAiming.OnAim(context);
+    }
+
     private bool IsGrounded()
     {
         return Physics2D.OverlapCapsule(groundCheck.position, new Vector2(1f, 0.1f), CapsuleDirection2D.Horizontal, 0, groundLayer);
@@ -72,21 +77,43 @@ public class PlayerController : MonoBehaviour
         Vector3 mousePos = mouseAiming.GetMousePos();
         Vector3 direction = mousePos - transform.position;
 
-        if (direction.x < 0)
-        {
-            spriteRenderer.flipX = false;
-        }
-        else if (direction.x > 0)
-        {
-            spriteRenderer.flipX = true;
-        }
+        // Calculate angle in degrees (-180 to 180)
+        float angle = Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg;
 
-        if (direction.y < 0)
+        // Wider deadzone for vertical aiming
+        float verticalDeadzone = 30f; // Increased from 15 to make it more stable
+
+        // Check if aiming in vertical zones
+        bool aimingUp = angle > (90 - verticalDeadzone) && angle < (90 + verticalDeadzone);
+        bool aimingDown = angle > (-90 - verticalDeadzone) && angle < (-90 + verticalDeadzone);
+        bool aimingVertically = aimingUp || aimingDown;
+
+        // ONLY update horizontal flip when NOT aiming vertically
+        if (!aimingVertically)
         {
-            spriteRenderer.flipY = true;
+            if (direction.x < 0)
+            {
+                spriteRenderer.flipX = false; // Face left
+            }
+            else if (direction.x > 0)
+            {
+                spriteRenderer.flipX = true; // Face right
+            }
         }
-        else if (direction.y > 0)
+        // When aiming vertically, freeze horizontal flip at its current state
+
+        // Vertical flip - only when clearly vertical
+        if (aimingUp)
         {
+            spriteRenderer.flipY = false; // Face up
+        }
+        else if (aimingDown)
+        {
+            spriteRenderer.flipY = true; // Face down
+        }
+        else
+        {
+            // Reset vertical flip when not aiming vertically
             spriteRenderer.flipY = false;
         }
     }
