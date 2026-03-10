@@ -1,3 +1,4 @@
+using System.Collections;
 using UnityEngine;
 
 public class Projectile : MonoBehaviour
@@ -22,6 +23,14 @@ public class Projectile : MonoBehaviour
     void Start()
     {
         rb = GetComponent<Rigidbody2D>();
+    }
+
+    private void Update()
+    {
+        if (isMoving)
+        {
+            Debug.Log("Projectile velocity: " + rb.linearVelocity + " | Position: " + transform.position);
+        }
     }
 
     void FixedUpdate()
@@ -80,12 +89,24 @@ public class Projectile : MonoBehaviour
 
     public void InitializeProjectile(Vector2 direction)
     {
+        Debug.Log("RECEIVED Direction parameter: " + direction);
+        Debug.Log("Force value: " + force);
+
         launchDirection = direction.normalized;
+        Debug.Log("After normalizing: " + launchDirection);
+
         isMoving = true;
 
         if (rb == null) rb = GetComponent<Rigidbody2D>();
 
-        rb.linearVelocity = launchDirection * force;
+        rb.bodyType = RigidbodyType2D.Dynamic;
+
+        Vector2 targetVelocity = launchDirection * force;
+        Debug.Log("Target velocity (direction * force): " + targetVelocity);
+
+        rb.linearVelocity = targetVelocity;
+
+        Debug.Log("RB Velocity RIGHT AFTER: " + rb.linearVelocity);
 
         float angle = Mathf.Atan2(launchDirection.y, launchDirection.x) * Mathf.Rad2Deg;
         transform.rotation = Quaternion.Euler(0, 0, angle);

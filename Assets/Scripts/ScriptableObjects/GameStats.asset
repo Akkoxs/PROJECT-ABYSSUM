@@ -19,8 +19,8 @@ MonoBehaviour:
   subMaxOxygen: 500
   subMoveSpeed: 0
   scanSpeed: 135
-  harpDamage: 0
-  harpSpeed: 0
-  harpReloadSpeed: 0
-  torpDamage: 0
-  torpSpeed: 0
+  harpDamage: 10
+  harpSpeed: 30
+  harpReloadSpeed: 3
+  torpDamage: 50
+  torpSpeed: 50
