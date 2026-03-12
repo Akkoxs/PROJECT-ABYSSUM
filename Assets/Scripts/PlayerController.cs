@@ -77,43 +77,36 @@ public class PlayerController : MonoBehaviour
         Vector3 mousePos = mouseAiming.GetMousePos();
         Vector3 direction = mousePos - transform.position;
 
-        // Calculate angle in degrees (-180 to 180)
         float angle = Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg;
 
-        // Wider deadzone for vertical aiming
-        float verticalDeadzone = 30f; // Increased from 15 to make it more stable
+        float verticalDeadzone = 30f;
 
-        // Check if aiming in vertical zones
         bool aimingUp = angle > (90 - verticalDeadzone) && angle < (90 + verticalDeadzone);
         bool aimingDown = angle > (-90 - verticalDeadzone) && angle < (-90 + verticalDeadzone);
         bool aimingVertically = aimingUp || aimingDown;
 
-        // ONLY update horizontal flip when NOT aiming vertically
         if (!aimingVertically)
         {
             if (direction.x < 0)
             {
-                spriteRenderer.flipX = false; // Face left
+                spriteRenderer.flipX = false;
             }
             else if (direction.x > 0)
             {
-                spriteRenderer.flipX = true; // Face right
+                spriteRenderer.flipX = true;
             }
         }
-        // When aiming vertically, freeze horizontal flip at its current state
 
-        // Vertical flip - only when clearly vertical
         if (aimingUp)
         {
-            spriteRenderer.flipY = false; // Face up
+            spriteRenderer.flipY = false;
         }
         else if (aimingDown)
         {
-            spriteRenderer.flipY = true; // Face down
+            spriteRenderer.flipY = true;
         }
         else
         {
-            // Reset vertical flip when not aiming vertically
             spriteRenderer.flipY = false;
         }
     }

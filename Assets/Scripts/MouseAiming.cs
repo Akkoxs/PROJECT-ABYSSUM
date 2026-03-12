@@ -9,9 +9,7 @@ public class MouseAiming : MonoBehaviour
     [SerializeField] private float aimRadius = 3f;
     [SerializeField] private Animator harpoonAnimator;
     [SerializeField] private bool needHarpoonAnimator;
-
-    [Header("Gamepad Settings")]
-    [SerializeField] private float stickDeadzone = 0.2f; // Minimum stick input to register
+    [SerializeField] private float stickDeadzone = 0.2f;
 
     [Header("Camera Reference")]
     [SerializeField] private Camera mainCamera;
@@ -24,9 +22,9 @@ public class MouseAiming : MonoBehaviour
     private float timer;
     private bool canFire;
     private bool shoot;
-    private Vector3 aimPosition; // Used for both mouse and gamepad
+    private Vector3 aimPosition;
     private Vector2 rightStickInput;
-    private Vector2 currentAimDirection; // Persistent aim direction for gamepad
+    private Vector2 currentAimDirection;
 
     void Start()
     {
@@ -36,7 +34,6 @@ public class MouseAiming : MonoBehaviour
             mainCamera = Camera.main;
         }
 
-        // Initialize aim direction (default to right)
         currentAimDirection = Vector2.right;
     }
 
@@ -49,15 +46,10 @@ public class MouseAiming : MonoBehaviour
 
     void UpdateAimPosition()
     {
-        // Check if gamepad right stick is being used
         if (rightStickInput.magnitude > stickDeadzone)
         {
-            // Update aim direction based on stick input
             currentAimDirection = rightStickInput.normalized;
         }
-        // If stick is neutral, keep the last aimed direction
-
-        // Calculate aim position on the circle
         aimPosition = transform.position + (Vector3)currentAimDirection * aimRadius;
     }
 
@@ -84,7 +76,7 @@ public class MouseAiming : MonoBehaviour
         if (canFire && shoot)
         {
             Projectile projectile = Instantiate(projectilePrefab, projectileTransform.position, Quaternion.identity).GetComponent<Projectile>();
-            projectile.InitializeProjectile(currentAimDirection); // Pass direction instead
+            projectile.InitializeProjectile(currentAimDirection);
 
             try
             {
@@ -104,7 +96,6 @@ public class MouseAiming : MonoBehaviour
         }
     }
 
-    // Called by Unity Input System
     public void OnAim(InputAction.CallbackContext context)
     {
         rightStickInput = context.ReadValue<Vector2>();

@@ -7,8 +7,6 @@ public class MouseAimingSubmarine : MonoBehaviour
     [Header("Aiming Settings")]
     [SerializeField] private Transform reticle;
     [SerializeField] private float aimRadius = 3f;
-
-    [Header("Gamepad Settings")]
     [SerializeField] private float stickDeadzone = 0.2f; // Minimum stick input to register
 
     [Header("Camera Reference")]
@@ -20,17 +18,16 @@ public class MouseAimingSubmarine : MonoBehaviour
     [SerializeField] private float timeBetweenFiring;
 
     [Header("Ammo System")]
-    [SerializeField] private int maxAmmo = 3; // Maximum torpedoes before reload
-    [SerializeField] private float reloadTime = 3f; // Time to reload all ammo
+    [SerializeField] private int maxAmmo = 3;
+    [SerializeField] private float reloadTime = 3f;
 
     private float timer;
     private bool canFire;
     private bool shoot;
-    private Vector3 aimPosition; // Used for gamepad aiming
+    private Vector3 aimPosition;
     private Vector2 rightStickInput;
-    private Vector2 currentAimDirection; // Persistent aim direction for gamepad
+    private Vector2 currentAimDirection;
 
-    // Ammo tracking
     private int currentAmmo;
     private bool isReloading = false;
     private float reloadTimer = 0f;
@@ -43,10 +40,8 @@ public class MouseAimingSubmarine : MonoBehaviour
             mainCamera = Camera.main;
         }
 
-        // Initialize aim direction (default to right)
         currentAimDirection = Vector2.right;
 
-        // Start with full ammo
         currentAmmo = maxAmmo;
         canFire = true;
     }
@@ -60,15 +55,11 @@ public class MouseAimingSubmarine : MonoBehaviour
 
     void UpdateAimPosition()
     {
-        // Check if gamepad right stick is being used
         if (rightStickInput.magnitude > stickDeadzone)
         {
-            // Update aim direction based on stick input
             currentAimDirection = rightStickInput.normalized;
         }
-        // If stick is neutral, keep the last aimed direction
 
-        // Calculate aim position on the circle
         aimPosition = transform.position + (Vector3)currentAimDirection * aimRadius;
     }
 
@@ -82,23 +73,21 @@ public class MouseAimingSubmarine : MonoBehaviour
 
     void HandleShooting()
     {
-        // Handle reloading
         if (isReloading)
         {
             reloadTimer += Time.deltaTime;
             if (reloadTimer >= reloadTime)
             {
-                // Reload complete
+
                 currentAmmo = maxAmmo;
                 isReloading = false;
                 reloadTimer = 0f;
                 canFire = true;
                 Debug.Log("Reload complete! Ammo: " + currentAmmo);
             }
-            return; // Don't allow firing while reloading
+            return;
         }
 
-        // Handle fire rate delay
         if (!canFire)
         {
             timer += Time.deltaTime;
@@ -109,12 +98,10 @@ public class MouseAimingSubmarine : MonoBehaviour
             }
         }
 
-        // Attempt to fire
         if (canFire && shoot)
         {
             if (currentAmmo > 0)
             {
-                // Fire torpedo
                 Torpedo projectile = Instantiate(projectilePrefab, projectileTransform.position, Quaternion.identity).GetComponent<Torpedo>();
                 projectile.InitializeProjectile(currentAimDirection); // Changed this line
                 currentAmmo--;
@@ -124,7 +111,6 @@ public class MouseAimingSubmarine : MonoBehaviour
                 shoot = false;
                 canFire = false;
 
-                // Start reload if out of ammo
                 if (currentAmmo <= 0)
                 {
                     isReloading = true;
@@ -134,7 +120,6 @@ public class MouseAimingSubmarine : MonoBehaviour
             }
             else
             {
-                // Out of ammo but somehow not reloading (safety check)
                 shoot = false;
                 isReloading = true;
                 reloadTimer = 0f;
@@ -146,7 +131,6 @@ public class MouseAimingSubmarine : MonoBehaviour
         }
     }
 
-    // Called by Unity Input System
     public void OnAim(InputAction.CallbackContext context)
     {
         rightStickInput = context.ReadValue<Vector2>();
@@ -173,7 +157,6 @@ public class MouseAimingSubmarine : MonoBehaviour
         timeBetweenFiring = newReloadSpeed;
     }
 
-    // Public getters for UI or other systems
     public int GetCurrentAmmo()
     {
         return currentAmmo;

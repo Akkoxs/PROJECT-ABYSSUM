@@ -157,7 +157,6 @@ public class Submarine : MonoBehaviour
     public void ExitSubmarine()
     {
         if (!playerInside) return;
-
         playerInside = false;
         exitedSubmarine?.Invoke();
         player.transform.position = enterExitPoint.transform.position;
