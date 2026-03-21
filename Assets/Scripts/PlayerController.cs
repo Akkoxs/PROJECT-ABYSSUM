@@ -7,6 +7,7 @@ public class PlayerController : MonoBehaviour
     [SerializeField] private MouseAiming mouseAiming;
     [SerializeField] private Animator animator;
     [SerializeField] private SpriteRenderer spriteRenderer;
+    [SerializeField] private PlayerInput playerInput;
 
     [Header("Player Speed Settings")]
     [SerializeField] float speed;
@@ -177,6 +178,21 @@ public class PlayerController : MonoBehaviour
             animator.SetTrigger("hurt");
             isInvulnerable = true;
             invulnerabilityTimer = invulnerabilityDuration;
+        }
+    }
+
+    private void OnTriggerStay2D(Collider2D collision)
+    {
+        if (collision.gameObject.CompareTag("MinigameTrigger"))
+        {
+            if (MinigameProgressManager.Instance.minigameActive)
+            {
+                playerInput.enabled = false;
+            }
+            else if (MinigameProgressManager.Instance.minigameCompleted)
+            {
+                playerInput.enabled = true;
+            }
         }
     }
 

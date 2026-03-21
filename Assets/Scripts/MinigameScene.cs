@@ -2,10 +2,9 @@ using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.SceneManagement;
 
-public class AdditiveSceneTrigger : MonoBehaviour
+public class MinigameScene : MonoBehaviour
 {
     [SerializeField] private string sceneToLoad; 
-    [SerializeField] private bool pause = true;
     [SerializeField] private bool oneTimeUse = true;
     
     private string playerTag = "Player";
@@ -18,8 +17,8 @@ public class AdditiveSceneTrigger : MonoBehaviour
         if (collision.CompareTag(playerTag) && (!trigger || !oneTimeUse))
         {
             LoadAdditiveScene();
-            playerInput = collision.GetComponent<PlayerInput>();
-            playerInput.enabled = false;
+            //playerInput = collision.GetComponent<PlayerInput>();
+            //playerInput.enabled = false;
 
             if (oneTimeUse)
             {
@@ -37,13 +36,7 @@ public class AdditiveSceneTrigger : MonoBehaviour
             return;
         }
 
-        if (pause)
-        {
-            Time.timeScale = 0f;
-        }
-
         SceneManager.LoadSceneAsync(sceneToLoad, LoadSceneMode.Additive).completed += OnSceneLoaded;
-
         Debug.Log("Loading minigame scene: " + sceneToLoad);
     }
 
@@ -63,11 +56,6 @@ public class AdditiveSceneTrigger : MonoBehaviour
 
     private void OnSceneUnloaded(AsyncOperation asyncOperation)
     {
-        if (pause)
-        {
-            Time.timeScale = 1f;
-        }
-
         Debug.Log("Minigame scene unloaded");
     }
 }
