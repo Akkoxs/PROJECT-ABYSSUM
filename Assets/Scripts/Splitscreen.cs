@@ -13,6 +13,9 @@ public class Splitscreen : MonoBehaviour
     public Camera camBottom; // S3 Diver Pilot
     public Camera camRight;  // S4 Diver Control
 
+    [Header("Shader")]
+    public Shader shader; 
+
     [Header("Dead Zone Settings")]
     [Range(0.05f, 0.45f)]
     public float deadZoneHalf = 0.27f;   // fraction of the square's side length
@@ -193,7 +196,9 @@ public class Splitscreen : MonoBehaviour
         mf.mesh = mesh;
 
         //find triangle clip custom shader 
-        var shader = Shader.Find("Custom/PeppersGhostSplit");
+        //var shader = Shader.Find("Custom/PeppersGhostSplit");
+        //var shader = Resources.Load<Shader>("Custom/PeppersGhostSplit");
+        //if (shader == null) .... 
 
         //create new material using shader for the quad and assign rt to it, config other stuff
         var mat = new Material(shader) { name = $"Mat_{label}" };

@@ -53,6 +53,7 @@ MonoBehaviour:
   camLeft: {fileID: 6147364175666756898}
   camBottom: {fileID: 8180979008484642548}
   camRight: {fileID: 1713376471386254326}
+  shader: {fileID: 4800000, guid: 3c114fe4f2a9e794bb716871a069cfbb, type: 3}
   deadZoneHalf: 0.27
   sidebarColor: {r: 0, g: 0, b: 0, a: 1}
   playAreaSize: 10
