@@ -54,6 +54,7 @@ MonoBehaviour:
   camBottom: {fileID: 8180979008484642548}
   camRight: {fileID: 1713376471386254326}
   shader: {fileID: 4800000, guid: 3c114fe4f2a9e794bb716871a069cfbb, type: 3}
+  unlitShader: {fileID: 10755, guid: 0000000000000000f000000000000000, type: 0}
   deadZoneHalf: 0.27
   sidebarColor: {r: 0, g: 0, b: 0, a: 1}
   playAreaSize: 10
@@ -71,14 +72,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: aef9cc937d861ef4cb75331649399314, type: 3}
   m_Name: 
   m_EditorClassIdentifier: '::'
-  deadZoneModifier: 304
-  deadZoneResizeSpeed: 0.4
+  coarseModifier: 304
+  fineModifier: 306
+  coarseSpeed: 0.4
+  fineSpeed: 0.05
   minHalf: 0.05
   maxHalf: 0.45
-  playAreaModifier: 306
-  playAreaResizeSpeed: 100
-  minPlayAreaSize: 200
-  maxPlayAreaSize: 0
 --- !u!1 &3852867571742195249
 GameObject:
   m_ObjectHideFlags: 0
@@ -310,7 +309,7 @@ Camera:
   far clip plane: 1000
   field of view: 60
   orthographic: 1
-  orthographic size: 15
+  orthographic size: 18
   m_Depth: 0
   m_CullingMask:
     serializedVersion: 2
@@ -463,7 +462,7 @@ Camera:
   far clip plane: 1000
   field of view: 60
   orthographic: 1
-  orthographic size: 15
+  orthographic size: 18
   m_Depth: 0
   m_CullingMask:
     serializedVersion: 2
