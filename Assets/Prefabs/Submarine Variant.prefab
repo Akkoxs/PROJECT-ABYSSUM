@@ -394,7 +394,7 @@ PrefabInstance:
       objectReference: {fileID: 971633262878859448}
     - target: {fileID: 7403966855269184886, guid: b980f31bb442a824d976d1e7444e854f, type: 3}
       propertyPath: speed
-      value: 20
+      value: 5
       objectReference: {fileID: 0}
     - target: {fileID: 7403966855269184886, guid: b980f31bb442a824d976d1e7444e854f, type: 3}
       propertyPath: mouseAiming

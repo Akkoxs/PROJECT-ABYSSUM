@@ -6,7 +6,7 @@ using UnityEngine.Rendering.Universal;
 
 public class Submarine : MonoBehaviour
 {
-    [SerializeField] private GameObject enterExitPoint; // Where player spawns when exiting
+    [SerializeField] private GameObject enterExitPoint;
     [SerializeField] private Key interactKey = Key.E;
     [SerializeField] private GameObject player;
     [SerializeField] private GameObject harpoonGun;
@@ -17,15 +17,20 @@ public class Submarine : MonoBehaviour
     [Header("Submarine Movement")]
     [SerializeField] private Rigidbody2D rb;
     [SerializeField] private MouseAimingSubmarine mouseAiming;
-    [SerializeField] private float speed = 3f;
+    [SerializeField] private float speed = 5f;
     [SerializeField] private PlayerInput submarineInput;
 
+    [Header("Submarine Tipping")]
+    [SerializeField] private float maxTipAngle = 15f;
+    [SerializeField] private float tipSpeed = 3f;
+    [SerializeField] private float tipReturnSpeed = 2f;
+
     [Header("Underwater Physics")]
-    [SerializeField] private float horizontalAcceleration = 2f;
-    [SerializeField] private float horizontalDeceleration = 0.90f;
-    [SerializeField] private float verticalAcceleration = 2f;
-    [SerializeField] private float verticalDeceleration = 0.90f;
-    [SerializeField] private float waterDrag = 0.95f;
+    [SerializeField] private float horizontalAcceleration = 1.5f;
+    [SerializeField] private float horizontalDeceleration = 0.95f;
+    [SerializeField] private float verticalAcceleration = 1.5f;
+    [SerializeField] private float verticalDeceleration = 0.95f;
+    [SerializeField] private float waterDrag = 0.97f;
 
     private PlayerController playerController;
     private SpriteRenderer playerSprite;
@@ -35,8 +40,8 @@ public class Submarine : MonoBehaviour
     private bool playerInside = false;
     private float horizontal;
     private float vertical;
+    private float currentTipAngle = 0f;
 
-    //public read only vars
     public bool PlayerInside => playerInside;
 
     public UnityEvent enteredSubmarine;
@@ -52,9 +57,7 @@ public class Submarine : MonoBehaviour
         playerShadow = player.GetComponent<ShadowCaster2D>();
         ees = enterExitPoint.GetComponent<EnterExitSubmarine>();
         rb = this.GetComponent<Rigidbody2D>();
-
-        //mouseAiming.enabled = false;
-        //submarineInput.enabled = false;
+        speed = 5f;
         rb.linearDamping = 0f;
         rb.angularDamping = 0f;
     }
@@ -63,7 +66,6 @@ public class Submarine : MonoBehaviour
     {
         if (ees.playerInRange && !playerInside && Keyboard.current[interactKey].wasPressedThisFrame)
             EnterSubmarine();
-
         else if (playerInside && Keyboard.current[interactKey].wasPressedThisFrame)
             ExitSubmarine();
     }
@@ -83,6 +85,7 @@ public class Submarine : MonoBehaviour
             mouseAiming.TriggerShoot(true);
         }
     }
+
     public void Aim(InputAction.CallbackContext context)
     {
         if (playerInside)
@@ -109,54 +112,75 @@ public class Submarine : MonoBehaviour
 
     private void FixedUpdate()
     {
+        HandleMovement();
+        HandleTipping();
+    }
 
-            float targetVelocityX = horizontal * speed;
-            float currentVelocityX = rb.linearVelocity.x;
+    private void HandleMovement()
+    {
+        float targetVelocityX = horizontal * speed;
+        float currentVelocityX = rb.linearVelocity.x;
 
-            if (horizontal != 0)
-            {
-                currentVelocityX = Mathf.Lerp(currentVelocityX, targetVelocityX, horizontalAcceleration * Time.fixedDeltaTime);
-            }
-            else
-            {
-                currentVelocityX *= horizontalDeceleration;
-            }
+        if (horizontal != 0)
+        {
+            currentVelocityX = Mathf.Lerp(currentVelocityX, targetVelocityX, horizontalAcceleration * Time.fixedDeltaTime);
+        }
+        else
+        {
+            currentVelocityX *= horizontalDeceleration;
+        }
 
-            float targetVelocityY = vertical * speed;
-            float currentVelocityY = rb.linearVelocity.y;
+        float targetVelocityY = vertical * speed;
+        float currentVelocityY = rb.linearVelocity.y;
 
-            if (vertical != 0)
-            {
-                currentVelocityY = Mathf.Lerp(currentVelocityY, targetVelocityY, verticalAcceleration * Time.fixedDeltaTime);
-            }
-            else
-            {
-                currentVelocityY *= verticalDeceleration;
-            }
+        if (vertical != 0)
+        {
+            currentVelocityY = Mathf.Lerp(currentVelocityY, targetVelocityY, verticalAcceleration * Time.fixedDeltaTime);
+        }
+        else
+        {
+            currentVelocityY *= verticalDeceleration;
+        }
 
-            rb.linearVelocity = new Vector2(
-                currentVelocityX * waterDrag,
-                currentVelocityY * waterDrag
-            );
+        rb.linearVelocity = new Vector2(
+            currentVelocityX * waterDrag,
+            currentVelocityY * waterDrag
+        );
 
-            if (horizontal < 0)
-            {
-                spriteRenderer.flipX = false;
-                FlipLightContainer(true);
-            }
-            else if (horizontal > 0)
-            {
-                spriteRenderer.flipX = true;
-                FlipLightContainer(false);
-            }
-            subAnimator.SetInteger("horizontal", (int)horizontal);
-            subAnimator.SetInteger("vertical", (int)vertical);
-        
+        if (horizontal < 0)
+        {
+            spriteRenderer.flipX = false;
+            FlipLightContainer(true);
+        }
+        else if (horizontal > 0)
+        {
+            spriteRenderer.flipX = true;
+            FlipLightContainer(false);
+        }
+
+        subAnimator.SetInteger("horizontal", (int)horizontal);
+        subAnimator.SetInteger("vertical", (int)vertical);
+    }
+
+    private void HandleTipping()
+    {
+        float targetTipAngle = 0f;
+
+        if (horizontal != 0)
+        {
+            targetTipAngle = -horizontal * maxTipAngle;
+        }
+
+        float lerpSpeed = (horizontal != 0) ? tipSpeed : tipReturnSpeed;
+        currentTipAngle = Mathf.Lerp(currentTipAngle, targetTipAngle, lerpSpeed * Time.fixedDeltaTime);
+
+        transform.rotation = Quaternion.Euler(0f, 0f, currentTipAngle);
     }
 
     public void ExitSubmarine()
     {
         if (!playerInside) return;
+
         playerInside = false;
         exitedSubmarine?.Invoke();
         player.transform.position = enterExitPoint.transform.position;
@@ -168,6 +192,9 @@ public class Submarine : MonoBehaviour
         mouseAiming.enabled = false;
         harpoonGun.SetActive(true);
         rb.linearVelocity = Vector2.zero;
+        currentTipAngle = 0f;
+        transform.rotation = Quaternion.identity;
+
         Debug.Log("Exited submarine!");
     }
 
@@ -182,6 +209,4 @@ public class Submarine : MonoBehaviour
         scale.x = isFlipped ? 1 : -1;
         lightContainer.transform.localScale = scale;
     }
-
-
 }
