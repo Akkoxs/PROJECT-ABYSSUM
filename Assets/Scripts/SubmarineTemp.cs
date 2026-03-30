@@ -16,6 +16,9 @@ public class SubmarineTemp : MonoBehaviour
     [Header("Passive Cooling")]
     [SerializeField] private float passiveCoolStrength = 0.02f; // 2% per sec
 
+    [Header("Arduino")]
+    [SerializeField] private SerialController serialController;
+
     private float heatRate = 0f;         // heat added per sec (from lights, etc.)
     private bool coolantActive = false;
 
@@ -83,13 +86,15 @@ public class SubmarineTemp : MonoBehaviour
 
                 currentCoolant = Mathf.Max(0f, currentCoolant - coolantDrainRate * dt);
                 coolantChanged?.Invoke(currentCoolant, maxCoolant);
+                Debug.Log("Sending to Arduino: " + currentCoolant.ToString("F0"));
+                serialController.SendSerialMessage(currentCoolant.ToString("F0"));
 
                 if (currentCoolant <= 0f)
                     coolantActive = false;
             }
 
             // --- Passive cooling (percentage-based, no tank) ---
-            if (heatRate == 0f) 
+            if (heatRate == 0f)
             {
                 currentTemp -= currentTemp * passiveCoolStrength * dt;
             }
