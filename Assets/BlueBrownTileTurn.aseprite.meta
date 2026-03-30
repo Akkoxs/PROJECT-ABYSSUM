@@ -273,17 +273,10 @@ ScriptedImporter:
       additiveSortOrder: 0
       cellRect:
         x: 16
-<<<<<<< Updated upstream:Assets/BlueBrownTileTurn.aseprite.meta
         y: 0
         width: 80
         height: 128
       spriteId: 37053c587ff71184ea902d1983d572a1
-=======
-        y: 48
-        width: 80
-        height: 80
-      spriteId: 5847c400781938c4fbe02951e83d4d00
->>>>>>> Stashed changes:Assets/Level Design/Tiles/BrownGems.aseprite.meta
     linkedCells: []
     tileCells: []
     tileSetIndex: 0

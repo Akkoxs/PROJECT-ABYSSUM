@@ -102,11 +102,7 @@ ScriptedImporter:
     generateIndividualEvents: 1
     generateSpriteAtlas: 1
   importFileNodeState: 1
-<<<<<<< Updated upstream:Assets/6x9 Corner Chain.aseprite.meta
   platformSettingsDirtyTick: 639091774795830023
-=======
-  platformSettingsDirtyTick: 639104279025942701
->>>>>>> Stashed changes:Assets/Level Design/Gradient/Brown_to_Blue.aseprite.meta
   textureAssetName: 
   singleSpriteImportData:
   - name: 
@@ -141,15 +137,9 @@ ScriptedImporter:
       serializedVersion: 2
       x: 4
       y: 4
-<<<<<<< Updated upstream:Assets/6x9 Corner Chain.aseprite.meta
       width: 192
       height: 288
     spriteID: 0ad48249679f1534487bcbf93331d20f
-=======
-      width: 128
-      height: 256
-    spriteID: 0e27f315986bc334dbed939c0fb227e1
->>>>>>> Stashed changes:Assets/Level Design/Gradient/Brown_to_Blue.aseprite.meta
     spriteBone: []
     spriteOutline: []
     vertices: []
@@ -168,17 +158,10 @@ ScriptedImporter:
     rect:
       serializedVersion: 2
       x: 4
-<<<<<<< Updated upstream:Assets/6x9 Corner Chain.aseprite.meta
       y: 260
       width: 32
       height: 32
     spriteID: 328114501a334df4fa478d7c286e8d06
-=======
-      y: 228
-      width: 32
-      height: 32
-    spriteID: 00b1eb6188cf9f848ac27cf1e5e596dd
->>>>>>> Stashed changes:Assets/Level Design/Gradient/Brown_to_Blue.aseprite.meta
     spriteBone: []
     spriteOutline: []
     vertices: []
@@ -196,17 +179,10 @@ ScriptedImporter:
     rect:
       serializedVersion: 2
       x: 36
-<<<<<<< Updated upstream:Assets/6x9 Corner Chain.aseprite.meta
       y: 260
       width: 32
       height: 32
     spriteID: 49308118f525e4e489a1ed3c5bfc249b
-=======
-      y: 228
-      width: 32
-      height: 32
-    spriteID: 73cd33c23f3908943aa76f92d10ff5a6
->>>>>>> Stashed changes:Assets/Level Design/Gradient/Brown_to_Blue.aseprite.meta
     spriteBone: []
     spriteOutline: []
     vertices: []
@@ -371,14 +347,10 @@ ScriptedImporter:
     rect:
       serializedVersion: 2
       x: 68
-      y: 228
+      y: 100
       width: 32
       height: 32
-<<<<<<< Updated upstream:Assets/6x9 Corner Chain.aseprite.meta
     spriteID: 23eb22a460493594393ca7f4ecbf4e01
-=======
-    spriteID: c5664316ab5b78a4ba16a8496a97264d
->>>>>>> Stashed changes:Assets/Level Design/Gradient/Brown_to_Blue.aseprite.meta
     spriteBone: []
     spriteOutline: []
     vertices: []
@@ -396,14 +368,10 @@ ScriptedImporter:
     rect:
       serializedVersion: 2
       x: 100
-      y: 228
+      y: 100
       width: 32
       height: 32
-<<<<<<< Updated upstream:Assets/6x9 Corner Chain.aseprite.meta
     spriteID: 2241cf6113b225748b6447ad9f777177
-=======
-    spriteID: 22f5d00829db9064f9ab2f0d07404062
->>>>>>> Stashed changes:Assets/Level Design/Gradient/Brown_to_Blue.aseprite.meta
     spriteBone: []
     spriteOutline: []
     vertices: []
@@ -412,53 +380,7 @@ ScriptedImporter:
     edges: []
     tessellationDetail: 0
     uvTransform: {x: 0, y: 0}
-<<<<<<< Updated upstream:Assets/6x9 Corner Chain.aseprite.meta
   - name: 6x9 Corner Chain_12
-=======
-  - name: Brown_to_Blue_4
-    originalName: 
-    pivot: {x: 0.5, y: 0.5}
-    alignment: 0
-    border: {x: 0, y: 0, z: 0, w: 0}
-    customData: 
-    rect:
-      serializedVersion: 2
-      x: 4
-      y: 196
-      width: 32
-      height: 32
-    spriteID: 8cae36b6c4da446448620a17f0e67d92
-    spriteBone: []
-    spriteOutline: []
-    vertices: []
-    spritePhysicsOutline: []
-    indices: 
-    edges: []
-    tessellationDetail: 0
-    uvTransform: {x: 0, y: 0}
-  - name: Brown_to_Blue_5
-    originalName: 
-    pivot: {x: 0.5, y: 0.5}
-    alignment: 0
-    border: {x: 0, y: 0, z: 0, w: 0}
-    customData: 
-    rect:
-      serializedVersion: 2
-      x: 36
-      y: 196
-      width: 32
-      height: 32
-    spriteID: ef9014c547c93c5448e73aebbc35da48
-    spriteBone: []
-    spriteOutline: []
-    vertices: []
-    spritePhysicsOutline: []
-    indices: 
-    edges: []
-    tessellationDetail: 0
-    uvTransform: {x: 0, y: 0}
-  - name: Brown_to_Blue_6
->>>>>>> Stashed changes:Assets/Level Design/Gradient/Brown_to_Blue.aseprite.meta
     originalName: 
     pivot: {x: 0.5, y: 0.5}
     alignment: 0
@@ -467,14 +389,10 @@ ScriptedImporter:
     rect:
       serializedVersion: 2
       x: 68
-      y: 196
+      y: 68
       width: 32
       height: 32
-<<<<<<< Updated upstream:Assets/6x9 Corner Chain.aseprite.meta
     spriteID: aa64072ea7612404cb0e32bb43ea5a97
-=======
-    spriteID: 5dacbac4dc5a6084fae1ded142b40038
->>>>>>> Stashed changes:Assets/Level Design/Gradient/Brown_to_Blue.aseprite.meta
     spriteBone: []
     spriteOutline: []
     vertices: []
@@ -492,14 +410,10 @@ ScriptedImporter:
     rect:
       serializedVersion: 2
       x: 100
-      y: 196
+      y: 68
       width: 32
       height: 32
-<<<<<<< Updated upstream:Assets/6x9 Corner Chain.aseprite.meta
     spriteID: de481f334aa254e4ea9422a0caae5449
-=======
-    spriteID: e50258c5ab59afd4c88d3d1fe97425ab
->>>>>>> Stashed changes:Assets/Level Design/Gradient/Brown_to_Blue.aseprite.meta
     spriteBone: []
     spriteOutline: []
     vertices: []
@@ -516,19 +430,11 @@ ScriptedImporter:
     customData: 
     rect:
       serializedVersion: 2
-<<<<<<< Updated upstream:Assets/6x9 Corner Chain.aseprite.meta
       x: 132
       y: 68
       width: 32
       height: 32
     spriteID: 08622191ccdc72549ac515473731e74b
-=======
-      x: 4
-      y: 164
-      width: 32
-      height: 32
-    spriteID: f55d336be770db849ac0ff0aea95cbe6
->>>>>>> Stashed changes:Assets/Level Design/Gradient/Brown_to_Blue.aseprite.meta
     spriteBone: []
     spriteOutline: []
     vertices: []
@@ -545,19 +451,11 @@ ScriptedImporter:
     customData: 
     rect:
       serializedVersion: 2
-<<<<<<< Updated upstream:Assets/6x9 Corner Chain.aseprite.meta
       x: 132
       y: 36
       width: 32
       height: 32
     spriteID: c2192fef5e5e6224a81bd601daf15b67
-=======
-      x: 36
-      y: 164
-      width: 32
-      height: 32
-    spriteID: d933420e785c1e94d9c801550f8d8127
->>>>>>> Stashed changes:Assets/Level Design/Gradient/Brown_to_Blue.aseprite.meta
     spriteBone: []
     spriteOutline: []
     vertices: []
@@ -566,32 +464,7 @@ ScriptedImporter:
     edges: []
     tessellationDetail: 0
     uvTransform: {x: 0, y: 0}
-<<<<<<< Updated upstream:Assets/6x9 Corner Chain.aseprite.meta
   - name: 6x9 Corner Chain_16
-=======
-  - name: Brown_to_Blue_10
-    originalName: 
-    pivot: {x: 0.5, y: 0.5}
-    alignment: 0
-    border: {x: 0, y: 0, z: 0, w: 0}
-    customData: 
-    rect:
-      serializedVersion: 2
-      x: 68
-      y: 164
-      width: 32
-      height: 32
-    spriteID: bfbb76fa459aa914eb7d7fae63d16e00
-    spriteBone: []
-    spriteOutline: []
-    vertices: []
-    spritePhysicsOutline: []
-    indices: 
-    edges: []
-    tessellationDetail: 0
-    uvTransform: {x: 0, y: 0}
-  - name: Brown_to_Blue_11
->>>>>>> Stashed changes:Assets/Level Design/Gradient/Brown_to_Blue.aseprite.meta
     originalName: 
     pivot: {x: 0.5, y: 0.5}
     alignment: 0
@@ -600,14 +473,10 @@ ScriptedImporter:
     rect:
       serializedVersion: 2
       x: 100
-      y: 164
+      y: 36
       width: 32
       height: 32
-<<<<<<< Updated upstream:Assets/6x9 Corner Chain.aseprite.meta
     spriteID: c8a33b1da2fa87f4a98deff38e78d29f
-=======
-    spriteID: 5958fdc8aa42d0d4491b0d320663db3a
->>>>>>> Stashed changes:Assets/Level Design/Gradient/Brown_to_Blue.aseprite.meta
     spriteBone: []
     spriteOutline: []
     vertices: []
@@ -624,19 +493,11 @@ ScriptedImporter:
     customData: 
     rect:
       serializedVersion: 2
-<<<<<<< Updated upstream:Assets/6x9 Corner Chain.aseprite.meta
       x: 164
       y: 36
       width: 32
       height: 32
     spriteID: 71cb27b168d85f345a03c4d5ee89669c
-=======
-      x: 4
-      y: 132
-      width: 32
-      height: 32
-    spriteID: 0761c60954b2e2447905406f4838c82f
->>>>>>> Stashed changes:Assets/Level Design/Gradient/Brown_to_Blue.aseprite.meta
     spriteBone: []
     spriteOutline: []
     vertices: []
@@ -653,397 +514,11 @@ ScriptedImporter:
     customData: 
     rect:
       serializedVersion: 2
-<<<<<<< Updated upstream:Assets/6x9 Corner Chain.aseprite.meta
       x: 164
       y: 4
       width: 32
       height: 32
     spriteID: 791373fb8cf0aa44981fabf6e8e09961
-=======
-      x: 36
-      y: 132
-      width: 32
-      height: 32
-    spriteID: 513756a5189293342ae868e661d3bcbd
-    spriteBone: []
-    spriteOutline: []
-    vertices: []
-    spritePhysicsOutline: []
-    indices: 
-    edges: []
-    tessellationDetail: 0
-    uvTransform: {x: 0, y: 0}
-  - name: Brown_to_Blue_14
-    originalName: 
-    pivot: {x: 0.5, y: 0.5}
-    alignment: 0
-    border: {x: 0, y: 0, z: 0, w: 0}
-    customData: 
-    rect:
-      serializedVersion: 2
-      x: 68
-      y: 132
-      width: 32
-      height: 32
-    spriteID: ef95fdd1a91bc2549b91a4ad4cc1b45c
-    spriteBone: []
-    spriteOutline: []
-    vertices: []
-    spritePhysicsOutline: []
-    indices: 
-    edges: []
-    tessellationDetail: 0
-    uvTransform: {x: 0, y: 0}
-  - name: Brown_to_Blue_15
-    originalName: 
-    pivot: {x: 0.5, y: 0.5}
-    alignment: 0
-    border: {x: 0, y: 0, z: 0, w: 0}
-    customData: 
-    rect:
-      serializedVersion: 2
-      x: 100
-      y: 132
-      width: 32
-      height: 32
-    spriteID: 4a90299e8222591449f893734bff472d
-    spriteBone: []
-    spriteOutline: []
-    vertices: []
-    spritePhysicsOutline: []
-    indices: 
-    edges: []
-    tessellationDetail: 0
-    uvTransform: {x: 0, y: 0}
-  - name: Brown_to_Blue_16
-    originalName: 
-    pivot: {x: 0.5, y: 0.5}
-    alignment: 0
-    border: {x: 0, y: 0, z: 0, w: 0}
-    customData: 
-    rect:
-      serializedVersion: 2
-      x: 4
-      y: 100
-      width: 32
-      height: 32
-    spriteID: 35b6878d228bed9488f1471f71d2c720
-    spriteBone: []
-    spriteOutline: []
-    vertices: []
-    spritePhysicsOutline: []
-    indices: 
-    edges: []
-    tessellationDetail: 0
-    uvTransform: {x: 0, y: 0}
-  - name: Brown_to_Blue_17
-    originalName: 
-    pivot: {x: 0.5, y: 0.5}
-    alignment: 0
-    border: {x: 0, y: 0, z: 0, w: 0}
-    customData: 
-    rect:
-      serializedVersion: 2
-      x: 36
-      y: 100
-      width: 32
-      height: 32
-    spriteID: 7ff4f6dbf06893948904a6e17ee4d3cd
-    spriteBone: []
-    spriteOutline: []
-    vertices: []
-    spritePhysicsOutline: []
-    indices: 
-    edges: []
-    tessellationDetail: 0
-    uvTransform: {x: 0, y: 0}
-  - name: Brown_to_Blue_18
-    originalName: 
-    pivot: {x: 0.5, y: 0.5}
-    alignment: 0
-    border: {x: 0, y: 0, z: 0, w: 0}
-    customData: 
-    rect:
-      serializedVersion: 2
-      x: 68
-      y: 100
-      width: 32
-      height: 32
-    spriteID: 1a2571accf9d46140ba58ffd27e2787b
-    spriteBone: []
-    spriteOutline: []
-    vertices: []
-    spritePhysicsOutline: []
-    indices: 
-    edges: []
-    tessellationDetail: 0
-    uvTransform: {x: 0, y: 0}
-  - name: Brown_to_Blue_19
-    originalName: 
-    pivot: {x: 0.5, y: 0.5}
-    alignment: 0
-    border: {x: 0, y: 0, z: 0, w: 0}
-    customData: 
-    rect:
-      serializedVersion: 2
-      x: 100
-      y: 100
-      width: 32
-      height: 32
-    spriteID: 64859e440439d8e428ebd7896a81c960
-    spriteBone: []
-    spriteOutline: []
-    vertices: []
-    spritePhysicsOutline: []
-    indices: 
-    edges: []
-    tessellationDetail: 0
-    uvTransform: {x: 0, y: 0}
-  - name: Brown_to_Blue_20
-    originalName: 
-    pivot: {x: 0.5, y: 0.5}
-    alignment: 0
-    border: {x: 0, y: 0, z: 0, w: 0}
-    customData: 
-    rect:
-      serializedVersion: 2
-      x: 4
-      y: 68
-      width: 32
-      height: 32
-    spriteID: c359d91684050a446a7543f254292056
-    spriteBone: []
-    spriteOutline: []
-    vertices: []
-    spritePhysicsOutline: []
-    indices: 
-    edges: []
-    tessellationDetail: 0
-    uvTransform: {x: 0, y: 0}
-  - name: Brown_to_Blue_21
-    originalName: 
-    pivot: {x: 0.5, y: 0.5}
-    alignment: 0
-    border: {x: 0, y: 0, z: 0, w: 0}
-    customData: 
-    rect:
-      serializedVersion: 2
-      x: 36
-      y: 68
-      width: 32
-      height: 32
-    spriteID: dee1f8a908d5bda479947f83bd9657b0
-    spriteBone: []
-    spriteOutline: []
-    vertices: []
-    spritePhysicsOutline: []
-    indices: 
-    edges: []
-    tessellationDetail: 0
-    uvTransform: {x: 0, y: 0}
-  - name: Brown_to_Blue_22
-    originalName: 
-    pivot: {x: 0.5, y: 0.5}
-    alignment: 0
-    border: {x: 0, y: 0, z: 0, w: 0}
-    customData: 
-    rect:
-      serializedVersion: 2
-      x: 68
-      y: 68
-      width: 32
-      height: 32
-    spriteID: 368fa58a814505943b1c4cf7f9f386c0
-    spriteBone: []
-    spriteOutline: []
-    vertices: []
-    spritePhysicsOutline: []
-    indices: 
-    edges: []
-    tessellationDetail: 0
-    uvTransform: {x: 0, y: 0}
-  - name: Brown_to_Blue_23
-    originalName: 
-    pivot: {x: 0.5, y: 0.5}
-    alignment: 0
-    border: {x: 0, y: 0, z: 0, w: 0}
-    customData: 
-    rect:
-      serializedVersion: 2
-      x: 100
-      y: 68
-      width: 32
-      height: 32
-    spriteID: 708922f2313bff4408f9d769cbd9a5ef
-    spriteBone: []
-    spriteOutline: []
-    vertices: []
-    spritePhysicsOutline: []
-    indices: 
-    edges: []
-    tessellationDetail: 0
-    uvTransform: {x: 0, y: 0}
-  - name: Brown_to_Blue_24
-    originalName: 
-    pivot: {x: 0.5, y: 0.5}
-    alignment: 0
-    border: {x: 0, y: 0, z: 0, w: 0}
-    customData: 
-    rect:
-      serializedVersion: 2
-      x: 4
-      y: 36
-      width: 32
-      height: 32
-    spriteID: 10bd9d2bf58690549a9f1490c5147e17
-    spriteBone: []
-    spriteOutline: []
-    vertices: []
-    spritePhysicsOutline: []
-    indices: 
-    edges: []
-    tessellationDetail: 0
-    uvTransform: {x: 0, y: 0}
-  - name: Brown_to_Blue_25
-    originalName: 
-    pivot: {x: 0.5, y: 0.5}
-    alignment: 0
-    border: {x: 0, y: 0, z: 0, w: 0}
-    customData: 
-    rect:
-      serializedVersion: 2
-      x: 36
-      y: 36
-      width: 32
-      height: 32
-    spriteID: 0de8468254fcd4d4eba18a9232375abb
-    spriteBone: []
-    spriteOutline: []
-    vertices: []
-    spritePhysicsOutline: []
-    indices: 
-    edges: []
-    tessellationDetail: 0
-    uvTransform: {x: 0, y: 0}
-  - name: Brown_to_Blue_26
-    originalName: 
-    pivot: {x: 0.5, y: 0.5}
-    alignment: 0
-    border: {x: 0, y: 0, z: 0, w: 0}
-    customData: 
-    rect:
-      serializedVersion: 2
-      x: 68
-      y: 36
-      width: 32
-      height: 32
-    spriteID: 3e75101ec8f993b46a016972f0fbbaf6
-    spriteBone: []
-    spriteOutline: []
-    vertices: []
-    spritePhysicsOutline: []
-    indices: 
-    edges: []
-    tessellationDetail: 0
-    uvTransform: {x: 0, y: 0}
-  - name: Brown_to_Blue_27
-    originalName: 
-    pivot: {x: 0.5, y: 0.5}
-    alignment: 0
-    border: {x: 0, y: 0, z: 0, w: 0}
-    customData: 
-    rect:
-      serializedVersion: 2
-      x: 100
-      y: 36
-      width: 32
-      height: 32
-    spriteID: 5bf30e6a6616371458fa03d0f247b2aa
-    spriteBone: []
-    spriteOutline: []
-    vertices: []
-    spritePhysicsOutline: []
-    indices: 
-    edges: []
-    tessellationDetail: 0
-    uvTransform: {x: 0, y: 0}
-  - name: Brown_to_Blue_28
-    originalName: 
-    pivot: {x: 0.5, y: 0.5}
-    alignment: 0
-    border: {x: 0, y: 0, z: 0, w: 0}
-    customData: 
-    rect:
-      serializedVersion: 2
-      x: 4
-      y: 4
-      width: 32
-      height: 32
-    spriteID: f58d5de789ed9c14dac4e22628f57d2b
-    spriteBone: []
-    spriteOutline: []
-    vertices: []
-    spritePhysicsOutline: []
-    indices: 
-    edges: []
-    tessellationDetail: 0
-    uvTransform: {x: 0, y: 0}
-  - name: Brown_to_Blue_29
-    originalName: 
-    pivot: {x: 0.5, y: 0.5}
-    alignment: 0
-    border: {x: 0, y: 0, z: 0, w: 0}
-    customData: 
-    rect:
-      serializedVersion: 2
-      x: 36
-      y: 4
-      width: 32
-      height: 32
-    spriteID: db379f38446a4544c8c8f3a39cb67f59
-    spriteBone: []
-    spriteOutline: []
-    vertices: []
-    spritePhysicsOutline: []
-    indices: 
-    edges: []
-    tessellationDetail: 0
-    uvTransform: {x: 0, y: 0}
-  - name: Brown_to_Blue_30
-    originalName: 
-    pivot: {x: 0.5, y: 0.5}
-    alignment: 0
-    border: {x: 0, y: 0, z: 0, w: 0}
-    customData: 
-    rect:
-      serializedVersion: 2
-      x: 68
-      y: 4
-      width: 32
-      height: 32
-    spriteID: 06b621438ba73474a9a644e1eb8e5bda
-    spriteBone: []
-    spriteOutline: []
-    vertices: []
-    spritePhysicsOutline: []
-    indices: 
-    edges: []
-    tessellationDetail: 0
-    uvTransform: {x: 0, y: 0}
-  - name: Brown_to_Blue_31
-    originalName: 
-    pivot: {x: 0.5, y: 0.5}
-    alignment: 0
-    border: {x: 0, y: 0, z: 0, w: 0}
-    customData: 
-    rect:
-      serializedVersion: 2
-      x: 100
-      y: 4
-      width: 32
-      height: 32
-    spriteID: 5540c1a72fdecd94eb344b21e5e3a796
->>>>>>> Stashed changes:Assets/Level Design/Gradient/Brown_to_Blue.aseprite.meta
     spriteBone: []
     spriteOutline: []
     vertices: []
@@ -1072,15 +547,9 @@ ScriptedImporter:
       cellRect:
         x: 0
         y: 0
-<<<<<<< Updated upstream:Assets/6x9 Corner Chain.aseprite.meta
         width: 192
         height: 288
       spriteId: 0ad48249679f1534487bcbf93331d20f
-=======
-        width: 128
-        height: 192
-      spriteId: 0e27f315986bc334dbed939c0fb227e1
->>>>>>> Stashed changes:Assets/Level Design/Gradient/Brown_to_Blue.aseprite.meta
     linkedCells: []
     tileCells: []
     tileSetIndex: 0
@@ -1114,10 +583,5 @@ ScriptedImporter:
   generatePhysicsShape: 0
   secondarySpriteTextures: []
   spritePackingTag: 
-<<<<<<< Updated upstream:Assets/6x9 Corner Chain.aseprite.meta
   canvasSize: {x: 192, y: 288}
   previousTextureSize: {x: 256, y: 512}
-=======
-  canvasSize: {x: 128, y: 192}
-  previousTextureSize: {x: 256, y: 256}
->>>>>>> Stashed changes:Assets/Level Design/Gradient/Brown_to_Blue.aseprite.meta
