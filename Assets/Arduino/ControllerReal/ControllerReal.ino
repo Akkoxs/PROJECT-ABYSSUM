@@ -34,7 +34,6 @@ const int PIN_floodSlider = A3;
 
 // Sub pilot (digital + analog)
 const int PIN_shoot = 42;
-const int PIN_accelSlider = A4;
 const int PIN_joy1X = A5;
 const int PIN_joy1Y = A6;
 const int PIN_joy2X = A7;
@@ -116,35 +115,34 @@ void receiveSerialValues() {
 
 // ─────────────────────────────────────────────────────────────────
 void sendSerialValues() {
-  // // Player sliders
-  // Serial.print(analogRead(PIN_playerPot_a));    Serial.print(",");
-  // Serial.print(analogRead(PIN_playerSlider_h)); Serial.print(",");
-  // Serial.print(analogRead(PIN_playerPot_k));    Serial.print(",");
-  // Serial.print(analogRead(PIN_playerSlider_c)); Serial.print(",");
+  // Player sliders
+  Serial.print(analogRead(PIN_playerPot_a));    Serial.print(",");
+  Serial.print(analogRead(PIN_playerSlider_h)); Serial.print(",");
+  Serial.print(analogRead(PIN_playerPot_k));    Serial.print(",");
+  Serial.print(analogRead(PIN_playerSlider_c)); Serial.print(",");
+  
+  // Sub control panel
+  Serial.print(digitalRead(PIN_oxyL1));    Serial.print(",");
+  Serial.print(digitalRead(PIN_oxyL2));    Serial.print(",");
+  Serial.print(digitalRead(PIN_oxyL3));    Serial.print(",");
+  Serial.print(digitalRead(PIN_ping));     Serial.print(",");
+  Serial.print(digitalRead(PIN_radarOn));  Serial.print(",");
+  Serial.print(digitalRead(PIN_radarOff)); Serial.print(",");
+  Serial.print(digitalRead(PIN_door));     Serial.print(",");
 
-  // // Sub control panel
-  // Serial.print(digitalRead(PIN_oxyL1));    Serial.print(",");
-  // Serial.print(digitalRead(PIN_oxyL2));    Serial.print(",");
-  // Serial.print(digitalRead(PIN_oxyL3));    Serial.print(",");
-  // Serial.print(digitalRead(PIN_ping));     Serial.print(",");
-  // Serial.print(digitalRead(PIN_radarOn));  Serial.print(",");
-  // Serial.print(digitalRead(PIN_radarOff)); Serial.print(",");
-  // Serial.print(digitalRead(PIN_door));     Serial.print(",");
+  // Coolant
+  Serial.print(analogRead(PIN_coolantPot)); Serial.print(",");
 
-  // // Coolant
-  // Serial.print(analogRead(PIN_coolantPot)); Serial.print(",");
+  // Lighting
+  Serial.print(analogRead(PIN_headSlider));  Serial.print(",");
+  Serial.print(analogRead(PIN_floodSlider)); Serial.print(",");
 
-  // // Lighting
-  // Serial.print(analogRead(PIN_headSlider));  Serial.print(",");
-  // Serial.print(analogRead(PIN_floodSlider)); Serial.print(",");
-
-  // // Pilot
-  // Serial.print(digitalRead(PIN_accelSlider)); Serial.print(",");
-  // Serial.print(digitalRead(PIN_shoot)); Serial.print(",");
-  // Serial.print(analogRead(PIN_joy1X));  Serial.print(",");
-  // Serial.print(analogRead(PIN_joy1Y));  Serial.print(",");
-  // Serial.print(analogRead(PIN_joy2X));  Serial.print(",");
-  // Serial.println(analogRead(PIN_joy2Y)); // println adds the \n delimiter Ardity needs
+  // Pilot
+  Serial.print(digitalRead(PIN_shoot)); Serial.print(",");
+  Serial.print(analogRead(PIN_joy1X));  Serial.print(",");
+  Serial.print(analogRead(PIN_joy1Y));  Serial.print(",");
+  Serial.print(analogRead(PIN_joy2X));  Serial.print(",");
+  Serial.println(analogRead(PIN_joy2Y)); // println adds the \n delimiter Ardity needs
 
   // ── Player A Controls ──────────────────────────────
   // Serial.print("playerPot_a:");    Serial.print(analogRead(PIN_playerPot_a));    Serial.print(",");
