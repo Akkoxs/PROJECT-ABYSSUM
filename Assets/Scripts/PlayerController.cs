@@ -67,6 +67,15 @@ public class PlayerController : MonoBehaviour
         mouseAiming.OnAim(context);
     }
 
+    public void OnPing(InputAction.CallbackContext context)
+    {
+        PingSonarSystem pingSystem = FindFirstObjectByType<PingSonarSystem>();
+        if (pingSystem != null)
+        {
+            pingSystem.OnPing(context);
+        }
+    }
+
     private bool IsGrounded()
     {
         return Physics2D.OverlapCapsule(groundCheck.position, new Vector2(1f, 0.1f), CapsuleDirection2D.Horizontal, 0, groundLayer);
