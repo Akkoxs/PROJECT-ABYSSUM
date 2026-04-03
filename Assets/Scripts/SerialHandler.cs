@@ -3,26 +3,42 @@ using UnityEngine;
 
 public class SerialHandler : MonoBehaviour
 {
-    //March 22 2026
-    //digital outputs (LEDs) YES
-    //digital outputs (oled) NOT YET
-    //digital/analog reads YES
-
     //MAY HAVE TO ADD A MOVING AVERAGE FILTER FOR SUBMARINE CONTROLS CAUSE VALS ARE NOISY
 
-    [SerializeField] KeyCode blinkStartKey = KeyCode.K;
-    [SerializeField] KeyCode blinkStopKey = KeyCode.L;
+    //SHOUld be usable from any other script, this class is a SINGLETON 
+
+    //should be usable like this:
+        //SerialHandler.Instance.SendSerialData("LED_ON!");
+        //SerialHandler.Instance.SendSerialData("PUMP:75");
+
+    //singleton 
+    public static SerialHandler Instance {get; private set;}
+    
+    //Debu keys 
 
     private SerialController serialController;
 
     //serial catch
-    float JoyX; 
-    float JoyY;
-    float slide_pot; //slide potientiometer
-    float rot_pot; //rotary potientiometer
-    bool button1; 
-    bool button2;
-
+    public float playerPot_a; //modulation minigame
+    public float playerSlider_h; //modulation minigame
+    public float playerPot_k; //modulation minigame
+    public float playerSlider_c; //modulation minigame
+    public bool oxyL1; //oxy transfer +
+    public bool oxyL2; //oxy transfer ++
+    public bool oxyL3; //oxy transfer +++
+    public bool ping; //scan lighting
+    public bool radarOn; 
+    public bool radarOff;
+    public bool door; //sub door
+    public float coolantPot; //coolant pump rate 
+    public float headSlider; //headlight brightness
+    public float floodSlider; //taillight brightness
+    public bool shoot; //submarine shoot 
+    public float joy1X; //sub move X
+    public float joy1Y; //sub move Y 
+    public float joy2X; //sub look X 
+    public float joy2Y; //sub look Y 
+    
     //multipliers for analog to digi.
     float joyStickMult = 1840f;
     float joyMin = 800f;
@@ -31,6 +47,13 @@ public class SerialHandler : MonoBehaviour
 
     void Awake()
     {
+        if (Instance != null && Instance != this)
+        {
+            Destroy(gameObject);
+            return;
+        }
+        Instance = this;
+        
         if (serialController == null)
         {
             serialController = GetComponentInParent<SerialController>();
@@ -60,7 +83,15 @@ public class SerialHandler : MonoBehaviour
     void Update()
     {
         ReceiveSerialData();
-        SendSerialData();
+    }
+
+    //REMINDER: Might have to Mathf.clamp it between 0 and 180 
+    //Send Temp by goin:
+        // SerialHandler.SendSerialData("$TEMP:{TempAngle}");
+        // SerialHandler.SendSerialData("$COOL:{CoolantAngle}");
+    public void SendSerialData(string message)
+    {
+        serialController.SendSerialMessage(message);
     }
 
     void ReceiveSerialData()
@@ -88,30 +119,35 @@ public class SerialHandler : MonoBehaviour
                     Debug.LogError("Failed to parse integer from serial: " + parts[i]);
                 }
             }
+            
+            playerPot_a = serial_catch[0] / potentiometerMult;
+            playerSlider_h = serial_catch[1] / potentiometerMult;
+            playerPot_k = serial_catch[2] / potentiometerMult;
+            playerSlider_c = serial_catch[3] / potentiometerMult;
+            oxyL1 = serial_catch[4] == 1;
+            oxyL2 = serial_catch[5] == 1;
+            oxyL3 = serial_catch[6] == 1;
+            ping = serial_catch[7] == 1;
+            radarOn = serial_catch[8] == 1;
+            radarOff = serial_catch[9] == 1;
+            door = serial_catch[10] == 1;  
+            coolantPot = serial_catch[11] / potentiometerMult; 
+            headSlider = serial_catch[12] / potentiometerMult;
+            floodSlider = serial_catch[13] / potentiometerMult;
+            shoot = serial_catch [14] == 1;
+            joy1X = NormalizeJoystick(serial_catch[15]);
+            joy1Y = NormalizeJoystick(serial_catch[16]);
+            joy2X = NormalizeJoystick(serial_catch[17]);
+            joy2Y = NormalizeJoystick(serial_catch[18]);
 
-            JoyX = NormalizeJoystick(serial_catch[0]);
-            JoyY = NormalizeJoystick(serial_catch[1]);
-            slide_pot = serial_catch[2] / potentiometerMult;
-            rot_pot = serial_catch[3] / potentiometerMult;
-            button1 = serial_catch[4] == 1;
-            button2 = serial_catch[5] == 1;
+            // JoyX = NormalizeJoystick(serial_catch[0]);
+            // JoyY = NormalizeJoystick(serial_catch[1]);
+            // slide_pot = serial_catch[2] / potentiometerMult;
+            // rot_pot = serial_catch[3] / potentiometerMult;
+            // button1 = serial_catch[4] == 1;
+            // button2 = serial_catch[5] == 1;
 
-            Debug.Log($"Received Serial Data - JoyX: {JoyX}, JoyY: {JoyY}, Slide Pot: {slide_pot}, Rot Pot: {rot_pot}, Button1: {button1}, Button2: {button2}");
-        }
-    }
-
-    void SendSerialData()
-    {
-        if (Input.GetKeyDown(blinkStartKey))
-        {
-            Debug.Log(message: "Sending LED_TEST!");
-            serialController.SendSerialMessage("LED_TEST!");
-        }
-
-        else if(Input.GetKeyDown(blinkStopKey))
-        {
-            Debug.Log(message: "Sending LED_STOP!");
-            serialController.SendSerialMessage("LED_STOP!");
+            //Debug.Log($"Received Serial Data - JoyX: {JoyX}, JoyY: {JoyY}, Slide Pot: {slide_pot}, Rot Pot: {rot_pot}, Button1: {button1}, Button2: {button2}");
         }
     }
 

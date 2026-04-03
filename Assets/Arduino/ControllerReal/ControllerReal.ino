@@ -1,11 +1,5 @@
 #include <Wire.h>
-#include <Adafruit_GFX.h>
-#include <Adafruit_SSD1306.h>
-
-#define SCREEN_WIDTH 128
-#define SCREEN_HEIGHT 64
-
-Adafruit_SSD1306 display(SCREEN_WIDTH, SCREEN_HEIGHT, &Wire, -1);
+#include <Servo.h> 
 
 // ─── PIN DEFINITIONS ──────────────────────────────────────────────
 // Player sliders (analog)
@@ -34,11 +28,14 @@ const int PIN_floodSlider = A3;
 
 // Sub pilot (digital + analog)
 const int PIN_shoot = 42;
-const int PIN_accelSlider = A4;
 const int PIN_joy1X = A5;
 const int PIN_joy1Y = A6;
 const int PIN_joy2X = A7;
 const int PIN_joy2Y = A8;
+
+//serov pins 
+const int PIN_tempServo = 13;
+const int PIN_coolantServo = 12;
 
 // ─── TIMING ───────────────────────────────────────────────────────
 unsigned long lastSend = 0;
@@ -49,6 +46,10 @@ bool ledBlinking = false;
 bool ledState = false;
 unsigned long lastBlink = 0;
 const unsigned long BLINK_INTERVAL = 1000;
+
+// SERVOS 
+Servo tempServo;
+Servo coolantServo;
 
 // ─────────────────────────────────────────────────────────────────
 void setup() {
@@ -68,18 +69,12 @@ void setup() {
   pinMode(PIN_coolantServo, OUTPUT);
   pinMode(PIN_tempServo,    OUTPUT);
 
-  // OLED (uncomment to enable)
-  // if (!display.begin(SSD1306_SWITCHCAPVCC, 0x3C)) {
-  //   Serial.println(F("SSD1306 allocation failed"));
-  //   for (;;);
-  // }
-  // delay(2000);
-  // display.clearDisplay();
-  // display.setTextSize(1);
-  // display.setTextColor(WHITE);
-  // display.setCursor(0, 10);
-  // display.println("Hello, world!");
-  // display.display();
+  //servo setup
+  tempServo = attach(PIN_tempServo);
+  coolantServo = attach(PIN_coolantServo);
+
+  tempServo.write = write(0);
+  coolantServo.write = write(180);
 }
 
 // ─────────────────────────────────────────────────────────────────
@@ -92,7 +87,6 @@ void loop() {
   }
 
   receiveSerialValues();
-
   // blinkLight(now); // uncomment if using LED
 }
 
@@ -103,15 +97,27 @@ void receiveSerialValues() {
   String command = Serial.readStringUntil('\n');
   command.trim();
 
-  // if (command == "LED_TEST!") {
-  //   ledBlinking = true;
-  //   lastBlink = millis();
-  // }
-  // else if (command == "LED_STOP!") {
-  //   ledBlinking = false;
-  //   ledState = false;
-  //   digitalWrite(ledPin, LOW);
-  // }
+  //parse temp commands 
+  if (command.startsWith("TEMP:")) {
+      // Extract the substring after "TEMP:" and convert to integer
+      String valueStr = command.substring(5); 
+      int angle = valueStr.toInt();
+      
+      // Constrain to safe servo angles and write
+      angle = constrain(angle, 0, 180);
+      tempServoObj.write(angle);
+  }
+
+  // Parse Coolant Command
+  else if (command.startsWith("COOL:")) {
+    // Extract the substring after "COOL:" and convert to integer
+    String valueStr = command.substring(5);
+    int angle = valueStr.toInt();
+    
+    // Constrain to safe servo angles and write
+    angle = constrain(angle, 0, 180);
+    coolantServoObj.write(angle);
+  }
 }
 
 // ─────────────────────────────────────────────────────────────────
@@ -139,33 +145,32 @@ void sendSerialValues() {
   // Serial.print(analogRead(PIN_floodSlider)); Serial.print(",");
 
   // // Pilot
-  // Serial.print(digitalRead(PIN_accelSlider)); Serial.print(",");
   // Serial.print(digitalRead(PIN_shoot)); Serial.print(",");
   // Serial.print(analogRead(PIN_joy1X));  Serial.print(",");
   // Serial.print(analogRead(PIN_joy1Y));  Serial.print(",");
   // Serial.print(analogRead(PIN_joy2X));  Serial.print(",");
   // Serial.println(analogRead(PIN_joy2Y)); // println adds the \n delimiter Ardity needs
 
-  // ── Player A Controls ──────────────────────────────
+  //── Player A Controls ──────────────────────────────
   // Serial.print("playerPot_a:");    Serial.print(analogRead(PIN_playerPot_a));    Serial.print(",");
   // Serial.print("playerSlider_h:"); Serial.print(analogRead(PIN_playerSlider_h)); Serial.print(",");
   // Serial.print("playerPot_k:");    Serial.print(analogRead(PIN_playerPot_k));    Serial.print(",");
   // Serial.print("playerSlider_c:"); Serial.print(analogRead(PIN_playerSlider_c)); Serial.print(",");
 
   // // ── Oxygen Levels ──────────────────────────────────
-   Serial.print("oxyL1:");    Serial.println(digitalRead(PIN_oxyL1));    Serial.print(",");
-   Serial.print("oxyL2:");    Serial.println(digitalRead(PIN_oxyL2));    Serial.print(",");
-   Serial.print("oxyL3:");    Serial.println(digitalRead(PIN_oxyL3));    Serial.print(",");
+  //  Serial.print("oxyL1:");    Serial.println(digitalRead(PIN_oxyL1));    Serial.print(",");
+  //  Serial.print("oxyL2:");    Serial.println(digitalRead(PIN_oxyL2));    Serial.print(",");
+  //  Serial.print("oxyL3:");    Serial.println(digitalRead(PIN_oxyL3));    Serial.print(",");
 
-  // // ── Radar & Sonar ──────────────────────────────────
-  // Serial.print("ping:");     Serial.print(digitalRead(PIN_ping));     Serial.print(",");
+  // ── Radar & Sonar ──────────────────────────────────
+  //Serial.print("ping:");     Serial.print(digitalRead(PIN_ping));     Serial.print(","); //WORKS
   // Serial.print("radarOn:");  Serial.print(digitalRead(PIN_radarOn));  Serial.print(",");
   // Serial.print("radarOff:"); Serial.print(digitalRead(PIN_radarOff)); Serial.print(",");
 
-  // // ── Door ───────────────────────────────────────────
+  // ── Door ───────────────────────────────────────────
   // Serial.print("door:");     Serial.print(digitalRead(PIN_door));     Serial.print(",");
 
-  // // ── Coolant ────────────────────────────────────────
+  // ── Coolant ────────────────────────────────────────
   // Serial.print("coolantPot:"); Serial.print(analogRead(PIN_coolantPot)); Serial.print(",");
 
   // // ── Lighting ───────────────────────────────────────
