@@ -9,6 +9,5 @@ public enum RadarObjectType //returns obj. type
     Terrain,
     Fauna,
     Flora,
-    Artifact,
-    Player
+    Artifact
 }
