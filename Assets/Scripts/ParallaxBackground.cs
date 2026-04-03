@@ -23,7 +23,7 @@ public class ParallaxBackground : MonoBehaviour
     // 5 - Craggy peaks
 
     [Header("Per-Layer Parallax Speeds (furthest -> closest)")]
-    public float[] layerParallaxFactorsX = { 0.05f, 0.15f, 0.25f, 0.40f, 0.60f, 0.80f };
+    public float[] layerParallaxFactorsX = { 0f, 0.97f, 0.97f, 0.97f, 0.95f, 0.95f, 0.95f, 0.90f };
     public float[] layerParallaxFactorsY = { 0f, 0f, 0.02f, 0.03f, 0.05f, 0.07f };
 
     private ParallaxLayer[] layers;
