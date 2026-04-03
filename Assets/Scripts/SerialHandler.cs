@@ -3,15 +3,18 @@ using UnityEngine;
 
 public class SerialHandler : MonoBehaviour
 {
-    //March 22 2026
-    //digital outputs (LEDs) YES
-    //digital outputs (oled) NOT YET
-    //digital/analog reads YES
-
     //MAY HAVE TO ADD A MOVING AVERAGE FILTER FOR SUBMARINE CONTROLS CAUSE VALS ARE NOISY
 
-    [SerializeField] KeyCode blinkStartKey = KeyCode.K;
-    [SerializeField] KeyCode blinkStopKey = KeyCode.L;
+    //SHOUld be usable from any other script, this class is a SINGLETON 
+
+    //should be usable like this:
+        //SerialHandler.Instance.SendSerialData("LED_ON!");
+        //SerialHandler.Instance.SendSerialData("PUMP:75");
+
+    //singleton 
+    public static SerialHandler Instance {get; private set;}
+    
+    //Debu keys 
 
     private SerialController serialController;
 
@@ -44,6 +47,13 @@ public class SerialHandler : MonoBehaviour
 
     void Awake()
     {
+        if (Instance != null && Instance != this)
+        {
+            Destroy(gameObject);
+            return;
+        }
+        Instance = this;
+        
         if (serialController == null)
         {
             serialController = GetComponentInParent<SerialController>();
@@ -73,7 +83,15 @@ public class SerialHandler : MonoBehaviour
     void Update()
     {
         ReceiveSerialData();
-        SendSerialData();
+    }
+
+    //REMINDER: Might have to Mathf.clamp it between 0 and 180 
+    //Send Temp by goin:
+        // SerialHandler.SendSerialData("$TEMP:{TempAngle}");
+        // SerialHandler.SendSerialData("$COOL:{CoolantAngle}");
+    public void SendSerialData(string message)
+    {
+        serialController.SendSerialMessage(message);
     }
 
     void ReceiveSerialData()
@@ -130,21 +148,6 @@ public class SerialHandler : MonoBehaviour
             // button2 = serial_catch[5] == 1;
 
             //Debug.Log($"Received Serial Data - JoyX: {JoyX}, JoyY: {JoyY}, Slide Pot: {slide_pot}, Rot Pot: {rot_pot}, Button1: {button1}, Button2: {button2}");
-        }
-    }
-
-    void SendSerialData()
-    {
-        if (Input.GetKeyDown(blinkStartKey))
-        {
-            Debug.Log(message: "Sending LED_TEST!");
-            serialController.SendSerialMessage("LED_TEST!");
-        }
-
-        else if(Input.GetKeyDown(blinkStopKey))
-        {
-            Debug.Log(message: "Sending LED_STOP!");
-            serialController.SendSerialMessage("LED_STOP!");
         }
     }
 
