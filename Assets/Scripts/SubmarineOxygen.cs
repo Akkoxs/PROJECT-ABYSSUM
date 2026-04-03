@@ -8,7 +8,7 @@ public class SubmarineOxygen : MonoBehaviour
     [SerializeField] private float currentOxygen; 
     [SerializeField] private float maxOxygen = 750f;
     [SerializeField] private float depletionRate = 100f; //ticks per second
-    [SerializeField] private PlayerOxygen playerOxy;
+    private PlayerOxygen playerOxy;
     [SerializeField] private Submarine sub;
     private bool isUnderwater;
     private bool hasInvokedDepletion;
@@ -28,6 +28,8 @@ public class SubmarineOxygen : MonoBehaviour
         currentOxygen = maxOxygen;
         sub.enteredSubmarine.AddListener(PlayerEnteredSubmarine);
         sub.exitedSubmarine.AddListener(PlayerExitedSubmarine);
+        playerOxy = GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerOxygen>();
+
 
     }
 
