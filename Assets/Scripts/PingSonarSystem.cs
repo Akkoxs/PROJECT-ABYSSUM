@@ -61,14 +61,19 @@ public class PingSonarSystem : MonoBehaviour
 
             //UpdateUI();
         }
+
+        if (SerialHandler.Instance.ping && !isPinging && !isOnCooldown)
+        {
+            ActivatePing();
+        }
     }
 
     public void OnPing(InputAction.CallbackContext context)
     {
-        if (context.performed && !isPinging && !isOnCooldown)
-        {
-            ActivatePing();
-        }
+        //if (context.performed && !isPinging && !isOnCooldown)
+        //{
+        //    ActivatePing();
+        //}
     }
 
     public void ActivatePing()

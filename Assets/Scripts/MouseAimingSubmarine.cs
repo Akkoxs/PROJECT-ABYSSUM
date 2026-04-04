@@ -48,6 +48,8 @@ public class MouseAimingSubmarine : MonoBehaviour
 
     void Update()
     {
+        rightStickInput = new Vector2(SerialHandler.Instance.joy2X, SerialHandler.Instance.joy2Y);
+
         UpdateAimPosition();
         UpdateReticlePosition();
         HandleShooting();
@@ -133,7 +135,7 @@ public class MouseAimingSubmarine : MonoBehaviour
 
     public void OnAim(InputAction.CallbackContext context)
     {
-        rightStickInput = context.ReadValue<Vector2>();
+        //rightStickInput = context.ReadValue<Vector2>();
     }
 
     private void OnDrawGizmosSelected()

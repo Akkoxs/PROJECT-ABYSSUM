@@ -40,6 +40,8 @@ public class Submarine : MonoBehaviour
     private bool playerInside = false;
     private float horizontal;
     private float vertical;
+    private float aimVer;
+    private float aimHor;
     private float currentTipAngle = 0f;
 
     public bool PlayerInside => playerInside;
@@ -68,22 +70,27 @@ public class Submarine : MonoBehaviour
             EnterSubmarine();
         else if (playerInside && Keyboard.current[interactKey].wasPressedThisFrame)
             ExitSubmarine();
+
+        if (playerInside && SerialHandler.Instance.shoot)
+        {
+            mouseAiming.TriggerShoot(true);
+        }
     }
 
     #region SUBMARINE_CONTROLS
     public void Move(InputAction.CallbackContext context)
     {
-        Vector2 input = context.ReadValue<Vector2>();
-        horizontal = input.x;
-        vertical = input.y;
+        //Vector2 input = context.ReadValue<Vector2>();
+        //horizontal = input.x;
+        //vertical = input.y;
     }
 
     public void Fire(InputAction.CallbackContext context)
     {
-        if (context.performed && playerInside)
-        {
-            mouseAiming.TriggerShoot(true);
-        }
+        //if (context.performed && playerInside)
+        //{
+        //    mouseAiming.TriggerShoot(true);
+        //}
     }
 
     public void Aim(InputAction.CallbackContext context)
@@ -93,6 +100,7 @@ public class Submarine : MonoBehaviour
             mouseAiming.OnAim(context);
         }
     }
+
     #endregion
 
     public void EnterSubmarine()
@@ -118,6 +126,12 @@ public class Submarine : MonoBehaviour
 
     private void HandleMovement()
     {
+        horizontal = SerialHandler.Instance.joy1X;
+        vertical = SerialHandler.Instance.joy1Y;
+
+        aimHor = SerialHandler.Instance.joy2X;
+        aimVer = SerialHandler.Instance.joy2Y;
+
         float targetVelocityX = horizontal * speed;
         float currentVelocityX = rb.linearVelocity.x;
 

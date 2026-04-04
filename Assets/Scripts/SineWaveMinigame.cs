@@ -109,11 +109,13 @@ public class SineWaveMinigame : MonoBehaviour
     void HandleInput()
     {
         float deltaTime = Time.unscaledDeltaTime;
+        float ampInput = SerialHandler.Instance.playerPot_a;
+        float horInput = SerialHandler.Instance.playerSlider_h;
 
-        playerAmplitude += dpadInput.y * amplitudeChangeSpeed * deltaTime;
+        playerAmplitude += ampInput * amplitudeChangeSpeed * deltaTime;
         playerAmplitude = Mathf.Clamp(playerAmplitude, minAmplitude, maxAmplitude);
 
-        playerHorizontalShift += dpadInput.x * shiftChangeSpeed * deltaTime;
+        playerHorizontalShift += horInput * shiftChangeSpeed * deltaTime;
         playerHorizontalShift = Mathf.Clamp(playerHorizontalShift, minShift, maxShift);
     }
 
