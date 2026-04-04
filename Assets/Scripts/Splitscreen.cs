@@ -17,6 +17,9 @@ public class Splitscreen : MonoBehaviour
     public Shader shader; 
     public Shader unlitShader;
 
+    [Header("HUD")]
+    public Canvas hudCanvas; 
+
     [Header("Dead Zone Settings")]
     [Range(0.05f, 0.45f)]
     public float deadZoneHalf = 0.27f;   // fraction of the square's side length
@@ -48,6 +51,7 @@ public class Splitscreen : MonoBehaviour
     {
         if (shader == null){shader = Shader.Find("Custom/PeppersGhostSplit");}
         EnsureUICamera(); //build the splitscreen camera 
+        CreateHUDCamera();
         Rebuild();
     }
 
@@ -144,6 +148,18 @@ void RestoreCameras()
             if (cam == null) continue;
             cam.cullingMask &= ~(1 << LayerMask.NameToLayer("UI"));
         }
+    }
+
+    void CreateHUDCamera()
+    {
+        if (hudCanvas == null) return;
+
+        hudCanvas.renderMode = RenderMode.ScreenSpaceCamera;
+        hudCanvas.worldCamera = uiCam;       // reuse the existing splitscreen UI cam
+        hudCanvas.sortingOrder = 100;        // above quads (0-3), deadzone (10), sidebars (5)
+        hudCanvas.planeDistance = 0.1f;      // in front of the quad meshes (which sit at z=0.5)
+
+        SetLayerRecursively(hudCanvas.gameObject, LayerMask.NameToLayer("UI"));
     }
 
     void Build()
@@ -358,5 +374,13 @@ void RestoreCameras()
         if (go == null) return;
         SafeDestroy(go);
         go = null;
+    }
+
+    static void SetLayerRecursively(GameObject go, int layer)
+    {
+        go.layer = layer;
+        foreach (Transform child in go.transform){
+            SetLayerRecursively(child.gameObject, layer);
+        }
     }
 }
