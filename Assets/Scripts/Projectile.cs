@@ -25,14 +25,6 @@ public class Projectile : MonoBehaviour
         rb = GetComponent<Rigidbody2D>();
     }
 
-    private void Update()
-    {
-        if (isMoving)
-        {
-            Debug.Log("Projectile velocity: " + rb.linearVelocity + " | Position: " + transform.position);
-        }
-    }
-
     void FixedUpdate()
     {
         if (isMoving && !isStuck)
