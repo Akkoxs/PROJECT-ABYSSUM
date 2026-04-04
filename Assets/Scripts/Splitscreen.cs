@@ -15,6 +15,10 @@ public class Splitscreen : MonoBehaviour
 
     [Header("Shader")]
     public Shader shader; 
+    public Shader unlitShader;
+
+    [Header("HUD")]
+    public Canvas hudCanvas; 
 
     [Header("Dead Zone Settings")]
     [Range(0.05f, 0.45f)]
@@ -26,6 +30,7 @@ public class Splitscreen : MonoBehaviour
 
     private Camera uiCam;
     private GameObject uiCamGO;
+    private int[] originalCullingMasks;
 
     private GameObject deadZoneGO;
     private GameObject sidebarL;
@@ -44,13 +49,46 @@ public class Splitscreen : MonoBehaviour
 
     void OnEnable()
     {
+        if (shader == null){shader = Shader.Find("Custom/PeppersGhostSplit");}
         EnsureUICamera(); //build the splitscreen camera 
+        CreateHUDCamera();
         Rebuild();
     }
 
-    void OnDisable() => Teardown();
+    void OnDisable()
+    {
+        Teardown();
+        RestoreCameras();
+    } 
 
-    void OnDestroy() => Teardown();
+    void OnDestroy()
+    {
+        Teardown();
+        RestoreCameras();
+
+    } 
+
+void RestoreCameras()
+{
+    if (originalCullingMasks != null) 
+    {
+        var cams = new[]{ camTop, camBottom, camLeft, camRight };
+        for (int i = 0; i < cams.Length; i++)
+        {
+            if (cams[i] == null) continue;
+            cams[i].cullingMask = originalCullingMasks[i];
+            cams[i].targetTexture = null;
+            cams[i].enabled = false;
+        }
+    }
+
+    if (uiCamGO != null)
+    {
+        SafeDestroy(uiCamGO);
+        uiCamGO = null;
+        uiCam = null;
+    }
+}
 
     void Update()
     {
@@ -63,14 +101,36 @@ public class Splitscreen : MonoBehaviour
 
     void EnsureUICamera()
     {
-        if (uiCam != null) return; //if it alr exists, you can safely delete it from heirarchy tho cause it causes scene to lag
+        if (uiCam != null) return;
 
-        uiCamGO = new GameObject("SplitscreenUICamera") { hideFlags = HideFlags.DontSave };
+        Camera[] allCams = Resources.FindObjectsOfTypeAll<Camera>();
+        foreach (var cam in allCams)
+        {
+            // If we find a camera named SplitscreenUICamera, nuke it.
+            if (cam.name == "SplitscreenUICamera" && cam != uiCam)
+            {
+                SafeDestroy(cam.gameObject);
+            }
+        }
+
+        // save original culling masks before stripping UI layer
+        var cams = new[]{ camTop, camBottom, camLeft, camRight };
+        originalCullingMasks = new int[cams.Length];
+        for (int i = 0; i < cams.Length; i++)
+        {
+            if (cams[i] == null) continue;
+            originalCullingMasks[i] = cams[i].cullingMask;
+            cams[i].cullingMask &= ~(1 << LayerMask.NameToLayer("UI"));
+        }
+
+        uiCamGO = new GameObject("SplitscreenUICamera");
+        uiCamGO.transform.SetParent(this.transform, false); 
         uiCam = uiCamGO.AddComponent<Camera>();
 
-        //camera config
+        // camera config
         uiCam.orthographic = true;
-        uiCam.clearFlags = CameraClearFlags.Depth;
+        uiCam.clearFlags = CameraClearFlags.SolidColor;
+        uiCam.backgroundColor = Color.black;
         uiCam.cullingMask = 1 << LayerMask.NameToLayer("UI");
         uiCam.depth = 100;
         uiCam.nearClipPlane = -1f;
@@ -78,11 +138,11 @@ public class Splitscreen : MonoBehaviour
 
         uiCamGO.transform.position = Vector3.zero;
 
-        //disable audio listener to avoid conflicts with gameplay cams 
+        // disable audio listener to avoid conflicts with gameplay cams 
         var al = uiCamGO.GetComponent<AudioListener>();
         if (al) al.enabled = false;
 
-        //make sure gameplay cameras dont render the UI layer
+        // make sure gameplay cameras dont render the UI layer
         foreach (var cam in new[]{ camTop, camBottom, camLeft, camRight })
         {
             if (cam == null) continue;
@@ -90,17 +150,37 @@ public class Splitscreen : MonoBehaviour
         }
     }
 
+    void CreateHUDCamera()
+    {
+        if (hudCanvas == null) return;
+
+        hudCanvas.renderMode = RenderMode.ScreenSpaceCamera;
+        hudCanvas.worldCamera = uiCam;       // reuse the existing splitscreen UI cam
+        hudCanvas.sortingOrder = 100;        // above quads (0-3), deadzone (10), sidebars (5)
+        hudCanvas.planeDistance = 0.1f;      // in front of the quad meshes (which sit at z=0.5)
+
+        SetLayerRecursively(hudCanvas.gameObject, LayerMask.NameToLayer("UI"));
+    }
+
     void Build()
     {
         float screenW = Screen.width;
         float screenH = Screen.height;
 
-        float square = (playAreaSize > 0f) ? Mathf.Min(playAreaSize, screenH) : screenH;
-        float sidebarW = (screenW - square) * 0.5f;
+        float camH = uiCam.orthographicSize * 2f;
+        float camW = camH * (screenW / screenH);
+
+        float square = Mathf.Min(camH, camW);
+        float sidebarW = (camW - square) * 0.5f;
+
+        // uiCam.orthographicSize = screenH * 0.5f;
+        // uiCam.orthographicSize = 1f;
+        // uiCam.aspect = screenW / screenH;
+
+        //float square = (playAreaSize > 0f) ? Mathf.Min(playAreaSize, screenH) : screenH;
+        //float sidebarW = (screenW - square) * 0.5f;
         float half = square * 0.5f;
         float dz = square * deadZoneHalf;
-
-        //uiCam.orthographicSize = screenH * 0.5f;
 
         // defining the quad corners with respect to the square center
         float pL = -half, pR = half, pT = half, pB = -half;
@@ -147,7 +227,10 @@ public class Splitscreen : MonoBehaviour
     void CreateViewQuad(Camera cam, float xMin, float xMax, float yTop, float yBot, int sortOrder, float rotationZ, string label)
     {
         //create a new render texture and assign it to the camera + name it 
-        var rt = new RenderTexture(rtWidth, rtHeight, 24, RenderTextureFormat.DefaultHDR)
+        cam.enabled = true;
+    
+
+        var rt = new RenderTexture(rtWidth, rtHeight, 24, RenderTextureFormat.ARGB32) //changed from .DefaultHDR
         {
             name = $"RT_{label}"
         };
@@ -159,7 +242,7 @@ public class Splitscreen : MonoBehaviour
         go.layer = LayerMask.NameToLayer("UI");
         go.transform.SetParent(uiCamGO.transform, false);
         go.transform.localPosition = new Vector3(0f, 0f, 0.5f); 
-        go.transform.localRotation = Quaternion.Euler(0, 0, rotationZ); 
+        go.transform.localRotation = Quaternion.Euler(0, 0, rotationZ);
 
         //build rectangular meshes, shader will do clipping 
         var mesh = new Mesh { name = $"Mesh_{label}" };
@@ -195,14 +278,10 @@ public class Splitscreen : MonoBehaviour
         var mr = go.AddComponent<MeshRenderer>();
         mf.mesh = mesh;
 
-        //find triangle clip custom shader 
-        //var shader = Shader.Find("Custom/PeppersGhostSplit");
-        //var shader = Resources.Load<Shader>("Custom/PeppersGhostSplit");
-        //if (shader == null) .... 
-
         //create new material using shader for the quad and assign rt to it, config other stuff
         var mat = new Material(shader) { name = $"Mat_{label}" };
         mat.SetTexture("_MainTex", rt);
+        mat.SetFloat("_Quadrant", (float)sortOrder);
         mr.material = mat;
         mr.sortingOrder = sortOrder;
         mr.shadowCastingMode = UnityEngine.Rendering.ShadowCastingMode.Off;
@@ -254,9 +333,23 @@ public class Splitscreen : MonoBehaviour
         mf.mesh = mesh;
 
         //find simple unlit shader for solid colour, create material and build the rect, config other stuff
-        var shader = Shader.Find("Unlit/Color");
-        if (shader == null) shader = Shader.Find("UI/Unlit/Transparent");
-        var mat = new Material(shader) { name = $"Mat_{label}", color = color };
+        //var shader = Shader.Find("Universal Render Pipeline/Unlit");
+        //if (shader == null) shader = Shader.Find("Hidden/Internal-CombinedShader");
+        var mat = new Material(unlitShader) { name = $"Mat_{label}" };
+
+        //Unlit/Color shaderuses "_Color" specifically. 
+        if (mat.HasProperty("_Color")) 
+        {
+            mat.SetColor("_Color", color);
+        }
+        else if (mat.HasProperty("_BaseColor")) 
+        {
+            mat.SetColor("_BaseColor", color);
+        }
+        else 
+        {
+            mat.color = color; // Final fallback
+        }
         mr.material = mat;
         mr.sortingOrder = sortOrder;
         mr.shadowCastingMode = UnityEngine.Rendering.ShadowCastingMode.Off;
@@ -281,5 +374,13 @@ public class Splitscreen : MonoBehaviour
         if (go == null) return;
         SafeDestroy(go);
         go = null;
+    }
+
+    static void SetLayerRecursively(GameObject go, int layer)
+    {
+        go.layer = layer;
+        foreach (Transform child in go.transform){
+            SetLayerRecursively(child.gameObject, layer);
+        }
     }
 }
