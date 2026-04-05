@@ -221,6 +221,7 @@ GameObject:
   - component: {fileID: 4695054199279498030}
   - component: {fileID: 320203838260726087}
   - component: {fileID: 4375190347105797388}
+  - component: {fileID: 6221624823304325863}
   m_Layer: 10
   m_Name: Submarine
   m_TagString: Submarine
@@ -310,7 +311,7 @@ MonoBehaviour:
   subAnimator: {fileID: 4375190347105797388}
   lightContainer: {fileID: 2295054788987313635}
   rb: {fileID: 7065195129841400459}
-  mouseAiming: {fileID: 320203838260726087}
+  mouseAiming: {fileID: 0}
   speed: 3
   submarineInput: {fileID: 4695054199279498030}
   playerInput: {fileID: 0}
@@ -616,6 +617,19 @@ Animator:
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
   m_WriteDefaultValuesOnDisable: 0
+--- !u!114 &6221624823304325863
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3711125862220502543}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9117324d4cb88964986e4a8ea2591100, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::SubmarineStatSetter
+  stats: {fileID: 11400000, guid: d6696a0b6a2341b4d808ef4c84e82e42, type: 2}
 --- !u!1 &6497886273176012459
 GameObject:
   m_ObjectHideFlags: 0

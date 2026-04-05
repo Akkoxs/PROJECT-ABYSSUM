@@ -8,6 +8,11 @@ public class HarpoonGunAiming : MonoBehaviour
     private Vector3 mousePos;
     private float angleThreshold = 15f;
 
+    void Start()
+    {
+        lightContainer = GameObject.Find("LightContainer");
+    }
+
     void Update()
     {
         mousePos = mouseAiming.GetMousePos();
