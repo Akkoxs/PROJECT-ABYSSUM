@@ -40,9 +40,8 @@ public class Submarine : MonoBehaviour
     private bool playerInside = false;
     private float horizontal;
     private float vertical;
-    private float aimVer;
-    private float aimHor;
     private float currentTipAngle = 0f;
+    private bool doorOpen;
 
     public bool PlayerInside => playerInside;
 
@@ -112,16 +111,36 @@ public class Submarine : MonoBehaviour
         playerMouseAiming.enabled = false;
         playerShadow.enabled = false;
         harpoonGun.SetActive(false);
-        submarineInput.enabled = true;
-        mouseAiming.enabled = true;
-
+        //submarineInput.enabled = true;
+        //mouseAiming.enabled = true;
         Debug.Log("Entered submarine!");
+    }
+
+    public void HandleSubmarineDoor()
+    {
+        if (SerialHandler.Instance.door)
+        {
+            if (horizontal == 0 && vertical == 0 && !doorOpen)
+            {
+                subAnimator.SetBool("door", true);
+                doorOpen = true;
+            }
+        } else if (!SerialHandler.Instance.door)
+        {
+           if (horizontal == 0 && vertical == 0 && doorOpen)
+            {
+                subAnimator.SetBool("door", false);
+                doorOpen = false;
+            }
+
+        }
     }
 
     private void FixedUpdate()
     {
         HandleMovement();
         HandleTipping();
+        HandleSubmarineDoor();
     }
 
     private void HandleMovement()
@@ -129,13 +148,10 @@ public class Submarine : MonoBehaviour
         horizontal = SerialHandler.Instance.joy1X;
         vertical = SerialHandler.Instance.joy1Y;
 
-        aimHor = SerialHandler.Instance.joy2X;
-        aimVer = SerialHandler.Instance.joy2Y;
-
         float targetVelocityX = horizontal * speed;
         float currentVelocityX = rb.linearVelocity.x;
 
-        if (horizontal != 0)
+        if (horizontal != 0 && !doorOpen)
         {
             currentVelocityX = Mathf.Lerp(currentVelocityX, targetVelocityX, horizontalAcceleration * Time.fixedDeltaTime);
         }
@@ -147,7 +163,7 @@ public class Submarine : MonoBehaviour
         float targetVelocityY = vertical * speed;
         float currentVelocityY = rb.linearVelocity.y;
 
-        if (vertical != 0)
+        if (vertical != 0 && !doorOpen)
         {
             currentVelocityY = Mathf.Lerp(currentVelocityY, targetVelocityY, verticalAcceleration * Time.fixedDeltaTime);
         }
