@@ -1,0 +1,30 @@
+fileFormatVersion: 2
+guid: 380af34d4d5dcd849b594fe6b691fa6b
+AudioImporter:
+  externalObjects: {}
+  serializedVersion: 7
+  defaultSettings:
+    serializedVersion: 2
+    loadType: 0
+    sampleRateSetting: 0
+    sampleRateOverride: 44100
+    compressionFormat: 1
+    quality: 1
+    conversionMode: 0
+    preloadAudioData: 0
+  platformSettingOverrides: {}
+  forceToMono: 0
+  normalize: 1
+  loadInBackground: 0
+  ambisonic: 0
+  3D: 1
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 290709
+  packageName: Dark Horror Ambient Music - Grimytheus Vol. 2
+  packageVersion: 1.0
+  assetPath: Assets/Grimytheus Vol. 2/grimyth - The Threat Looms Large.wav
+  uploadId: 678575
