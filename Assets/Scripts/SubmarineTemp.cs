@@ -21,6 +21,7 @@ public class SubmarineTemp : MonoBehaviour
 
     private float heatRate = 0f;         // heat added per sec (from lights, etc.)
     private float coolantFlow = 0f;      // 0 = off, 1 = full (from pot)
+    private bool tickRunning = false;
 
     public float CurrentTemp => currentTemp;
     public float MaxTemp => maxTemp;
@@ -71,8 +72,11 @@ public class SubmarineTemp : MonoBehaviour
 
     private void TryStartTick()
     {
-        if (tempTick == null)
+        if (!tickRunning)
+        {
+            tickRunning = true;
             tempTick = StartCoroutine(TempTick());
+        }
     }
 
     private IEnumerator TempTick()
@@ -122,7 +126,7 @@ public class SubmarineTemp : MonoBehaviour
 
             yield return null;
         }
-
         tempTick = null;
+        tickRunning = false;
     }
 }
