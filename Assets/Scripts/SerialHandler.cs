@@ -135,10 +135,14 @@ public class SerialHandler : MonoBehaviour
             headSlider = serial_catch[12] / potentiometerMult;
             floodSlider = serial_catch[13] / potentiometerMult;
             shoot = serial_catch [14] == 1;
-            joy1X = NormalizeJoystick(serial_catch[15]);
-            joy1Y = NormalizeJoystick(serial_catch[16]);
-            joy2X = NormalizeJoystick(serial_catch[17]);
-            joy2Y = NormalizeJoystick(serial_catch[18]);
+            // joy1X = NormalizeJoystick(serial_catch[15]);
+            // joy1Y = NormalizeJoystick(serial_catch[16]);
+            // joy2X = NormalizeJoystick(serial_catch[17]);
+            // joy2Y = NormalizeJoystick(serial_catch[18]);
+            joy1X = (serial_catch[15]);
+            joy1Y = (serial_catch[16]);
+            joy2X = (serial_catch[17]);
+            joy2Y = (serial_catch[18]);
 
             // JoyX = NormalizeJoystick(serial_catch[0]);
             // JoyY = NormalizeJoystick(serial_catch[1]);

@@ -7,7 +7,7 @@ public class Health : MonoBehaviour, IDamageable, IHealable
     [SerializeField] private float maxHealth = 100f;
     [SerializeField] private float currentHealth;
 
-    [SerializeField] private SubmarineTemp submarineTemp;
+    //[SerializeField] private SubmarineTemp submarineTemp;
 
     //public read only 
     public float MaxHealth => maxHealth;
@@ -23,7 +23,7 @@ public class Health : MonoBehaviour, IDamageable, IHealable
     {
         currentHealth = maxHealth;
         isDead = false;
-        submarineTemp.tempMaxReached.AddListener(() => TakeDamage(20f)); //instantly kill when max temp reached
+        //submarineTemp.tempMaxReached.AddListener(() => TakeDamage(20f)); //instantly kill when max temp reached
     }
 
     public void TakeDamage(float dmgAmount)
