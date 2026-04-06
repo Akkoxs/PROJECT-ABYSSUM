@@ -15,7 +15,7 @@ public class Artifact : MonoBehaviour, IRadarDetectable
 
     private void Awake()
     {
-        gameManager = FindObjectOfType<GameManager>();
+        gameManager = FindFirstObjectByType<GameManager>();
     }
 
 

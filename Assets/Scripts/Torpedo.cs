@@ -2,8 +2,7 @@ using UnityEngine;
 
 public class Torpedo : MonoBehaviour
 {
-    private Vector3 mousePos;
-    private Camera mainCamera;
+    private Vector2 launchDirection;
     private Rigidbody2D rb;
     private bool isMoving;
     private bool isStuck = false;
@@ -20,25 +19,17 @@ public class Torpedo : MonoBehaviour
     [SerializeField] private LayerMask enemyLayer;
     [SerializeField] private float tipOffset;
 
-
     void Start()
     {
         rb = GetComponent<Rigidbody2D>();
-        Vector3 direction = mousePos - transform.position;
-        Vector3 rotation = transform.position - mousePos;
-        rb.linearVelocity = new Vector2(direction.x, direction.y).normalized * force;
-        float rot = Mathf.Atan2(rotation.y, rotation.x) * Mathf.Rad2Deg;
-        transform.rotation = Quaternion.Euler(0, 0, rot);
-        harpoonAnimator.SetBool("fly", true);
     }
 
-    void Update()
+    void FixedUpdate()
     {
         if (isMoving && !isStuck)
         {
             Vector2 tipPosition = (Vector2)transform.position + (Vector2)transform.right * tipOffset;
             Collider2D hitCollider = Physics2D.OverlapCircle(tipPosition, 0.1f, floorLayer);
-
             if (hitCollider != null)
             {
                 StickToSurface();
@@ -46,13 +37,12 @@ public class Torpedo : MonoBehaviour
             }
 
             float currentSpeed = rb.linearVelocity.magnitude;
-            float newSpeed = currentSpeed - (waterDrag * Time.deltaTime);
+            float newSpeed = currentSpeed - (waterDrag * Time.fixedDeltaTime);
 
             if (newSpeed <= minVelocity)
             {
                 rb.linearVelocity = Vector2.zero;
                 isMoving = false;
-
                 Destroy(gameObject, 1f);
             }
             else
@@ -75,11 +65,9 @@ public class Torpedo : MonoBehaviour
     {
         isStuck = true;
         isMoving = false;
-
         rb.linearVelocity = Vector2.zero;
         rb.angularVelocity = 0f;
         rb.bodyType = RigidbodyType2D.Kinematic;
-
         Destroy(gameObject, 1f);
     }
 
@@ -90,11 +78,22 @@ public class Torpedo : MonoBehaviour
         Gizmos.DrawWireSphere(tipPosition, 0.1f);
     }
 
-    public void InitializeProjectile(Vector3 mousePos, Camera mainCamera)
+    public void InitializeProjectile(Vector2 direction)
     {
-        this.mousePos = mousePos;
-        this.mainCamera = mainCamera;
+        launchDirection = direction.normalized;
         isMoving = true;
+
+        if (rb == null) rb = GetComponent<Rigidbody2D>();
+
+        rb.linearVelocity = launchDirection * force;
+
+        float angle = Mathf.Atan2(launchDirection.y, launchDirection.x) * Mathf.Rad2Deg;
+        transform.rotation = Quaternion.Euler(0, 0, angle);
+
+        if (harpoonAnimator != null)
+        {
+            harpoonAnimator.SetBool("fly", true);
+        }
     }
 
     public void SetHarpDamage(float newDamage)

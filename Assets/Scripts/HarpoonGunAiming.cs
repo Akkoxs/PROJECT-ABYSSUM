@@ -5,8 +5,9 @@ public class HarpoonGunAiming : MonoBehaviour
     [SerializeField] private MouseAiming mouseAiming;
     [SerializeField] private SpriteRenderer spriteRenderer;
     [SerializeField] private GameObject lightContainer;
+
     private Vector3 mousePos;
-    private float angleThreshold = 15f;
+    private float verticalDeadzone = 30f;
 
     void Start()
     {
@@ -17,9 +18,16 @@ public class HarpoonGunAiming : MonoBehaviour
     {
         mousePos = mouseAiming.GetMousePos();
         Vector2 direction = (mousePos - transform.position).normalized;
+
         float angle = Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg;
         transform.rotation = Quaternion.Euler(0, 0, angle + 180f);
 
+        bool aimingUp = angle > (90 - verticalDeadzone) && angle < (90 + verticalDeadzone);
+        bool aimingDown = angle > (-90 - verticalDeadzone) && angle < (-90 + verticalDeadzone);
+        bool aimingVertically = aimingUp || aimingDown;
+
+        if (!aimingVertically)
+        {
             if (direction.x > 0)
             {
                 spriteRenderer.flipY = true;
@@ -32,5 +40,6 @@ public class HarpoonGunAiming : MonoBehaviour
                 spriteRenderer.transform.localPosition = new Vector3(-0.063f, spriteRenderer.transform.localPosition.y, spriteRenderer.transform.localPosition.z);
                 lightContainer.transform.localPosition = new Vector3(-0.063f, lightContainer.transform.localPosition.y, lightContainer.transform.localPosition.z);
             }
+        }
     }
 }

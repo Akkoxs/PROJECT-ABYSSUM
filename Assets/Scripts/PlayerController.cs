@@ -7,6 +7,9 @@ public class PlayerController : MonoBehaviour
     [SerializeField] private MouseAiming mouseAiming;
     [SerializeField] private Animator animator;
     [SerializeField] private SpriteRenderer spriteRenderer;
+    [SerializeField] private PlayerInput playerInput;
+    [SerializeField] private Submarine submarine;
+    [SerializeField] private EnterExitSubmarine ees;
 
     [Header("Player Speed Settings")]
     [SerializeField] float speed;
@@ -33,7 +36,13 @@ public class PlayerController : MonoBehaviour
     private float vertical;
     private float bobbingTimer = 0f;
     private bool isBeingKnockedBack = false;
+
+    [HideInInspector]
     public bool isInvulnerable = false;
+    [HideInInspector]
+    public bool isInteracting;
+
+    private float isInteractingTimer = 0f;
     private float invulnerabilityTimer = 0f;
     private float invulnerabilityDuration = 1.2f;
 
@@ -61,6 +70,36 @@ public class PlayerController : MonoBehaviour
         }
     }
 
+    public void Aim(InputAction.CallbackContext context)
+    {
+        mouseAiming.OnAim(context);
+    }
+
+    public void Interact(InputAction.CallbackContext context)
+    {
+        if (context.performed && submarine.doorOpen)
+        {
+            if (!submarine.playerInside)
+            {
+                Debug.Log("here entering submarine");
+                submarine.EnterSubmarine();
+            } else if (submarine.playerInside)
+            {
+                Debug.Log("here exiting submarine");
+                submarine.ExitSubmarine();
+            }
+        }
+    }
+
+    public void OnPing(InputAction.CallbackContext context)
+    {
+        PingSonarSystem pingSystem = FindFirstObjectByType<PingSonarSystem>();
+        if (pingSystem != null)
+        {
+            pingSystem.OnPing(context);
+        }
+    }
+
     private bool IsGrounded()
     {
         return Physics2D.OverlapCapsule(groundCheck.position, new Vector2(1f, 0.1f), CapsuleDirection2D.Horizontal, 0, groundLayer);
@@ -72,20 +111,35 @@ public class PlayerController : MonoBehaviour
         Vector3 mousePos = mouseAiming.GetMousePos();
         Vector3 direction = mousePos - transform.position;
 
-        if (direction.x < 0)
+        float angle = Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg;
+
+        float verticalDeadzone = 30f;
+
+        bool aimingUp = angle > (90 - verticalDeadzone) && angle < (90 + verticalDeadzone);
+        bool aimingDown = angle > (-90 - verticalDeadzone) && angle < (-90 + verticalDeadzone);
+        bool aimingVertically = aimingUp || aimingDown;
+
+        if (!aimingVertically)
         {
-            spriteRenderer.flipX = false;
-        }
-        else if (direction.x > 0)
-        {
-            spriteRenderer.flipX = true;
+            if (direction.x < 0)
+            {
+                spriteRenderer.flipX = false;
+            }
+            else if (direction.x > 0)
+            {
+                spriteRenderer.flipX = true;
+            }
         }
 
-        if (direction.y < 0)
+        if (aimingUp)
+        {
+            spriteRenderer.flipY = false;
+        }
+        else if (aimingDown)
         {
             spriteRenderer.flipY = true;
         }
-        else if (direction.y > 0)
+        else
         {
             spriteRenderer.flipY = false;
         }
@@ -157,6 +211,21 @@ public class PlayerController : MonoBehaviour
             animator.SetTrigger("hurt");
             isInvulnerable = true;
             invulnerabilityTimer = invulnerabilityDuration;
+        }
+    }
+
+    private void OnTriggerStay2D(Collider2D collision)
+    {
+        if (collision.gameObject.CompareTag("MinigameTrigger"))
+        {
+            if (MinigameProgressManager.Instance.minigameActive)
+            {
+                playerInput.enabled = false;
+            }
+            else if (MinigameProgressManager.Instance.minigameCompleted)
+            {
+                playerInput.enabled = true;
+            }
         }
     }
 

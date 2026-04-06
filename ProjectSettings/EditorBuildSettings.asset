@@ -12,6 +12,8 @@ EditorBuildSettings:
     path: Assets/Scenes/NewMaster.unity
     guid: c7fc6a6559a010944ad0157f2680e03f
   - enabled: 1
+    path: Assets/Scenes/MInigames/MinigameSCene.unity
+    guid: a9528c68f62a2604d8741de46921999d
     path: Assets/Scenes/Kai Testing/PeppersGhostTest.unity
     guid: 44819641b0b6ebd44b155ee445fa9cad
   m_configObjects:

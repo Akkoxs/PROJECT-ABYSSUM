@@ -1,5 +1,6 @@
 using System;
 using UnityEngine;
+using UnityEngine.InputSystem;
 
 public class MouseAiming : MonoBehaviour
 {
@@ -8,6 +9,7 @@ public class MouseAiming : MonoBehaviour
     [SerializeField] private float aimRadius = 3f;
     [SerializeField] private Animator harpoonAnimator;
     [SerializeField] private bool needHarpoonAnimator;
+    [SerializeField] private float stickDeadzone = 0.2f;
 
     [Header("Camera Reference")]
     [SerializeField] private Camera mainCamera;
@@ -16,29 +18,51 @@ public class MouseAiming : MonoBehaviour
     [SerializeField] private GameObject projectilePrefab;
     [SerializeField] private Transform projectileTransform;
     [SerializeField] private float timeBetweenFiring;
+
     private float timer;
     private bool canFire;
     private bool shoot;
-    private Vector3 mousePos;
+    private Vector3 aimPosition;
+    private Vector2 rightStickInput;
+    private Vector2 currentAimDirection;
 
     void Start()
     {
         Cursor.visible = false;
-
         if (mainCamera == null)
         {
             mainCamera = Camera.main;
         }
+
+        currentAimDirection = Vector2.right;
     }
 
     void Update()
     {
-        mousePos = mainCamera.ScreenToWorldPoint(Input.mousePosition);
-        mousePos.z = 0f;
-        Vector2 direction = (mousePos - transform.position).normalized;
-        Vector2 reticlePos = (Vector2)transform.position + (direction * aimRadius);
-        if (reticle != null) { reticle.position = reticlePos; }
+        UpdateAimPosition();
+        UpdateReticlePosition();
+        HandleShooting();
+    }
 
+    void UpdateAimPosition()
+    {
+        if (rightStickInput.magnitude > stickDeadzone)
+        {
+            currentAimDirection = rightStickInput.normalized;
+        }
+        aimPosition = transform.position + (Vector3)currentAimDirection * aimRadius;
+    }
+
+    void UpdateReticlePosition()
+    {
+        if (reticle != null)
+        {
+            reticle.position = aimPosition;
+        }
+    }
+
+    void HandleShooting()
+    {
         if (!canFire)
         {
             timer += Time.deltaTime;
@@ -52,7 +76,7 @@ public class MouseAiming : MonoBehaviour
         if (canFire && shoot)
         {
             Projectile projectile = Instantiate(projectilePrefab, projectileTransform.position, Quaternion.identity).GetComponent<Projectile>();
-            projectile.InitializeProjectile(mousePos, mainCamera);
+            projectile.InitializeProjectile(currentAimDirection);
 
             try
             {
@@ -62,12 +86,19 @@ public class MouseAiming : MonoBehaviour
             {
                 Debug.Log("DONT NEED HARPOON GUN ANIMATOR ON SUBMARINE");
             }
+
             shoot = false;
             canFire = false;
-        } else if (!canFire && shoot)
+        }
+        else if (!canFire && shoot)
         {
             shoot = false;
         }
+    }
+
+    public void OnAim(InputAction.CallbackContext context)
+    {
+        rightStickInput = context.ReadValue<Vector2>();
     }
 
     private void OnDrawGizmosSelected()
@@ -78,7 +109,7 @@ public class MouseAiming : MonoBehaviour
 
     public Vector3 GetMousePos()
     {
-        return mousePos;
+        return aimPosition;
     }
 
     public void TriggerShoot(bool shoot)
