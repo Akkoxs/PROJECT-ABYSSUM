@@ -13,6 +13,7 @@ public class GameStats : ScriptableObject
     public float subMaxOxygen; 
     public float subMoveSpeed;
     public float scanSpeed; 
+    public float subCoolantCapacity;
 
     [Header("Harpoon")]
     public float harpDamage; 
