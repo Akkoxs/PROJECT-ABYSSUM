@@ -44,7 +44,7 @@ public class OxygenBarSubmarine : MonoBehaviour
 
     private void OxygenDepleted()
     {
-        StartCoroutine(uiHelper.BarFlash(flashDuration, flashColor, regColor, flashFill));
+        StartCoroutine(uiHelper.BarFlash(flashDuration, flashColor, regColor, flashFill, true));
     }
 
     private void OnEnteredSubmarine() => linkLight.SetActive(false);

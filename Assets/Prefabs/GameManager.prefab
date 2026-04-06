@@ -596,7 +596,7 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 0688befac9b1d594c81401bc7fc0bbde, type: 2}
   - {fileID: 11400000, guid: 2254df84ace0a7249b4cba9fbdbf9180, type: 2}
   currentMoney: 0
-  totalDebt: 1000000
+  totalDebt: 100000
   pfArtifact: {fileID: 2277606919776719219, guid: 00b711705c26b37468434b28f768c766, type: 3}
   pfArtifactParent: {fileID: 0}
   maxArtifactsInWorld: 5
@@ -852,8 +852,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b298f98b4d6e8784b8d539053c408e3e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PingSonarSystem
-  tilemapsToLight: []
-  normalColor: {r: 0.3, g: 0.3, b: 0.3, a: 1}
+  tilemapColors: []
   pingColor: {r: 1, g: 1, b: 1, a: 1}
   pingDuration: 2
   fadeSpeed: 2

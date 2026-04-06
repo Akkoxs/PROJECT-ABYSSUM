@@ -184,6 +184,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 7679920097613461720}
+  - component: {fileID: 9098653874409453462}
   m_Layer: 10
   m_Name: lightContainer
   m_TagString: Untagged
@@ -208,6 +209,29 @@ Transform:
   - {fileID: 1938639078601820871}
   m_Father: {fileID: 2343720130038067033}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &9098653874409453462
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2295054788987313635}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 67d141e5084621b45bd88d0a00513da1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: '::'
+  submarineTemp: {fileID: 0}
+  headPercentText: {fileID: 0}
+  floodPercentText: {fileID: 0}
+  headLight: {fileID: 485153639928071952}
+  headMaxIntensity: 80
+  headHeatRate: 30
+  floodLights:
+  - {fileID: 4347977556650197975}
+  - {fileID: 6771838892510159830}
+  floodMaxIntensity: 80
+  floodHeatRate: 30
 --- !u!1 &2908966966107577833
 GameObject:
   m_ObjectHideFlags: 0
@@ -347,7 +371,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::Health
   maxHealth: 1000
   currentHealth: 1000
-  submarineTemp: {fileID: 0}
   healthChanged:
     m_PersistentCalls:
       m_Calls: []
@@ -401,7 +424,6 @@ MonoBehaviour:
   rb: {fileID: 7065195129841400459}
   mouseAiming: {fileID: 0}
   speed: 3
-  submarineInput: {fileID: 0}
   maxTipAngle: 15
   tipSpeed: 3
   tipReturnSpeed: 2
@@ -724,6 +746,12 @@ MonoBehaviour:
   tempMaxReached:
     m_PersistentCalls:
       m_Calls: []
+  coolantFlowChanged:
+    m_PersistentCalls:
+      m_Calls: []
+  overheatInterval: 1
+  overheatDamage: 5
+  subHealth: {fileID: 0}
 --- !u!1 &4253820449561818043
 GameObject:
   m_ObjectHideFlags: 0

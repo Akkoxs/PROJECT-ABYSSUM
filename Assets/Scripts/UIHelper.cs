@@ -6,11 +6,18 @@ using System.Collections;
 public class UIHelper : MonoBehaviour
 {
 
- public IEnumerator BarFlash(float flashTime, Color flashColor, Color regColor, Image barFill)
+ public IEnumerator BarFlash(float flashTime, Color flashColor, Color regColor, Image barFill, bool hideAfterFlash = false)
  {
+   barFill.gameObject.SetActive(true);
     barFill.color = flashColor;  
     yield return new WaitForSeconds(flashTime);
     barFill.color = regColor;
+
+    if (hideAfterFlash)
+      {
+         barFill.gameObject.SetActive(false);
+      }
+
  }    
 
 public IEnumerator Translate(RectTransform panel, RectTransform target, float moveDuration)
