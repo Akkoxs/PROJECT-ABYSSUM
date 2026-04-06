@@ -66,5 +66,5 @@
     "explorer.fileNesting.patterns": {
         "*.sln": "*.csproj"
     },
-    "dotnet.defaultSolution": "PROJECT-ABYSSUM.sln"
+    "dotnet.defaultSolution": "BANANA-BRICK-F2025.sln"
 }

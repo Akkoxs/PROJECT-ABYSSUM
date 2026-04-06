@@ -20,10 +20,6 @@ public class ArtifactApplicator : MonoBehaviour
     private SubmarineStatSetter subStatSetter; 
     private SubmarineTemp submarineTemp;
 
-
-    //UI
-    [SerializeField] private Sonar sonar; 
-
     //events
     public UnityEvent <ArtifactType, float> onStatUpgraded; 
     public UnityEvent <string> onReplenished;

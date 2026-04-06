@@ -145,7 +145,34 @@ public class SerialController : MonoBehaviour
         serialThread.SendMessage(message);
     }
 
-    
+    public void ConnectToPort(string newPortName)
+    {
+        // 1. Update the target port
+        portName = newPortName;
+
+        // 2. Shut down the existing thread (mirroring OnDisable logic)
+        if (serialThread != null)
+        {
+            serialThread.RequestStop();
+            serialThread = null;
+        }
+
+        if (thread != null)
+        {
+            thread.Join(); // Wait for the thread to safely finish
+            thread = null;
+        }
+
+        // 3. Boot up a fresh thread with the new port (mirroring OnEnable logic)
+        serialThread = new SerialThreadLines(portName, 
+                                             baudRate, 
+                                             reconnectionDelay,
+                                             maxUnreadMessages);
+        thread = new Thread(new ThreadStart(serialThread.RunForever));
+        thread.Start();
+        
+        Debug.Log($"[SerialController] Restarted and attempting connection to {portName}");
+    }
 
     // ------------------------------------------------------------------------
     // Executes a user-defined function before Unity closes the COM port, so
