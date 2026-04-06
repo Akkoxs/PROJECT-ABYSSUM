@@ -1,19 +1,26 @@
 using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.Tilemaps;
 using TMPro;
 
+[System.Serializable]
+public class TilemapColorPair
+{
+    public Tilemap tilemap;
+    public Color normalColor = new Color(0.3f, 0.3f, 0.3f, 1f);
+}
+
 public class PingSonarSystem : MonoBehaviour
 {
     [Header("Tilemap References")]
-    [SerializeField] private Tilemap[] tilemapsToLight;
+    [SerializeField] private List<TilemapColorPair> tilemapColors = new List<TilemapColorPair>();
 
     [Header("Ping Settings")]
-    [SerializeField] private Color normalColor = new Color(0.3f, 0.3f, 0.3f, 1f);
     [SerializeField] private Color pingColor = Color.white;
     [SerializeField] private float pingDuration = 2f;
-    [SerializeField] private float fadeSpeed = 2f; 
+    [SerializeField] private float fadeSpeed = 2f;
     [SerializeField] private float cooldownTime = 30f;
 
     [Header("Audio (Optional)")]
@@ -21,30 +28,23 @@ public class PingSonarSystem : MonoBehaviour
     [SerializeField] private AudioClip pingSound;
 
     [Header("UI Feedback (Optional)")]
-    [SerializeField] private TextMeshProUGUI cooldownText; 
-    [SerializeField] private UnityEngine.UI.Image cooldownFillImage; 
+    [SerializeField] private TextMeshProUGUI cooldownText;
+    [SerializeField] private UnityEngine.UI.Image cooldownFillImage;
 
     private bool isPinging = false;
     private bool isOnCooldown = false;
     private float cooldownTimer = 0f;
-    private Color[] originalColors;
 
     void Start()
     {
-        if (tilemapsToLight != null && tilemapsToLight.Length > 0)
+        // Set all tilemaps to their respective normal colors
+        foreach (TilemapColorPair pair in tilemapColors)
         {
-            originalColors = new Color[tilemapsToLight.Length];
-            for (int i = 0; i < tilemapsToLight.Length; i++)
+            if (pair.tilemap != null)
             {
-                if (tilemapsToLight[i] != null)
-                {
-                    originalColors[i] = tilemapsToLight[i].color;
-                    tilemapsToLight[i].color = normalColor;
-                }
+                pair.tilemap.color = pair.normalColor;
             }
         }
-
-        //UpdateUI();
     }
 
     void Update()
@@ -58,14 +58,12 @@ public class PingSonarSystem : MonoBehaviour
                 isOnCooldown = false;
                 cooldownTimer = 0f;
             }
-
-            //UpdateUI();
         }
 
-        //if (SerialHandler.Instance.ping && !isPinging && !isOnCooldown)
-        //{
-        //    ActivatePing();
-        //}
+        if (SerialHandler.Instance.ping && !isPinging && !isOnCooldown)
+        {
+            ActivatePing();
+        }
     }
 
     public void OnPing(InputAction.CallbackContext context)
@@ -96,9 +94,12 @@ public class PingSonarSystem : MonoBehaviour
     IEnumerator PingCoroutine()
     {
         isPinging = true;
-        SetAllTilemapColors(pingColor);
+
+        // Flash all tilemaps to ping color
+        SetAllTilemapsToColor(pingColor);
 
         yield return new WaitForSeconds(pingDuration);
+
         float elapsed = 0f;
         float fadeDuration = 1f / fadeSpeed;
 
@@ -107,72 +108,55 @@ public class PingSonarSystem : MonoBehaviour
             elapsed += Time.deltaTime;
             float t = elapsed / fadeDuration;
 
-            Color currentColor = Color.Lerp(pingColor, normalColor, t);
-            SetAllTilemapColors(currentColor);
+            // Fade each tilemap back to its individual normal color
+            FadeTilemapsToNormal(t);
 
             yield return null;
         }
 
-        SetAllTilemapColors(normalColor);
+        // Ensure all tilemaps are back to their exact normal colors
+        SetTilemapsToNormal();
 
         isPinging = false;
     }
 
-    void SetAllTilemapColors(Color color)
+    void SetAllTilemapsToColor(Color color)
     {
-        if (tilemapsToLight == null) return;
-
-        foreach (Tilemap tilemap in tilemapsToLight)
+        foreach (TilemapColorPair pair in tilemapColors)
         {
-            if (tilemap != null)
+            if (pair.tilemap != null)
             {
-                tilemap.color = color;
+                pair.tilemap.color = color;
             }
         }
     }
 
-    //void UpdateUI()
-    //{
-    //    if (cooldownText != null)
-    //    {
-    //        if (isOnCooldown)
-    //        {
-    //            cooldownText.text = $"Ping: {cooldownTimer:F1}s";
-    //        }
-    //        else
-    //        {
-    //            cooldownText.text = "Ping: Ready!";
-    //        }
-    //    }
+    void FadeTilemapsToNormal(float t)
+    {
+        foreach (TilemapColorPair pair in tilemapColors)
+        {
+            if (pair.tilemap != null)
+            {
+                Color fadedColor = Color.Lerp(pingColor, pair.normalColor, t);
+                pair.tilemap.color = fadedColor;
+            }
+        }
+    }
 
-    //    if (cooldownFillImage != null)
-    //    {
-    //        if (isOnCooldown)
-    //        {
-    //            cooldownFillImage.fillAmount = cooldownTimer / cooldownTime;
-    //        }
-    //        else
-    //        {
-    //            cooldownFillImage.fillAmount = 1f;
-    //        }
-    //    }
-    //}
+    void SetTilemapsToNormal()
+    {
+        foreach (TilemapColorPair pair in tilemapColors)
+        {
+            if (pair.tilemap != null)
+            {
+                pair.tilemap.color = pair.normalColor;
+            }
+        }
+    }
 
-    // Optional: Manual trigger for testing
     [ContextMenu("Test Ping")]
     public void TestPing()
     {
         ActivatePing();
     }
-
-    //public bool IsOnCooldown()
-    //{
-    //    return isOnCooldown;
-    //}
-
-    //public float GetCooldownProgress()
-    //{
-    //    if (!isOnCooldown) return 1f;
-    //    return 1f - (cooldownTimer / cooldownTime);
-    //}
 }

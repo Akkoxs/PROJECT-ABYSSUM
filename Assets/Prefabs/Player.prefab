@@ -47,9 +47,9 @@ MonoBehaviour:
   m_ComponentVersion: 2
   m_LightType: 3
   m_BlendStyleIndex: 0
-  m_FalloffIntensity: 0.508
-  m_Color: {r: 1, g: 0.9371726, b: 0, a: 1}
-  m_Intensity: 50
+  m_FalloffIntensity: 0.76
+  m_Color: {r: 0.9622642, g: 0.7781288, b: 0, a: 1}
+  m_Intensity: 55
   m_LightVolumeIntensity: 1
   m_LightVolumeEnabled: 0
   m_ApplyToSortingLayers: 00000000
@@ -70,8 +70,8 @@ MonoBehaviour:
   m_LocalBounds:
     m_Center: {x: 0, y: -0.00000011920929, z: 0}
     m_Extent: {x: 0.9985302, y: 0.99853027, z: 0}
-  m_PointLightInnerAngle: 9.75
-  m_PointLightOuterAngle: 50.41999
+  m_PointLightInnerAngle: 5.4683547
+  m_PointLightOuterAngle: 46.13835
   m_PointLightInnerRadius: 0
   m_PointLightOuterRadius: 10
   m_ShapeLightParametricSides: 5
@@ -678,7 +678,19 @@ MonoBehaviour:
     m_ActionId: f1b97928-c31f-4d11-8c23-b8a039ce369d
     m_ActionName: UI/TrackedDeviceOrientation
   - m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 5336883611615615912}
+        m_TargetAssemblyTypeName: PlayerController, Assembly-CSharp
+        m_MethodName: Aim
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
     m_ActionId: e1815ec2-b2c0-464f-8b88-415f005cb15b
     m_ActionName: 'Player/Aim[/DualSenseGamepadHID/rightStick,/SwitchProControllerHID/rightStick]'
   - m_PersistentCalls:
@@ -686,7 +698,19 @@ MonoBehaviour:
     m_ActionId: fde5d1b9-df3e-419d-9e71-6d55ba46d3bc
     m_ActionName: 'Player/Ping[/DualSenseGamepadHID/leftTrigger]'
   - m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 5336883611615615912}
+        m_TargetAssemblyTypeName: PlayerController, Assembly-CSharp
+        m_MethodName: Interact
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
     m_ActionId: 62947c63-ccd5-4175-8af5-66876b17d4a0
     m_ActionName: 'Player/Interact[/DualSenseGamepadHID/buttonSouth,/DualSenseGamepadHID/buttonEast]'
   m_NeverAutoSwitchControlSchemes: 0
@@ -766,7 +790,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::Health
   maxHealth: 100
   currentHealth: 100
-  submarineTemp: {fileID: 0}
   healthChanged:
     m_PersistentCalls:
       m_Calls: []

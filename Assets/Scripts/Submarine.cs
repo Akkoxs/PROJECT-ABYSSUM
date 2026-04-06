@@ -67,6 +67,11 @@ public class Submarine : MonoBehaviour
         //    EnterSubmarine();
         //else if (playerInside && Keyboard.current[interactKey].wasPressedThisFrame)
         //    ExitSubmarine();
+
+        if (SerialHandler.Instance.shoot)
+        {
+            mouseAiming.TriggerShoot(true);
+        }
     }
 
     #region SUBMARINE_CONTROLS

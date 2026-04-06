@@ -532,6 +532,7 @@ GameObject:
   - component: {fileID: 3422597391964862305}
   - component: {fileID: 2023356520227658442}
   - component: {fileID: 1358502573070242686}
+  - component: {fileID: 1636052396883262806}
   m_Layer: 0
   m_Name: GameManager
   m_TagString: Untagged
@@ -839,6 +840,28 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9399091429b1b1045b53ebeee7643e5a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PortConfigLoader
+--- !u!114 &1636052396883262806
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2170786113157098044}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b298f98b4d6e8784b8d539053c408e3e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PingSonarSystem
+  tilemapsToLight: []
+  normalColor: {r: 0.3, g: 0.3, b: 0.3, a: 1}
+  pingColor: {r: 1, g: 1, b: 1, a: 1}
+  pingDuration: 2
+  fadeSpeed: 2
+  cooldownTime: 30
+  audioSource: {fileID: 0}
+  pingSound: {fileID: 0}
+  cooldownText: {fileID: 0}
+  cooldownFillImage: {fileID: 0}
 --- !u!1 &2599967445930855108
 GameObject:
   m_ObjectHideFlags: 0
