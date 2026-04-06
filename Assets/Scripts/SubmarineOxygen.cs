@@ -5,13 +5,19 @@ using System.Collections;
 
 public class SubmarineOxygen : MonoBehaviour
 {
-    [SerializeField] private float currentOxygen; 
-    [SerializeField] private float maxOxygen = 750f;
-    [SerializeField] private float depletionRate = 100f; //ticks per second
-    private PlayerOxygen playerOxy;
+    [Header("References")]
     [SerializeField] private Submarine sub;
+    [SerializeField] private Health subHealth;
+
+    [Header("Properties")]
+    [SerializeField] private float currentOxygen; 
+    [SerializeField] private float maxOxygen = 1000f;
+    [SerializeField] private float depletionRate = 1f; //ticks per second
+    [SerializeField] private float playerInsideMultiplier = 2f; //2x drain when player inside 
+    [SerializeField] private float depletionTickDamage = 5f;
+    [SerializeField] private float depletionTickRate = 1f;
+
     private bool isUnderwater;
-    private bool hasInvokedDepletion;
 
     //public read only vars
     public float CurrentOxygen => currentOxygen;
@@ -22,52 +28,36 @@ public class SubmarineOxygen : MonoBehaviour
     public UnityEvent oxygenDepleted;
     
     Coroutine oxyTick = null;
+    Coroutine oxyDepletedDamage = null;
 
     private void Awake()
     {
         currentOxygen = maxOxygen;
-        sub.enteredSubmarine.AddListener(PlayerEnteredSubmarine);
-        sub.exitedSubmarine.AddListener(PlayerExitedSubmarine);
-        playerOxy = GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerOxygen>();
-
-
     }
 
     //triggered by OxygenZone
-    public void EnterOxygenZone() //When sub surfaces with player inside
+    public void EnterOxygenZone()
     {
         isUnderwater = false;
         ResetOxygen();
-
-        if(oxyTick != null && sub.PlayerInside)
-        {
-            StopCoroutine(oxyTick);
-            oxyTick = null;
-        }
+        StopOxyTick();
+        StopDamageTick();
     }
 
     //triggered by OxygenZone
     public void ExitOxygenZone() //When sub submerges with player inside
     {
         isUnderwater = true;
-
-        if (oxyTick == null && sub.PlayerInside)
-            oxyTick = StartCoroutine(OxygenTick());
+        StartOxyTick();
     }
 
-    private void PlayerEnteredSubmarine() //when player exits sub while underwater
+    //to be called by oxygen transfer system
+    public float RequestOxygen(float amount)
     {
-        if (isUnderwater && oxyTick == null)
-            oxyTick = StartCoroutine(OxygenTick());
-    }
-
-    private void PlayerExitedSubmarine() //when player exits sub while underwater
-    {
-        if (isUnderwater && oxyTick != null)
-        {
-            StopCoroutine(oxyTick);
-            oxyTick = null;
-        }
+        float given = Mathf.Min(amount, currentOxygen); //clamp so we dont seen below 0
+        currentOxygen -= given; //subtract the given from our current reserves
+        oxygenChanged?.Invoke(currentOxygen, maxOxygen); //let the event knon
+        return given;
     }
 
     public void ResetOxygen()
@@ -76,29 +66,85 @@ public class SubmarineOxygen : MonoBehaviour
         oxygenChanged?.Invoke(currentOxygen, maxOxygen);
     }
 
-    private IEnumerator OxygenTick()
-    {
-        while (isUnderwater && sub.PlayerInside)
-        {
-            if (currentOxygen > 0f)
-            {
-                currentOxygen = Mathf.Max(0, currentOxygen - depletionRate * Time.deltaTime);
-                oxygenChanged?.Invoke(currentOxygen, maxOxygen);
-            }
-
-            else if (currentOxygen <= 0)
-            {
-                oxygenDepleted?.Invoke();
-                yield return new WaitForSeconds(1f);
-            }
-            yield return null; 
-        }
-    }
-
+    //I believe this is called by the submarine stat setter
     public void SetMaxOxygen(float newMax)
     {
         maxOxygen = newMax; 
         currentOxygen = Mathf.Min(currentOxygen, maxOxygen); //clamp
         oxygenChanged?.Invoke(currentOxygen, maxOxygen);
+    }
+
+    //HELPERS -----------
+
+    private void StartOxyTick()
+    {
+        if (oxyTick == null)
+            oxyTick = StartCoroutine(OxygenTick());
+    }
+
+    private void StopOxyTick()
+    {
+        if (oxyTick != null)
+        {
+            StopCoroutine(oxyTick);
+            oxyTick = null;
+        }
+    }
+
+    private void StopDamageTick()
+    {
+        if (oxyDepletedDamage != null)
+        {
+            StopCoroutine(oxyDepletedDamage);
+            oxyDepletedDamage = null;
+        }
+    }
+
+    private IEnumerator OxygenTick()
+    {
+        while (isUnderwater)
+        {
+            float rate; 
+            
+            //how much do we deplete by? depends on if player inside or not 
+            if (sub.PlayerInside)
+            {
+                rate = depletionRate * playerInsideMultiplier;
+            }
+            else
+            {
+                rate = depletionRate;
+            }
+            
+            //as long as we have oxy
+            if (currentOxygen > 0f)
+            {
+                currentOxygen = Mathf.Max(0f, currentOxygen - rate * Time.deltaTime); //subtract the current rate, but clamp so it doesnt go below 0
+                oxygenChanged?.Invoke(currentOxygen, maxOxygen); //let the ui know
+
+                // clear damage tick if we regained oxygen
+                if (currentOxygen > 0f)
+                    StopDamageTick();
+            }
+
+            //if we are out of oxy and not already taking damage, start the corot
+            if (currentOxygen <= 0f && oxyDepletedDamage == null)
+                oxyDepletedDamage = StartCoroutine(OxygenDepletedDamage());
+
+            yield return null;
+        }
+    }
+
+    private IEnumerator OxygenDepletedDamage()
+    {
+        while (isUnderwater && currentOxygen <= 0f)
+        {
+            oxygenDepleted?.Invoke();
+            if (subHealth != null && !subHealth.isDead)
+                subHealth.TakeDamage(depletionTickDamage);
+
+            yield return new WaitForSeconds(depletionTickRate);
+        }
+        oxyDepletedDamage = null;
     }
 }

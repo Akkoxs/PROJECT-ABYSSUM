@@ -145,6 +145,8 @@ public class SerialController : MonoBehaviour
         serialThread.SendMessage(message);
     }
 
+    
+
     // ------------------------------------------------------------------------
     // Executes a user-defined function before Unity closes the COM port, so
     // the user can send some tear-down message to the hardware reliably.

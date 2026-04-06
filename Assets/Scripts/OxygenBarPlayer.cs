@@ -18,18 +18,22 @@ public class OxygenBarPlayer : MonoBehaviour
 
     private void OnEnable()
     {
+        regColor = barFill.color;
         flashFill.color = regColor;
         UpdateOxygen(oxy.CurrentOxygen, oxy.MaxOxygen);
+
         oxy.oxygenChanged.AddListener(UpdateOxygen);
         oxy.oxygenDepleted.AddListener(OxygenDepleted);
-        sub.enteredSubmarine.AddListener(OxygenLink);
-        sub.exitedSubmarine.AddListener(OxygenUnlink);
+        sub.enteredSubmarine.AddListener(OnEnteredSubmarine);
+        sub.exitedSubmarine.AddListener(OnExitedSubmarine);
     }
 
     private void OnDisable()
     {
         oxy.oxygenChanged.RemoveListener(UpdateOxygen);
-        oxy.oxygenDepleted.RemoveListener(OxygenDepleted);   
+        oxy.oxygenDepleted.RemoveListener(OxygenDepleted);  
+        sub.enteredSubmarine.RemoveListener(OnEnteredSubmarine); 
+        sub.exitedSubmarine.RemoveListener(OnExitedSubmarine);
     }
 
     private void UpdateOxygen(float currentOxygen, float maxOxygen)
@@ -42,14 +46,7 @@ public class OxygenBarPlayer : MonoBehaviour
         StartCoroutine(uiHelper.BarFlash(flashDuration, flashColor, regColor, flashFill));
     }
 
-    private void OxygenLink()
-    {
-        linkLight.SetActive(false);
-    }
-
-    private void OxygenUnlink()
-    {
-        linkLight.SetActive(true);
-    }
+    private void OnEnteredSubmarine() => linkLight.SetActive(false);
+    private void OnExitedSubmarine() => linkLight.SetActive(true);
 
 }

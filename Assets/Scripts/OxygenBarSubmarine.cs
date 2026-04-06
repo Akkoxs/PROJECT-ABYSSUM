@@ -15,6 +15,7 @@ public class OxygenBarSubmarine : MonoBehaviour
 
     private void OnEnable()
     {
+        regColor = barFill.color;
         flashFill.color = regColor;
         UpdateOxygen(oxy.CurrentOxygen, oxy.MaxOxygen);
         oxy.oxygenChanged.AddListener(UpdateOxygen);
