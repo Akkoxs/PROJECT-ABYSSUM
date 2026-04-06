@@ -8,6 +8,8 @@ public class PlayerController : MonoBehaviour
     [SerializeField] private Animator animator;
     [SerializeField] private SpriteRenderer spriteRenderer;
     [SerializeField] private PlayerInput playerInput;
+    [SerializeField] private Submarine submarine;
+    [SerializeField] private EnterExitSubmarine ees;
 
     [Header("Player Speed Settings")]
     [SerializeField] float speed;
@@ -34,7 +36,13 @@ public class PlayerController : MonoBehaviour
     private float vertical;
     private float bobbingTimer = 0f;
     private bool isBeingKnockedBack = false;
+
+    [HideInInspector]
     public bool isInvulnerable = false;
+    [HideInInspector]
+    public bool isInteracting;
+
+    private float isInteractingTimer = 0f;
     private float invulnerabilityTimer = 0f;
     private float invulnerabilityDuration = 1.2f;
 
@@ -65,6 +73,20 @@ public class PlayerController : MonoBehaviour
     public void Aim(InputAction.CallbackContext context)
     {
         mouseAiming.OnAim(context);
+    }
+
+    public void Interact(InputAction.CallbackContext context)
+    {
+        if (context.performed && ees.playerInRange && submarine.doorOpen)
+        {
+            if (!submarine.playerInside)
+            {
+                submarine.EnterSubmarine();
+            } else if (submarine.playerInside)
+            {
+                submarine.ExitSubmarine();
+            }
+        }
     }
 
     public void OnPing(InputAction.CallbackContext context)

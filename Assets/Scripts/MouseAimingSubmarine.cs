@@ -7,7 +7,7 @@ public class MouseAimingSubmarine : MonoBehaviour
     [Header("Aiming Settings")]
     [SerializeField] private Transform reticle;
     [SerializeField] private float aimRadius = 3f;
-    [SerializeField] private float stickDeadzone = 0.2f; // Minimum stick input to register
+    [SerializeField] private float stickDeadzone = 0.2f;
 
     [Header("Camera Reference")]
     [SerializeField] private Camera mainCamera;

@@ -7,7 +7,6 @@ using UnityEngine.Rendering.Universal;
 public class Submarine : MonoBehaviour
 {
     [SerializeField] private GameObject enterExitPoint;
-    [SerializeField] private Key interactKey = Key.E;
     [SerializeField] private GameObject player;
     [SerializeField] private GameObject harpoonGun;
     [SerializeField] private SpriteRenderer spriteRenderer;
@@ -37,11 +36,11 @@ public class Submarine : MonoBehaviour
     private EnterExitSubmarine ees;
     private MouseAiming playerMouseAiming;
     private ShadowCaster2D playerShadow;
-    private bool playerInside = false;
+    public bool playerInside = false;
     private float horizontal;
     private float vertical;
     private float currentTipAngle = 0f;
-    private bool doorOpen;
+    public bool doorOpen;
 
     public bool PlayerInside => playerInside;
 
@@ -65,12 +64,12 @@ public class Submarine : MonoBehaviour
 
     private void Update()
     {
-        if (ees.playerInRange && !playerInside && Keyboard.current[interactKey].wasPressedThisFrame)
-            EnterSubmarine();
-        else if (playerInside && Keyboard.current[interactKey].wasPressedThisFrame)
-            ExitSubmarine();
+        //if (ees.playerInRange && !playerInside && )
+        //    EnterSubmarine();
+        //else if (playerInside && Keyboard.current[interactKey].wasPressedThisFrame)
+        //    ExitSubmarine();
 
-        if (playerInside && SerialHandler.Instance.shoot)
+        if (SerialHandler.Instance.shoot)
         {
             mouseAiming.TriggerShoot(true);
         }
@@ -99,33 +98,35 @@ public class Submarine : MonoBehaviour
             mouseAiming.OnAim(context);
         }
     }
-
     #endregion
 
     public void EnterSubmarine()
     {
-        playerInside = true;
-        enteredSubmarine?.Invoke();
-        playerController.enabled = false;
-        playerSprite.enabled = false;
-        playerMouseAiming.enabled = false;
-        playerShadow.enabled = false;
-        harpoonGun.SetActive(false);
-        //submarineInput.enabled = true;
-        //mouseAiming.enabled = true;
-        Debug.Log("Entered submarine!");
+        if (doorOpen)
+        {
+            playerInside = true;
+            enteredSubmarine?.Invoke();
+            playerController.enabled = false;
+            playerSprite.enabled = false;
+            playerMouseAiming.enabled = false;
+            playerShadow.enabled = false;
+            harpoonGun.SetActive(false);
+            //submarineInput.enabled = true;
+            //mouseAiming.enabled = true;
+            Debug.Log("Entered submarine!");
+        }
     }
 
     public void HandleSubmarineDoor()
     {
-        if (SerialHandler.Instance.door)
+        if (SerialHandler.Instance.door || Keyboard.current[Key.E].wasPressedThisFrame)
         {
             if (horizontal == 0 && vertical == 0 && !doorOpen)
             {
                 subAnimator.SetBool("door", true);
                 doorOpen = true;
             }
-        } else if (!SerialHandler.Instance.door)
+        } else if (!SerialHandler.Instance.door || Keyboard.current[Key.E].wasPressedThisFrame)
         {
            if (horizontal == 0 && vertical == 0 && doorOpen)
             {
@@ -210,22 +211,23 @@ public class Submarine : MonoBehaviour
     public void ExitSubmarine()
     {
         if (!playerInside) return;
-
-        playerInside = false;
-        exitedSubmarine?.Invoke();
-        player.transform.position = enterExitPoint.transform.position;
-        playerController.enabled = true;
-        submarineInput.enabled = false;
-        playerShadow.enabled = true;
-        playerSprite.enabled = true;
-        playerMouseAiming.enabled = true;
-        mouseAiming.enabled = false;
-        harpoonGun.SetActive(true);
-        rb.linearVelocity = Vector2.zero;
-        currentTipAngle = 0f;
-        transform.rotation = Quaternion.identity;
-
-        Debug.Log("Exited submarine!");
+        if (doorOpen)
+        {
+            playerInside = false;
+            exitedSubmarine?.Invoke();
+            player.transform.position = enterExitPoint.transform.position;
+            playerController.enabled = true;
+            //submarineInput.enabled = false;
+            playerShadow.enabled = true;
+            playerSprite.enabled = true;
+            playerMouseAiming.enabled = true;
+            //mouseAiming.enabled = false;
+            harpoonGun.SetActive(true);
+            rb.linearVelocity = Vector2.zero;
+            currentTipAngle = 0f;
+            transform.rotation = Quaternion.identity;
+            Debug.Log("Exited submarine!");
+        }
     }
 
     public void SetMoveSpeed(float newSpeed)
