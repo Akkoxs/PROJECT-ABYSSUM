@@ -22,6 +22,7 @@ public class ArtifactStats : ScriptableObject
     public bool replenishSubOxygen;
     public bool replenishTorpedo;
     public bool grantExtraTorpedo;
+    public bool replenishCoolant;
 }
 
 [System.Serializable]
@@ -37,6 +38,7 @@ public enum StatType //all types of stats
     DiverOxygen, 
     SubHealth, 
     SubOxygen,
+    SubCoolant,
     SonarSpeed,
     TorpedoDamage,
     TorpedoSpeed,
@@ -65,5 +67,6 @@ public enum ArtifactType
     HARP,
     RLD,
     SWIM,
-    PROP
+    PROP,
+    COOL
 }

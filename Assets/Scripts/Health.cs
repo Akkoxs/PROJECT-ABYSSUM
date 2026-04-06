@@ -5,29 +5,32 @@ public class Health : MonoBehaviour, IDamageable, IHealable
 {
 
     [SerializeField] private float maxHealth = 100f;
-    [SerializeField] private float currentHealth; 
+    [SerializeField] private float currentHealth;
+
+    [SerializeField] private SubmarineTemp submarineTemp;
 
     //public read only 
-    public float MaxHealth => maxHealth; 
-    public float CurrentHealth => currentHealth; 
-    public bool isDead {get; private set;} 
+    public float MaxHealth => maxHealth;
+    public float CurrentHealth => currentHealth;
+    public bool isDead { get; private set; }
 
     //Events
-    public UnityEvent <float, float> healthChanged;  
-    public UnityEvent died; 
+    public UnityEvent<float, float> healthChanged;
+    public UnityEvent died;
 
 
     private void Awake()
     {
-       currentHealth = maxHealth;
-       isDead = false;
+        currentHealth = maxHealth;
+        isDead = false;
+        submarineTemp.tempMaxReached.AddListener(() => TakeDamage(20f)); //instantly kill when max temp reached
     }
 
     public void TakeDamage(float dmgAmount)
     {
         if (isDead)
             return;
-        
+
         currentHealth = Mathf.Max(0, currentHealth - dmgAmount); //keeps between min and current 
         healthChanged?.Invoke(currentHealth, maxHealth);
 
@@ -40,7 +43,7 @@ public class Health : MonoBehaviour, IDamageable, IHealable
     public void Heal(float healAmount)
     {
         if (isDead)
-            return; 
+            return;
 
         currentHealth = Mathf.Min(maxHealth, currentHealth + healAmount); //keeps between max and current 
         healthChanged?.Invoke(currentHealth, maxHealth);
@@ -49,14 +52,14 @@ public class Health : MonoBehaviour, IDamageable, IHealable
     private void Die()
     {
         currentHealth = 0;
-        isDead = true; 
+        isDead = true;
         died?.Invoke();
     }
 
     public void SetMaxHealth(float newMax, bool fullHealth)
     {
-        maxHealth = newMax; 
-        
+        maxHealth = newMax;
+
         if (fullHealth)
             currentHealth = maxHealth;
 
@@ -65,7 +68,7 @@ public class Health : MonoBehaviour, IDamageable, IHealable
 
         healthChanged?.Invoke(currentHealth, maxHealth);
 
-    } 
+    }
 
 
 }
