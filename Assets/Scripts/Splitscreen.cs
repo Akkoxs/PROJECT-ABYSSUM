@@ -383,4 +383,7 @@ void RestoreCameras()
             SetLayerRecursively(child.gameObject, layer);
         }
     }
+
+    public Camera GetUICamera() => uiCam;
+    public Camera[] GetGameCameras() => new[] { camTop, camBottom, camLeft, camRight };
 }
