@@ -43,7 +43,7 @@ public class SerialHandler : MonoBehaviour
     float joyStickMult = 1840f;
     float joyMin = 800f;
     float joyMax = 3200f;
-    float potentiometerMult = 4095f;
+    float potentiometerMult = 1023f;
 
     void Awake()
     {

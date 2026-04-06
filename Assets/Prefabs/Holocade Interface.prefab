@@ -474,7 +474,7 @@ GameObject:
   m_Component:
   - component: {fileID: 854747228996586142}
   - component: {fileID: 7848451613527917185}
-  - component: {fileID: 3710632957925011016}
+  - component: {fileID: 6422477774267306057}
   m_Layer: 5
   m_Name: Pilot Oxy Bar
   m_TagString: Untagged
@@ -554,7 +554,7 @@ MonoBehaviour:
   m_OnValueChanged:
     m_PersistentCalls:
       m_Calls: []
---- !u!114 &3710632957925011016
+--- !u!114 &6422477774267306057
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -563,17 +563,17 @@ MonoBehaviour:
   m_GameObject: {fileID: 180827817218700352}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: cfbe4cc868489984da1657aab90bd933, type: 3}
+  m_Script: {fileID: 11500000, guid: b5f64a43704f612409e1911952d15278, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::OxygenBarPlayer
+  m_EditorClassIdentifier: Assembly-CSharp::OxygenBarSubmarine
   slider: {fileID: 7848451613527917185}
   oxy: {fileID: 0}
-  sub: {fileID: 0}
-  linkLight: {fileID: 4321503730146881035}
   uiHelper: {fileID: 4097745362373356111}
+  linkLight: {fileID: 4321503730146881035}
   barFill: {fileID: 2095620980777058405}
   flashFill: {fileID: 7203770262526349710}
   flashDuration: 0.2
+  sub: {fileID: 0}
 --- !u!1 &215209049479492899
 GameObject:
   m_ObjectHideFlags: 0
@@ -1002,9 +1002,11 @@ MonoBehaviour:
   slider: {fileID: 0}
   oxy: {fileID: 0}
   uiHelper: {fileID: 0}
+  linkLight: {fileID: 0}
   barFill: {fileID: 0}
   flashFill: {fileID: 0}
   flashDuration: 0.2
+  sub: {fileID: 0}
 --- !u!1 &351829417756611740
 GameObject:
   m_ObjectHideFlags: 0

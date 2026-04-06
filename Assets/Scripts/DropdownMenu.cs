@@ -11,34 +11,77 @@ public class DropdownMenu : MonoBehaviour
     private RectTransform target;
     private Coroutine translateCoroutine;
     private bool panelDeployed = false;
+    private bool lastSwitchState = false;
 
     void Update()
     {
-        if (Keyboard.current.tabKey.wasPressedThisFrame)
-            ToggleMenu();
+        if (SerialHandler.Instance == null) return;
+
+        bool currentSwitchState = SerialHandler.Instance.radarOn;
+
+        if (currentSwitchState != lastSwitchState)
+        {
+            lastSwitchState = currentSwitchState;
+
+            if (currentSwitchState && !panelDeployed)
+                DeployMenu();
+            else if (!currentSwitchState && panelDeployed)
+                RetractMenu();
+        }
     }
 
-    private void ToggleMenu()
+    // void Update()
+    // {
+    //     if (Keyboard.current.tabKey.wasPressedThisFrame)
+    //         ToggleMenu();
+    // }
+
+    private void DeployMenu()
+    {
+        StopTranslate();
+        target = panelOutPos;
+        panelDeployed = true;
+        translateCoroutine = StartCoroutine(uiHelper.Translate(panel, target, deploySpeed));
+    }
+
+    private void RetractMenu()
+    {
+        StopTranslate();
+        target = panelInPos;
+        panelDeployed = false;
+        translateCoroutine = StartCoroutine(uiHelper.Translate(panel, target, deploySpeed));
+    }
+
+    private void StopTranslate()
     {
         if (translateCoroutine != null)
         {
             StopCoroutine(translateCoroutine);
             translateCoroutine = null;
         }
+    }
 
-        if (panelDeployed)
-        {
-            target = panelInPos;
-            panelDeployed = false;
-        }
-        else
-        {
-            target = panelOutPos;
-            panelDeployed = true;  
-        }
+    // private void ToggleMenu()
+    // {
+    //     if (translateCoroutine != null)
+    //     {
+    //         StopCoroutine(translateCoroutine);
+    //         translateCoroutine = null;
+    //     }
+
+    //     if (panelDeployed)
+    //     {
+    //         target = panelInPos;
+    //         panelDeployed = false;
+    //     }
+    //     else
+    //     {
+    //         target = panelOutPos;
+    //         panelDeployed = true;  
+    //     }
             
 
-        translateCoroutine = StartCoroutine(uiHelper.Translate(panel, target, deploySpeed));
-    }
+    //     translateCoroutine = StartCoroutine(uiHelper.Translate(panel, target, deploySpeed));
+    // }
    
 }
