@@ -77,13 +77,15 @@ public class PlayerController : MonoBehaviour
 
     public void Interact(InputAction.CallbackContext context)
     {
-        if (context.performed && ees.playerInRange && submarine.doorOpen)
+        if (context.performed && submarine.doorOpen)
         {
             if (!submarine.playerInside)
             {
+                Debug.Log("here entering submarine");
                 submarine.EnterSubmarine();
             } else if (submarine.playerInside)
             {
+                Debug.Log("here exiting submarine");
                 submarine.ExitSubmarine();
             }
         }

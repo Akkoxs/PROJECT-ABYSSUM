@@ -154,19 +154,19 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3294705913223454776, guid: b980f31bb442a824d976d1e7444e854f, type: 3}
       propertyPath: m_Size.x
-      value: 1.260116
+      value: 0.45866162
       objectReference: {fileID: 0}
     - target: {fileID: 3294705913223454776, guid: b980f31bb442a824d976d1e7444e854f, type: 3}
       propertyPath: m_Size.y
-      value: 0.536988
+      value: 0.3955799
       objectReference: {fileID: 0}
     - target: {fileID: 3294705913223454776, guid: b980f31bb442a824d976d1e7444e854f, type: 3}
       propertyPath: m_Offset.x
-      value: -0.5416787
+      value: -0.04577887
       objectReference: {fileID: 0}
     - target: {fileID: 3294705913223454776, guid: b980f31bb442a824d976d1e7444e854f, type: 3}
       propertyPath: m_Offset.y
-      value: -0.516773
+      value: -0.051304385
       objectReference: {fileID: 0}
     - target: {fileID: 3711125862220502543, guid: b980f31bb442a824d976d1e7444e854f, type: 3}
       propertyPath: m_Name
@@ -616,7 +616,8 @@ PrefabInstance:
       propertyPath: m_ColliderPaths.Array.data[1].m_ColliderPaths.Array.data[0].Array.data[3].Y
       value: 6214670
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 6221624823304325863, guid: b980f31bb442a824d976d1e7444e854f, type: 3}
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
     m_AddedComponents:

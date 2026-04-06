@@ -68,11 +68,6 @@ public class Submarine : MonoBehaviour
         //    EnterSubmarine();
         //else if (playerInside && Keyboard.current[interactKey].wasPressedThisFrame)
         //    ExitSubmarine();
-
-        if (SerialHandler.Instance.shoot)
-        {
-            mouseAiming.TriggerShoot(true);
-        }
     }
 
     #region SUBMARINE_CONTROLS
@@ -93,10 +88,10 @@ public class Submarine : MonoBehaviour
 
     public void Aim(InputAction.CallbackContext context)
     {
-        if (playerInside)
-        {
-            mouseAiming.OnAim(context);
-        }
+        //if (playerInside)
+        //{
+        //    mouseAiming.OnAim(context);
+        //}
     }
     #endregion
 
@@ -119,14 +114,14 @@ public class Submarine : MonoBehaviour
 
     public void HandleSubmarineDoor()
     {
-        if (SerialHandler.Instance.door || Keyboard.current[Key.E].wasPressedThisFrame)
+        if (SerialHandler.Instance.door)
         {
             if (horizontal == 0 && vertical == 0 && !doorOpen)
             {
                 subAnimator.SetBool("door", true);
                 doorOpen = true;
             }
-        } else if (!SerialHandler.Instance.door || Keyboard.current[Key.E].wasPressedThisFrame)
+        } else if (!SerialHandler.Instance.door)
         {
            if (horizontal == 0 && vertical == 0 && doorOpen)
             {
