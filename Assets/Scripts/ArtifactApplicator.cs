@@ -33,6 +33,7 @@ public class ArtifactApplicator : MonoBehaviour
         subHealth = sub.GetComponent<Health>();
         subOxy = sub.GetComponent<SubmarineOxygen>();
         subStatSetter = sub.GetComponent<SubmarineStatSetter>();
+        submarineTemp = sub.GetComponent<SubmarineTemp>();
     }
 
     public void ApplyArtifact(ArtifactStats artifactStat)
@@ -55,7 +56,7 @@ public class ArtifactApplicator : MonoBehaviour
         ApplySpecialLogic(artifactStat);
     }
 
-    private void ApplyArtifactStats(StatType stat, float value)
+private void ApplyArtifactStats(StatType stat, float value)
     {
         switch(stat)
         {
@@ -76,7 +77,8 @@ public class ArtifactApplicator : MonoBehaviour
             break;
 
             case StatType.SubCoolant:
-            gameStats.subCoolantCapacity += value;
+            if (submarineTemp != null)
+                submarineTemp.AddCoolant(value);
             break;
             
             case StatType.SonarSpeed:
@@ -145,6 +147,10 @@ public class ArtifactApplicator : MonoBehaviour
         if (artifactStat.grantExtraTorpedo)
         {
             //
+        }
+        if (artifactStat.replenishCoolant)
+        {
+            submarineTemp.ResetCoolant();
         }
     }
 
