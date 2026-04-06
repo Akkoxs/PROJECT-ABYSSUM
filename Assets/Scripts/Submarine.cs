@@ -17,7 +17,6 @@ public class Submarine : MonoBehaviour
     [SerializeField] private Rigidbody2D rb;
     [SerializeField] private MouseAimingSubmarine mouseAiming;
     [SerializeField] private float speed = 5f;
-    [SerializeField] private PlayerInput submarineInput;
 
     [Header("Submarine Tipping")]
     [SerializeField] private float maxTipAngle = 15f;
@@ -106,7 +105,6 @@ public class Submarine : MonoBehaviour
             playerMouseAiming.enabled = false;
             playerShadow.enabled = false;
             harpoonGun.SetActive(false);
-            //submarineInput.enabled = true;
             //mouseAiming.enabled = true;
             Debug.Log("Entered submarine!");
         }
@@ -212,7 +210,6 @@ public class Submarine : MonoBehaviour
             exitedSubmarine?.Invoke();
             player.transform.position = enterExitPoint.transform.position;
             playerController.enabled = true;
-            //submarineInput.enabled = false;
             playerShadow.enabled = true;
             playerSprite.enabled = true;
             playerMouseAiming.enabled = true;

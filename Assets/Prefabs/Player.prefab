@@ -407,7 +407,6 @@ GameObject:
   - component: {fileID: 1230880166355383062}
   - component: {fileID: 1344621553141628442}
   - component: {fileID: 8379693957306864750}
-  - component: {fileID: 5735195608183578591}
   m_Layer: 7
   m_Name: Player
   m_TagString: Player
@@ -682,6 +681,14 @@ MonoBehaviour:
       m_Calls: []
     m_ActionId: e1815ec2-b2c0-464f-8b88-415f005cb15b
     m_ActionName: 'Player/Aim[/DualSenseGamepadHID/rightStick,/SwitchProControllerHID/rightStick]'
+  - m_PersistentCalls:
+      m_Calls: []
+    m_ActionId: fde5d1b9-df3e-419d-9e71-6d55ba46d3bc
+    m_ActionName: 'Player/Ping[/DualSenseGamepadHID/leftTrigger]'
+  - m_PersistentCalls:
+      m_Calls: []
+    m_ActionId: 62947c63-ccd5-4175-8af5-66876b17d4a0
+    m_ActionName: 'Player/Interact[/DualSenseGamepadHID/buttonSouth,/DualSenseGamepadHID/buttonEast]'
   m_NeverAutoSwitchControlSchemes: 0
   m_DefaultControlScheme: Gamepad
   m_DefaultActionMap: Player
@@ -704,6 +711,8 @@ MonoBehaviour:
   animator: {fileID: 1230880166355383062}
   spriteRenderer: {fileID: 7397831411424686445}
   playerInput: {fileID: 0}
+  submarine: {fileID: 0}
+  ees: {fileID: 0}
   speed: 4
   jumpingPower: 5
   knockbackForce: 10
@@ -720,6 +729,7 @@ MonoBehaviour:
   bobbingSpeed: 1.1
   enableBobbing: 1
   isInvulnerable: 0
+  isInteracting: 0
 --- !u!114 &8881802823708470294
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -741,6 +751,7 @@ MonoBehaviour:
   projectilePrefab: {fileID: 0}
   projectileTransform: {fileID: 0}
   timeBetweenFiring: 1
+  shootSFX: {fileID: 0}
 --- !u!114 &7774610673544867257
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -755,6 +766,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::Health
   maxHealth: 100
   currentHealth: 100
+  submarineTemp: {fileID: 0}
   healthChanged:
     m_PersistentCalls:
       m_Calls: []
@@ -875,18 +887,6 @@ MonoBehaviour:
       type: {class: ShadowShape2DProvider_SpriteRenderer, ns: UnityEngine.Rendering.Universal, asm: Unity.RenderPipelines.Universal.2D.Runtime}
       data: 
 --- !u!114 &8379693957306864750
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8849392445168222747}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 178f4eab681c4b74c84c572bcb57420d, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::PlayerRadarSignature
---- !u!114 &5735195608183578591
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}

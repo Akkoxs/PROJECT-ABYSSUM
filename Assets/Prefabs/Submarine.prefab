@@ -303,9 +303,10 @@ GameObject:
   - component: {fileID: 1290532751599610700}
   - component: {fileID: 7065195129841400459}
   - component: {fileID: 5269097922120161920}
-  - component: {fileID: 4695054199279498030}
   - component: {fileID: 4375190347105797388}
   - component: {fileID: 6221624823304325863}
+  - component: {fileID: 8568823109497214388}
+  - component: {fileID: 8487057787659157920}
   m_Layer: 10
   m_Name: Submarine
   m_TagString: Submarine
@@ -346,6 +347,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::Health
   maxHealth: 1000
   currentHealth: 1000
+  submarineTemp: {fileID: 0}
   healthChanged:
     m_PersistentCalls:
       m_Calls: []
@@ -364,11 +366,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 05c547129debf7847b732f508b809995, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::SubmarineOxygen
+  sub: {fileID: 7403966855269184886}
+  subHealth: {fileID: 0}
   currentOxygen: 750
   maxOxygen: 750
   depletionRate: 250
-  playerOxy: {fileID: 0}
-  sub: {fileID: 7403966855269184886}
+  playerInsideMultiplier: 2
+  depletionTickDamage: 5
+  depletionTickRate: 1
   oxygenChanged:
     m_PersistentCalls:
       m_Calls: []
@@ -388,7 +393,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Submarine
   enterExitPoint: {fileID: 2019140128829757796}
-  interactKey: 19
   player: {fileID: 0}
   harpoonGun: {fileID: 0}
   spriteRenderer: {fileID: 2615663404707731530}
@@ -397,13 +401,17 @@ MonoBehaviour:
   rb: {fileID: 7065195129841400459}
   mouseAiming: {fileID: 0}
   speed: 3
-  submarineInput: {fileID: 4695054199279498030}
-  playerInput: {fileID: 0}
+  submarineInput: {fileID: 0}
+  maxTipAngle: 15
+  tipSpeed: 3
+  tipReturnSpeed: 2
   horizontalAcceleration: 2
   horizontalDeceleration: 0.9
   verticalAcceleration: 2
   verticalDeceleration: 0.9
   waterDrag: 0.95
+  playerInside: 0
+  doorOpen: 0
   enteredSubmarine:
     m_PersistentCalls:
       m_Calls: []
@@ -629,36 +637,6 @@ MonoBehaviour:
   bobbingStrength: 0.5
   bobbingSpeed: 1
   verticalDamping: 0.98
---- !u!114 &4695054199279498030
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3711125862220502543}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 62899f850307741f2a39c98a8b639597, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Unity.InputSystem::UnityEngine.InputSystem.PlayerInput
-  m_Actions: {fileID: -944628639613478452, guid: a8821aacaa0f9c24e9eda2c0dedda2a9, type: 3}
-  m_NotificationBehavior: 0
-  m_UIInputModule: {fileID: 0}
-  m_DeviceLostEvent:
-    m_PersistentCalls:
-      m_Calls: []
-  m_DeviceRegainedEvent:
-    m_PersistentCalls:
-      m_Calls: []
-  m_ControlsChangedEvent:
-    m_PersistentCalls:
-      m_Calls: []
-  m_ActionEvents: []
-  m_NeverAutoSwitchControlSchemes: 0
-  m_DefaultControlScheme: Keyboard&Mouse
-  m_DefaultActionMap: Player
-  m_SplitScreenIndex: -1
-  m_Camera: {fileID: 0}
 --- !u!95 &4375190347105797388
 Animator:
   serializedVersion: 7
@@ -694,6 +672,58 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::SubmarineStatSetter
   stats: {fileID: 11400000, guid: d6696a0b6a2341b4d808ef4c84e82e42, type: 2}
+--- !u!114 &8568823109497214388
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3711125862220502543}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6feeea0b68b556b4e88280bad9abc5d6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::MouseAimingSubmarine
+  reticle: {fileID: 146037382527299945, guid: ac53eba7e05193147aef812c13d92097, type: 3}
+  aimRadius: 5.61
+  stickDeadzone: 0.2
+  projectilePrefab: {fileID: 8044487839321092788, guid: 3fc29d8590bf18849b53f2fd704bd36c, type: 3}
+  projectileTransform: {fileID: 146037382527299945, guid: ac53eba7e05193147aef812c13d92097, type: 3}
+  timeBetweenFiring: 2
+  maxAmmo: 3
+  reloadTime: 10
+--- !u!114 &8487057787659157920
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3711125862220502543}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 41f45c8b32935714f80a99b705abca84, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::SubmarineTemp
+  currentTemp: 0
+  maxTemp: 1000
+  currentCoolant: 0
+  maxCoolant: 5000
+  coolantStrength: 0.75
+  coolantDrainRate: 5
+  passiveCoolStrength: 0.2
+  serialController: {fileID: 0}
+  tempChanged:
+    m_PersistentCalls:
+      m_Calls: []
+  heatRateChanged:
+    m_PersistentCalls:
+      m_Calls: []
+  coolantChanged:
+    m_PersistentCalls:
+      m_Calls: []
+  tempMaxReached:
+    m_PersistentCalls:
+      m_Calls: []
 --- !u!1 &4253820449561818043
 GameObject:
   m_ObjectHideFlags: 0

@@ -9,9 +9,6 @@ public class MouseAimingSubmarine : MonoBehaviour
     [SerializeField] private float aimRadius = 3f;
     [SerializeField] private float stickDeadzone = 0.2f;
 
-    [Header("Camera Reference")]
-    [SerializeField] private Camera mainCamera;
-
     [Header("Shooter Settings")]
     [SerializeField] private GameObject projectilePrefab;
     [SerializeField] private Transform projectileTransform;
@@ -35,10 +32,6 @@ public class MouseAimingSubmarine : MonoBehaviour
     void Start()
     {
         Cursor.visible = false;
-        if (mainCamera == null)
-        {
-            mainCamera = Camera.main;
-        }
 
         currentAimDirection = Vector2.right;
 

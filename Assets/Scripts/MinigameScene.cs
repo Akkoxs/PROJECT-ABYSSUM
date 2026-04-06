@@ -4,21 +4,34 @@ using UnityEngine.SceneManagement;
 
 public class MinigameScene : MonoBehaviour
 {
-    [SerializeField] private string sceneToLoad; 
+    [Header("Scene Settings")]
+    [SerializeField] private string sceneToLoad;
     [SerializeField] private bool oneTimeUse = true;
-    
+
+    [Header("Camera Settings")]
+    [SerializeField] private Camera minigameCamera; // Camera that will render the minigame
+    [SerializeField] private Rect cameraViewport = new Rect(0.3f, 0.3f, 0.4f, 0.4f); // Position and size on screen
+
     private string playerTag = "Player";
     private PlayerInput playerInput;
     private bool trigger = false;
     private Scene loadedScene;
+
+    private void Start()
+    {
+        // Setup camera viewport
+        if (minigameCamera != null)
+        {
+            minigameCamera.rect = cameraViewport;
+            minigameCamera.depth = 10; // Render on top
+        }
+    }
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
         if (collision.CompareTag(playerTag) && (!trigger || !oneTimeUse))
         {
             LoadAdditiveScene();
-            //playerInput = collision.GetComponent<PlayerInput>();
-            //playerInput.enabled = false;
 
             if (oneTimeUse)
             {
