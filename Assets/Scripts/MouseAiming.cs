@@ -16,6 +16,10 @@ public class MouseAiming : MonoBehaviour
     [SerializeField] private GameObject projectilePrefab;
     [SerializeField] private Transform projectileTransform;
     [SerializeField] private float timeBetweenFiring;
+
+    [Header("Audio")]
+    [SerializeField] private AudioClip shootSFX;
+
     private float timer;
     private bool canFire;
     private bool shoot;
@@ -53,6 +57,7 @@ public class MouseAiming : MonoBehaviour
         {
             Projectile projectile = Instantiate(projectilePrefab, projectileTransform.position, Quaternion.identity).GetComponent<Projectile>();
             projectile.InitializeProjectile(mousePos, mainCamera);
+            AudioEventBus.RequestSFX(new SFXEvent(shootSFX, volume: 0.5f));
 
             try
             {

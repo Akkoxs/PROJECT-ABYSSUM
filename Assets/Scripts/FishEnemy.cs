@@ -33,6 +33,10 @@ public class FishEnemy : MonoBehaviour, IRadarDetectable
     [SerializeField] private float damageAmount = 10f;
     [SerializeField] private float invulnerabilityDuration = 2f;
 
+    [Header("Audio")]
+    [SerializeField] private AudioClip hurtSFX;
+    [SerializeField] private AudioClip deathSFX;
+
     private Rigidbody2D rb;
     private SpriteRenderer spriteRenderer;
 
@@ -130,6 +134,7 @@ public class FishEnemy : MonoBehaviour, IRadarDetectable
 
         if(health.CurrentHealth <= 0)
         {
+            AudioEventBus.RequestSFX(new SFXEvent(deathSFX, volume: 1f, pitch: Random.Range(0.9f, 1.1f), pos: transform.position));
             Destroy(gameObject);
         }
 
@@ -226,6 +231,7 @@ public class FishEnemy : MonoBehaviour, IRadarDetectable
             isInvulnerable = true;
             invulnerabilityTimer = invulnerabilityDuration;
             animator.SetTrigger("hurt");
+            AudioEventBus.RequestSFX(new SFXEvent(hurtSFX, volume: 2f, pitch: Random.Range(0.8f, 1.2f), pos: transform.position));
             Debug.Log("Fish hit! Now invulnerable for " + invulnerabilityDuration + " seconds");
 
             currentState = FishState.Patrol;
