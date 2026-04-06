@@ -331,6 +331,7 @@ GameObject:
   - component: {fileID: 6221624823304325863}
   - component: {fileID: 8568823109497214388}
   - component: {fileID: 8487057787659157920}
+  - component: {fileID: 3231746864587615788}
   m_Layer: 10
   m_Name: Submarine
   m_TagString: Submarine
@@ -752,6 +753,20 @@ MonoBehaviour:
   overheatInterval: 1
   overheatDamage: 5
   subHealth: {fileID: 0}
+--- !u!114 &3231746864587615788
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3711125862220502543}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0e66389e9bcc3c14991e9d647eb1f5eb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::DoorUIConnection
+  openButton: {fileID: 0}
+  closeButton: {fileID: 0}
 --- !u!1 &4253820449561818043
 GameObject:
   m_ObjectHideFlags: 0

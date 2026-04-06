@@ -148,6 +148,17 @@ public class SubmarineTemp : MonoBehaviour
         tempTick = null;
         tickRunning = false;
     }
+    public void AddCoolant(float amount)
+    {
+        currentCoolant = Mathf.Clamp(currentCoolant + amount, 0f, maxCoolant);
+        coolantChanged?.Invoke(currentCoolant, maxCoolant);
+    }
+
+    public void ResetCoolant()
+    {
+        currentCoolant = maxCoolant;
+        coolantChanged?.Invoke(currentCoolant, maxCoolant);
+    }
 
     private IEnumerator OverheatDamage()
     {
