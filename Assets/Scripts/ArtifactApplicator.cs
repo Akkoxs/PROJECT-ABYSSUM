@@ -18,6 +18,7 @@ public class ArtifactApplicator : MonoBehaviour
     private Health subHealth;
     private SubmarineOxygen subOxy;
     private SubmarineStatSetter subStatSetter; 
+    private SubmarineTemp submarineTemp;
 
 
     //UI
@@ -78,6 +79,10 @@ public class ArtifactApplicator : MonoBehaviour
             gameStats.subMaxOxygen += value;
             break;
 
+            case StatType.SubCoolant:
+            gameStats.subCoolantCapacity += value;
+            break;
+            
             case StatType.SonarSpeed:
             gameStats.scanSpeed += value;
             break;

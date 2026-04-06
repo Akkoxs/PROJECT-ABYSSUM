@@ -12,7 +12,7 @@ public class SonarPing : MonoBehaviour
     [SerializeField] private float dissapearTimerMax = 1f;
     [SerializeField] private GameObject pfPingLabel;
     private TextMeshProUGUI label;
-
+    
     private void Awake()
     {
         image = GetComponent<Image>();

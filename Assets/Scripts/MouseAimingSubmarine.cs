@@ -1,11 +1,13 @@
 using System;
 using UnityEngine;
+using UnityEngine.InputSystem;
 
 public class MouseAimingSubmarine : MonoBehaviour
 {
     [Header("Aiming Settings")]
     [SerializeField] private Transform reticle;
     [SerializeField] private float aimRadius = 3f;
+    [SerializeField] private float stickDeadzone = 0.2f;
 
     [Header("Camera Reference")]
     [SerializeField] private Camera mainCamera;
@@ -14,28 +16,79 @@ public class MouseAimingSubmarine : MonoBehaviour
     [SerializeField] private GameObject projectilePrefab;
     [SerializeField] private Transform projectileTransform;
     [SerializeField] private float timeBetweenFiring;
+
+    [Header("Ammo System")]
+    [SerializeField] private int maxAmmo = 3;
+    [SerializeField] private float reloadTime = 3f;
+
     private float timer;
     private bool canFire;
     private bool shoot;
-    private Vector3 mousePos;
+    private Vector3 aimPosition;
+    private Vector2 rightStickInput;
+    private Vector2 currentAimDirection;
+
+    private int currentAmmo;
+    private bool isReloading = false;
+    private float reloadTimer = 0f;
 
     void Start()
     {
         Cursor.visible = false;
-
         if (mainCamera == null)
         {
             mainCamera = Camera.main;
         }
+
+        currentAimDirection = Vector2.right;
+
+        currentAmmo = maxAmmo;
+        canFire = true;
     }
 
     void Update()
     {
-        mousePos = mainCamera.ScreenToWorldPoint(Input.mousePosition);
-        mousePos.z = 0f;
-        Vector2 direction = (mousePos - transform.position).normalized;
-        Vector2 reticlePos = (Vector2)transform.position + (direction * aimRadius);
-        if (reticle != null) { reticle.position = reticlePos; }
+        rightStickInput = new Vector2(SerialHandler.Instance.joy2X, SerialHandler.Instance.joy2Y);
+
+        UpdateAimPosition();
+        UpdateReticlePosition();
+        HandleShooting();
+    }
+
+    void UpdateAimPosition()
+    {
+        if (rightStickInput.magnitude > stickDeadzone)
+        {
+            currentAimDirection = rightStickInput.normalized;
+        }
+
+        aimPosition = transform.position + (Vector3)currentAimDirection * aimRadius;
+    }
+
+    void UpdateReticlePosition()
+    {
+        if (reticle != null)
+        {
+            reticle.position = aimPosition;
+        }
+    }
+
+    void HandleShooting()
+    {
+        if (isReloading)
+        {
+            reloadTimer += Time.deltaTime;
+            if (reloadTimer >= reloadTime)
+            {
+
+                currentAmmo = maxAmmo;
+                isReloading = false;
+                reloadTimer = 0f;
+                canFire = true;
+                Debug.Log("Reload complete! Ammo: " + currentAmmo);
+            }
+            return;
+        }
 
         if (!canFire)
         {
@@ -49,15 +102,40 @@ public class MouseAimingSubmarine : MonoBehaviour
 
         if (canFire && shoot)
         {
-            Torpedo projectile = Instantiate(projectilePrefab, projectileTransform.position, Quaternion.identity).GetComponent<Torpedo>();
-            projectile.InitializeProjectile(mousePos, mainCamera);
+            if (currentAmmo > 0)
+            {
+                Torpedo projectile = Instantiate(projectilePrefab, projectileTransform.position, Quaternion.identity).GetComponent<Torpedo>();
+                projectile.InitializeProjectile(currentAimDirection); // Changed this line
+                currentAmmo--;
 
-            shoot = false;
-            canFire = false;
-        } else if (!canFire && shoot)
+                Debug.Log("Torpedo fired! Ammo remaining: " + currentAmmo);
+
+                shoot = false;
+                canFire = false;
+
+                if (currentAmmo <= 0)
+                {
+                    isReloading = true;
+                    reloadTimer = 0f;
+                    Debug.Log("Out of ammo! Reloading...");
+                }
+            }
+            else
+            {
+                shoot = false;
+                isReloading = true;
+                reloadTimer = 0f;
+            }
+        }
+        else if (!canFire && shoot)
         {
             shoot = false;
         }
+    }
+
+    public void OnAim(InputAction.CallbackContext context)
+    {
+        //rightStickInput = context.ReadValue<Vector2>();
     }
 
     private void OnDrawGizmosSelected()
@@ -68,7 +146,7 @@ public class MouseAimingSubmarine : MonoBehaviour
 
     public Vector3 GetMousePos()
     {
-        return mousePos;
+        return aimPosition;
     }
 
     public void TriggerShoot(bool shoot)
@@ -79,5 +157,26 @@ public class MouseAimingSubmarine : MonoBehaviour
     public void SetReloadSpeed(float newReloadSpeed)
     {
         timeBetweenFiring = newReloadSpeed;
+    }
+
+    public int GetCurrentAmmo()
+    {
+        return currentAmmo;
+    }
+
+    public int GetMaxAmmo()
+    {
+        return maxAmmo;
+    }
+
+    public bool IsReloading()
+    {
+        return isReloading;
+    }
+
+    public float GetReloadProgress()
+    {
+        if (!isReloading) return 1f;
+        return reloadTimer / reloadTime;
     }
 }

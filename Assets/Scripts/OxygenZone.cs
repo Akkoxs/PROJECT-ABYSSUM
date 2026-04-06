@@ -19,6 +19,7 @@ public class OxygenZone : MonoBehaviour
 
     void Start()
     {
+        player = GameObject.FindGameObjectWithTag("Player");
         playerAirProbe = player.gameObject.GetComponentInChildren<Collider2D>();
         playerOxy = player.GetComponent<PlayerOxygen>();
         playerRB = player.GetComponent<Rigidbody2D>();

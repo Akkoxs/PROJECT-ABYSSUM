@@ -4,7 +4,6 @@ public class FishEnemy : MonoBehaviour, IRadarDetectable
 {
     [Header("Player Reference")]
     [SerializeField] private Transform playerTransform;
-    [SerializeField] private Transform subTransform;
     [SerializeField] private Animator animator;
     private Transform mainTransform;
 
@@ -44,8 +43,8 @@ public class FishEnemy : MonoBehaviour, IRadarDetectable
     private enum FishState { Patrol, Charging, Retreating, Pausing }
     private FishState currentState = FishState.Patrol;
     private float stateTimer = 0f;
-    private Health health; 
-
+    private Health health;
+    private Transform subTransform;
     private float patrolDirection;
     private bool isInvulnerable = false;
     private float invulnerabilityTimer = 0f;
@@ -74,7 +73,10 @@ public class FishEnemy : MonoBehaviour, IRadarDetectable
                 playerTransform = player.transform;
             }
         }
+    }
 
+    void Update()
+    {
         if (subTransform == null)
         {
             GameObject submarine = GameObject.FindGameObjectWithTag("Submarine");
@@ -83,17 +85,15 @@ public class FishEnemy : MonoBehaviour, IRadarDetectable
                 subTransform = submarine.transform;
             }
         }
-    }
 
-    void Update()
-    {
-        if (subTransform.gameObject.GetComponent<Submarine>().PlayerInside)
-        {
-            mainTransform = subTransform;
-        } else
-        {
-            mainTransform = playerTransform;
-        }
+        //if (subTransform.gameObject.GetComponent<Submarine>().PlayerInside)
+        //{
+        //    mainTransform = subTransform;
+        //} else
+        //{
+        //    mainTransform = playerTransform;
+        //}
+        mainTransform = playerTransform;
         if (mainTransform == null)
         {
             currentState = FishState.Patrol;
