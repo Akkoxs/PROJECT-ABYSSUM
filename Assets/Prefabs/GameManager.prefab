@@ -530,6 +530,7 @@ GameObject:
   - component: {fileID: 8391863822721995532}
   - component: {fileID: 3381803443479674780}
   - component: {fileID: 3422597391964862305}
+  - component: {fileID: 2023356520227658442}
   m_Layer: 0
   m_Name: GameManager
   m_TagString: Untagged
@@ -560,6 +561,7 @@ Transform:
   - {fileID: 637753090227108812}
   - {fileID: 247297041048064271}
   - {fileID: 7546161260958231490}
+  - {fileID: 8832363041125753807}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &9012495057462366357
@@ -808,6 +810,23 @@ AudioSource:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
+--- !u!114 &2023356520227658442
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2170786113157098044}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8bc5f48af2cffd747a079fe8c632e2c8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::SerialController
+  portName: COM3
+  baudRate: 115200
+  messageListener: {fileID: 0}
+  reconnectionDelay: 1000
+  maxUnreadMessages: 1
 --- !u!1 &2599967445930855108
 GameObject:
   m_ObjectHideFlags: 0
@@ -937,6 +956,69 @@ AudioSource:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
+--- !u!1 &3562011960819301638
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 8832363041125753807}
+  - component: {fileID: 782581401762042422}
+  m_Layer: 0
+  m_Name: SerialHandler
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &8832363041125753807
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3562011960819301638}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 8095974663405832507}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &782581401762042422
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3562011960819301638}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: daced69c947395b4ab2298acdfb9ccac, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::SerialHandler
+  playerPot_a: 0
+  playerSlider_h: 0
+  playerPot_k: 0
+  playerSlider_c: 0
+  oxyL1: 0
+  oxyL2: 0
+  oxyL3: 0
+  ping: 0
+  radarOn: 0
+  radarOff: 0
+  door: 0
+  coolantPot: 0
+  headSlider: 0
+  floodSlider: 0
+  shoot: 0
+  joy1X: 0
+  joy1Y: 0
+  joy2X: 0
+  joy2Y: 0
 --- !u!1 &4998478195895611541
 GameObject:
   m_ObjectHideFlags: 0
