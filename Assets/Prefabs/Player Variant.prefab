@@ -336,6 +336,18 @@ PrefabInstance:
       propertyPath: m_TagString
       value: HarpoonGun
       objectReference: {fileID: 0}
+    - target: {fileID: 5028014924306833971, guid: b80c5471cdd9ffc4283b0185ae020fe1, type: 3}
+      propertyPath: m_Color.b
+      value: 0.4
+      objectReference: {fileID: 0}
+    - target: {fileID: 5028014924306833971, guid: b80c5471cdd9ffc4283b0185ae020fe1, type: 3}
+      propertyPath: m_Color.g
+      value: 0.4
+      objectReference: {fileID: 0}
+    - target: {fileID: 5028014924306833971, guid: b80c5471cdd9ffc4283b0185ae020fe1, type: 3}
+      propertyPath: m_Color.r
+      value: 0.4
+      objectReference: {fileID: 0}
     - target: {fileID: 5336883611615615912, guid: b80c5471cdd9ffc4283b0185ae020fe1, type: 3}
       propertyPath: speed
       value: 12.5
@@ -359,6 +371,22 @@ PrefabInstance:
     - target: {fileID: 7397831411424686445, guid: b80c5471cdd9ffc4283b0185ae020fe1, type: 3}
       propertyPath: m_Color.r
       value: 0.4
+      objectReference: {fileID: 0}
+    - target: {fileID: 7599624687736478683, guid: b80c5471cdd9ffc4283b0185ae020fe1, type: 3}
+      propertyPath: m_Intensity
+      value: 55
+      objectReference: {fileID: 0}
+    - target: {fileID: 7599624687736478683, guid: b80c5471cdd9ffc4283b0185ae020fe1, type: 3}
+      propertyPath: m_PointLightInnerAngle
+      value: 21.598103
+      objectReference: {fileID: 0}
+    - target: {fileID: 7599624687736478683, guid: b80c5471cdd9ffc4283b0185ae020fe1, type: 3}
+      propertyPath: m_PointLightOuterAngle
+      value: 62.268093
+      objectReference: {fileID: 0}
+    - target: {fileID: 7599624687736478683, guid: b80c5471cdd9ffc4283b0185ae020fe1, type: 3}
+      propertyPath: m_PointLightInnerRadius
+      value: 5.05
       objectReference: {fileID: 0}
     - target: {fileID: 8379248688088227484, guid: b80c5471cdd9ffc4283b0185ae020fe1, type: 3}
       propertyPath: m_Enabled
