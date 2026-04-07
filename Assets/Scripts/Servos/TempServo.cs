@@ -50,7 +50,7 @@ public class TempServo : MonoBehaviour
             if (SerialHandler.Instance != null)
             {
                 float t = Mathf.Clamp01(submarineTemp.CurrentTemp / submarineTemp.MaxTemp);
-                int angle = Mathf.RoundToInt(Mathf.Lerp(0f, 180f, t));
+                int angle = Mathf.RoundToInt(Mathf.Lerp(180f, 0f, t));
                 SerialHandler.Instance.SendSerialData($"TEMP:{angle}");
             }
 

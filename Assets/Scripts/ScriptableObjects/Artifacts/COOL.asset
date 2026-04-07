@@ -10,13 +10,13 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: e0121b29d3454ca44a2cf96722af99e6, type: 3}
-  m_Name: COLNT
+  m_Name: COOL
   m_EditorClassIdentifier: Assembly-CSharp::ArtifactStats
-  artifactName: COLNT
+  artifactName: COOL
   artifactType: 14
-  icon: {fileID: 0}
+  icon: {fileID: -216957594003844505, guid: 8fa7961afb1344b42b071a72d739c382, type: 3}
   sellValue: 3000
-  spawnLevels: 010000000100000001000000010000000100000001000000
+  spawnLevels: 0100000002000000030000000400000005000000
   statEffects: []
   replenishPlayerHealth: 0
   replenishSubHealth: 0
@@ -24,4 +24,4 @@ MonoBehaviour:
   replenishSubOxygen: 0
   replenishTorpedo: 0
   grantExtraTorpedo: 0
-  replenishCoolant: 0
+  replenishCoolant: 1
