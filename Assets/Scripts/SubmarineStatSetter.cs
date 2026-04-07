@@ -8,7 +8,7 @@ public class SubmarineStatSetter : MonoBehaviour
 private Health health;
 private SubmarineOxygen subOxy;
 private Sonar sonar;
-//private Torpedo torp;
+// private Torpedo torp;
 private Submarine controller;
 
 private void Awake()
@@ -16,7 +16,7 @@ private void Awake()
         health = GetComponent<Health>();
         subOxy = GetComponent<SubmarineOxygen>();
         sonar = GetComponent<Sonar>();
-        //torp = GetComponent<Torpedo>();
+        // torp = GetComponent<Torpedo>();
         controller = GetComponent<Submarine>();
 
         ApplyStats();
@@ -44,8 +44,6 @@ public void ApplyStats()
         // {
         //     torp.SetDamage(stats.torpDamage);
         //     torp.SetSpeed(stats.torpSpeed);
-        // Damage => 
-        // Speed => 
         // }
 
          if (controller != null)

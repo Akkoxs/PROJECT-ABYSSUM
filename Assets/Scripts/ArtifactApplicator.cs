@@ -154,7 +154,7 @@ private void ApplyArtifactStats(StatType stat, float value)
         }
     }
 
-    private void RefreshStats()
+    public void RefreshStats()
     {
         if (playerStatSetter != null)
             playerStatSetter.ApplyStats();

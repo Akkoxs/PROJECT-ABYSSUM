@@ -79,6 +79,7 @@ public class GameManager : MonoBehaviour
         SpawnInitialArtifacts();
         upgradeTracker.ResetAll();
         gameStats.ResetStats();
+        artifactApp.RefreshStats();
 
     }
 

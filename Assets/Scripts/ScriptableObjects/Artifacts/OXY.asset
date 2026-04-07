@@ -24,3 +24,4 @@ MonoBehaviour:
   replenishSubOxygen: 1
   replenishTorpedo: 0
   grantExtraTorpedo: 0
+  replenishCoolant: 0
