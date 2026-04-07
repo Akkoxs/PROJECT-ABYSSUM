@@ -3,24 +3,23 @@ using UnityEngine;
 public class CoolantGaugeTicker : MonoBehaviour
 {
     [SerializeField] private SubmarineTemp submarineTemp;
-    [SerializeField] private float minAngle = 0f;  // bottom-right (empty)
-    [SerializeField] private float maxAngle = 45f;     // bottom-left (full)
+    [SerializeField] private float minAngle = 0f;
+    [SerializeField] private float maxAngle = 45f;
 
     private void OnEnable()
     {
-        submarineTemp.coolantChanged.AddListener(UpdateGauge);
-        UpdateGauge(submarineTemp.CurrentCoolant, submarineTemp.MaxCoolant);
+        submarineTemp.coolantFlowChanged.AddListener(UpdateGauge);
+        UpdateGauge(0f);
     }
 
     private void OnDisable()
     {
-        submarineTemp.coolantChanged.RemoveListener(UpdateGauge);
+        submarineTemp.coolantFlowChanged.RemoveListener(UpdateGauge);
     }
 
-    private void UpdateGauge(float current, float max)
+    private void UpdateGauge(float flow01)
     {
-        float t = Mathf.Clamp01(current / max);
-        float angle = Mathf.Lerp(minAngle, maxAngle, t);
+        float angle = Mathf.Lerp(minAngle, maxAngle, flow01);
         transform.localRotation = Quaternion.Euler(0f, 0f, angle);
     }
 }

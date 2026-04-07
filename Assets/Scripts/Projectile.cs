@@ -101,7 +101,7 @@ public class Projectile : MonoBehaviour
         Debug.Log("RB Velocity RIGHT AFTER: " + rb.linearVelocity);
 
         float angle = Mathf.Atan2(launchDirection.y, launchDirection.x) * Mathf.Rad2Deg;
-        transform.rotation = Quaternion.Euler(0, 0, angle);
+        transform.rotation = Quaternion.Euler(0, 0, angle + 180);
 
         if (harpoonAnimator != null)
         {

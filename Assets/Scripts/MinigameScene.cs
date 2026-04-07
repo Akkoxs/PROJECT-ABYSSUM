@@ -10,7 +10,6 @@ public class MinigameScene : MonoBehaviour
 
     [Header("Camera Settings")]
     [SerializeField] private Camera minigameCamera; // Camera that will render the minigame
-    [SerializeField] private Rect cameraViewport = new Rect(0.3f, 0.3f, 0.4f, 0.4f); // Position and size on screen
 
     private string playerTag = "Player";
     private PlayerInput playerInput;
@@ -22,7 +21,6 @@ public class MinigameScene : MonoBehaviour
         // Setup camera viewport
         if (minigameCamera != null)
         {
-            minigameCamera.rect = cameraViewport;
             minigameCamera.depth = 10; // Render on top
         }
     }

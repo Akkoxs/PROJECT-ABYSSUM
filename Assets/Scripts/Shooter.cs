@@ -13,6 +13,8 @@ public class Shooter : MonoBehaviour
     [Header("Camera Reference")]
     [SerializeField] private Camera mainCamera;
 
+    [SerializeField] private SubmarineTemp submarineTemp;
+    [SerializeField] private float flatHeat = 10f;
     private float shootTime;
     private bool canShoot;
     private void Start()
@@ -33,6 +35,7 @@ public class Shooter : MonoBehaviour
         if (canShoot)
         {
             Projectile projectile = Instantiate(projectilePrefab, transform.position, Quaternion.identity).GetComponent<Projectile>();
+            submarineTemp.AddFlatHeat(10f);
             canShoot = false;
         }
     }

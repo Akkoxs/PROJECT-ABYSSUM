@@ -1,46 +1,42 @@
+using System.Collections.Generic;
 using UnityEngine;
 
 public class MinigameProgressManager : MonoBehaviour
 {
-    public bool minigameCompleted = false;
-    public bool minigameActive = false;
-
     private static MinigameProgressManager instance;
+    public static MinigameProgressManager Instance => instance;
+
+    // Tracks state per minigame ID
+    private Dictionary<string, bool> activeStates = new Dictionary<string, bool>();
+    private Dictionary<string, bool> completedStates = new Dictionary<string, bool>();
 
     void Awake()
     {
-        if (instance == null)
-        {
-            instance = this;
-        }
+        if (instance != null && instance != this) { Destroy(gameObject); return; }
+        instance = this;
     }
 
-    public static MinigameProgressManager Instance
+    public void SetMinigameStarted(string id)
     {
-        get { return instance; }
+        activeStates[id] = true;
+        completedStates[id] = false;
+        Debug.Log($"Minigame '{id}' started");
     }
 
-    public void SetMinigameStarted()
+    public void SetMinigameCompleted(string id)
     {
-        minigameActive = true;
-        Debug.Log("Minigame started in main scene");
-        //OnMinigameStarted();
+        activeStates[id] = false;
+        completedStates[id] = true;
+        Debug.Log($"Minigame '{id}' completed");
     }
 
-    public void SetMinigameCompleted()
+    public bool IsActive(string id)
     {
-        minigameCompleted = true;
-        minigameActive = false;
-        Debug.Log("Minigame marked as completed in main scene");
-        //OnMinigameCompleted();
+        return activeStates.TryGetValue(id, out bool v) && v;
     }
 
-    //void OnMinigameStarted()
-    //{
-
-    //}
-
-    //void OnMinigameCompleted()
-    //{
-    //}
+    public bool IsCompleted(string id)
+    {
+        return completedStates.TryGetValue(id, out bool v) && v;
+    }
 }

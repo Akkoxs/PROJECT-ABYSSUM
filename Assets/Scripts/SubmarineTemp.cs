@@ -7,6 +7,11 @@ public class SubmarineTemp : MonoBehaviour
     [SerializeField] private float currentTemp;
     [SerializeField] private float maxTemp = 1000f;
 
+    [Header("OverHeatings")]
+    private bool overheating = false;
+    private Coroutine overheatRoutine = null;
+    private Coroutine coolantRoutine = null;
+
     [Header("Coolant Tank")]
     [SerializeField] private float currentCoolant;
     [SerializeField] private float maxCoolant = 5000f;
@@ -15,9 +20,6 @@ public class SubmarineTemp : MonoBehaviour
 
     [Header("Passive Cooling")]
     [SerializeField] private float passiveCoolStrength = 0.02f; // 2% per sec
-
-    [Header("Arduino")]
-    [SerializeField] private SerialController serialController;
 
     private float heatRate = 0f;         // heat added per sec (from lights, etc.)
     private float coolantFlow = 0f;      // 0 = off, 1 = full (from pot)
@@ -29,13 +31,34 @@ public class SubmarineTemp : MonoBehaviour
     public float CurrentCoolant => currentCoolant;
     public float MaxCoolant => maxCoolant;
 
+    [Header("Events")]
     public UnityEvent<float, float> tempChanged;
     public UnityEvent<float> heatRateChanged;
     public UnityEvent<float, float> coolantChanged;
     public UnityEvent tempMaxReached;
+    public UnityEvent<float> coolantFlowChanged;
+
+    [Header("Overheat Damage")]
+    [SerializeField] private float overheatInterval = 1f;
+    [SerializeField] private float overheatDamage = 5f;
+    [SerializeField] private Health subHealth;
+
 
     Coroutine tempTick = null;
 
+    private void Start()
+    {
+        StartCoroutine(DebugLog());
+    }
+
+    private IEnumerator DebugLog()
+    {
+        while (true)
+        {
+            Debug.Log($"[SubTemp] Temp: {currentTemp:F1}/{maxTemp} | HeatRate: {heatRate:F1} | Coolant: {currentCoolant:F1}/{maxCoolant} | Flow: {coolantFlow:F2}");
+            yield return new WaitForSeconds(1f);
+        }
+    }
     private void Awake()
     {
         currentCoolant = maxCoolant;
@@ -46,9 +69,15 @@ public class SubmarineTemp : MonoBehaviour
     {
         if (SerialHandler.Instance != null)
         {
-            Debug.Log("coolantPot: " + SerialHandler.Instance.coolantPot);
-            SetCoolantFlow(SerialHandler.Instance.coolantPot);
+            // Debug.Log("coolantPot: " + SerialHandler.Instance.coolantPot);
+            SetCoolantFlow(1f - SerialHandler.Instance.coolantPot);
         }
+    }
+
+    public void AddFlatHeat(float heat)
+    {
+        currentTemp += heat; 
+        tempChanged?.Invoke(currentTemp, maxTemp);
     }
 
     public void AddHeatSource(float rate)
@@ -67,6 +96,7 @@ public class SubmarineTemp : MonoBehaviour
     public void SetCoolantFlow(float flow01)
     {
         coolantFlow = Mathf.Clamp01(flow01);
+        coolantFlowChanged?.Invoke(coolantFlow);
         TryStartTick();
     }
 
@@ -96,9 +126,9 @@ public class SubmarineTemp : MonoBehaviour
                 currentTemp -= cooling;
 
                 currentCoolant = Mathf.Max(0f, currentCoolant - coolantDrainRate * coolantFlow * dt);
+                // Debug.Log(currentCoolant); 
                 coolantChanged?.Invoke(currentCoolant, maxCoolant);
 
-                // serialController.SendSerialMessage(currentCoolant.ToString("F0"));
 
                 if (currentCoolant <= 0f)
                     coolantFlow = 0f;
@@ -113,11 +143,16 @@ public class SubmarineTemp : MonoBehaviour
             currentTemp = Mathf.Clamp(currentTemp, 0f, maxTemp);
             tempChanged?.Invoke(currentTemp, maxTemp);
 
-            if (currentTemp >= maxTemp)
+            if (currentTemp >= maxTemp && !overheating)
             {
-                tempMaxReached?.Invoke();
-                yield return new WaitForSeconds(1f);
-                continue;
+                overheating = true;
+                overheatRoutine = StartCoroutine(OverheatDamage());
+            }
+            else if (currentTemp < maxTemp && overheatRoutine != null)
+            {
+                StopCoroutine(overheatRoutine);
+                overheatRoutine = null;
+                overheating = false;
             }
 
             // Nothing happening — exit
@@ -129,4 +164,29 @@ public class SubmarineTemp : MonoBehaviour
         tempTick = null;
         tickRunning = false;
     }
+    public void AddCoolant(float amount)
+    {
+        currentCoolant = Mathf.Clamp(currentCoolant + amount, 0f, maxCoolant);
+        coolantChanged?.Invoke(currentCoolant, maxCoolant);
+    }
+
+    public void ResetCoolant()
+    {
+        currentCoolant = maxCoolant;
+        coolantChanged?.Invoke(currentCoolant, maxCoolant);
+    }
+
+    private IEnumerator OverheatDamage()
+    {
+        while (overheating)
+        {
+            if (subHealth != null && !subHealth.isDead)
+                subHealth.TakeDamage(overheatDamage);
+
+            yield return new WaitForSeconds(overheatInterval);
+        }
+        overheatRoutine = null;
+    }
+
+
 }

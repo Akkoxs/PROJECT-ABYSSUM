@@ -184,6 +184,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 7679920097613461720}
+  - component: {fileID: 9098653874409453462}
   m_Layer: 10
   m_Name: lightContainer
   m_TagString: Untagged
@@ -208,6 +209,29 @@ Transform:
   - {fileID: 1938639078601820871}
   m_Father: {fileID: 2343720130038067033}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &9098653874409453462
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2295054788987313635}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 67d141e5084621b45bd88d0a00513da1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: '::'
+  submarineTemp: {fileID: 0}
+  headPercentText: {fileID: 0}
+  floodPercentText: {fileID: 0}
+  headLight: {fileID: 485153639928071952}
+  headMaxIntensity: 80
+  headHeatRate: 30
+  floodLights:
+  - {fileID: 4347977556650197975}
+  - {fileID: 6771838892510159830}
+  floodMaxIntensity: 80
+  floodHeatRate: 30
 --- !u!1 &2908966966107577833
 GameObject:
   m_ObjectHideFlags: 0
@@ -307,6 +331,8 @@ GameObject:
   - component: {fileID: 6221624823304325863}
   - component: {fileID: 8568823109497214388}
   - component: {fileID: 8487057787659157920}
+  - component: {fileID: 3231746864587615788}
+  - component: {fileID: 3616746718009103109}
   m_Layer: 10
   m_Name: Submarine
   m_TagString: Submarine
@@ -347,7 +373,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::Health
   maxHealth: 1000
   currentHealth: 1000
-  submarineTemp: {fileID: 0}
   healthChanged:
     m_PersistentCalls:
       m_Calls: []
@@ -367,7 +392,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::SubmarineOxygen
   sub: {fileID: 7403966855269184886}
-  subHealth: {fileID: 0}
+  subHealth: {fileID: 6693476613336186745}
   currentOxygen: 750
   maxOxygen: 750
   depletionRate: 250
@@ -398,18 +423,21 @@ MonoBehaviour:
   spriteRenderer: {fileID: 2615663404707731530}
   subAnimator: {fileID: 4375190347105797388}
   lightContainer: {fileID: 2295054788987313635}
+  subHealth: {fileID: 6693476613336186745}
+  flashHit: {fileID: 3616746718009103109}
   rb: {fileID: 7065195129841400459}
-  mouseAiming: {fileID: 0}
-  speed: 3
-  submarineInput: {fileID: 0}
-  maxTipAngle: 15
-  tipSpeed: 3
+  mouseAiming: {fileID: 8568823109497214388}
+  speed: 5
+  maxTipAngle: 10
+  tipSpeed: 2
   tipReturnSpeed: 2
   horizontalAcceleration: 2
   horizontalDeceleration: 0.9
   verticalAcceleration: 2
   verticalDeceleration: 0.9
   waterDrag: 0.95
+  minSpeedForDamage: 3
+  damageAmount: 10
   playerInside: 0
   doorOpen: 0
   enteredSubmarine:
@@ -515,36 +543,36 @@ CompositeCollider2D:
   m_GenerationType: 0
   m_EdgeRadius: 0
   m_ColliderPaths:
-  - m_Collider: {fileID: 1480253263067706029}
-    m_ColliderPaths:
-    - - X: 14135995
-        Y: 36470564
-      - X: -39123940
-        Y: 36470564
-      - X: -39123940
-        Y: 6163396
-      - X: 14135995
-        Y: 6163396
   - m_Collider: {fileID: 1290532751599610700}
     m_ColliderPaths:
-    - - X: 40221564
-        Y: 50943480
-      - X: -38675488
-        Y: 50943480
-      - X: -38675488
-        Y: 35761232
-      - X: 40221564
-        Y: 35761232
+    - - X: 45153612
+        Y: 62664240
+      - X: -43417960
+        Y: 62664240
+      - X: -43417960
+        Y: 43988956
+      - X: 45153612
+        Y: 43988956
+  - m_Collider: {fileID: 1480253263067706029}
+    m_ColliderPaths:
+    - - X: 15869381
+        Y: 44861488
+      - X: -43921404
+        Y: 44861488
+      - X: -43921404
+        Y: 7581432
+      - X: 15869381
+        Y: 7581432
   m_CompositePaths:
     m_Paths:
-    - - {x: 1.4135702, y: 0.6163396}
-      - {x: 1.4136289, y: 3.5761232}
-      - {x: 4.0221562, y: 3.5761523}
-      - {x: 4.022127, y: 5.094348}
-      - {x: -3.867549, y: 5.094319}
-      - {x: -3.8675785, y: 3.6470563}
-      - {x: -3.912394, y: 3.6470273}
-      - {x: -3.912365, y: 0.6163396}
+    - - {x: 1.5869088, y: 0.7581432}
+      - {x: 1.5869675, y: 4.3988957}
+      - {x: 4.5153613, y: 4.398925}
+      - {x: 4.515332, y: 6.266424}
+      - {x: -4.341796, y: 6.266395}
+      - {x: -4.3418255, y: 4.486149}
+      - {x: -4.3921404, y: 4.4861197}
+      - {x: -4.3921113, y: 0.7581432}
   m_VertexDistance: 0.0005
   m_OffsetDistance: 0.00005
   m_UseDelaunayMesh: 0
@@ -724,6 +752,38 @@ MonoBehaviour:
   tempMaxReached:
     m_PersistentCalls:
       m_Calls: []
+  coolantFlowChanged:
+    m_PersistentCalls:
+      m_Calls: []
+  overheatInterval: 1
+  overheatDamage: 5
+  subHealth: {fileID: 0}
+--- !u!114 &3231746864587615788
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3711125862220502543}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0e66389e9bcc3c14991e9d647eb1f5eb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::DoorUIConnection
+  openButton: {fileID: 0}
+  closeButton: {fileID: 0}
+--- !u!114 &3616746718009103109
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3711125862220502543}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 08e3114e13663b14b810a194918b1d12, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::FlashHit
 --- !u!1 &4253820449561818043
 GameObject:
   m_ObjectHideFlags: 0

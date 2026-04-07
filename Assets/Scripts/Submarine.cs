@@ -6,12 +6,15 @@ using UnityEngine.Rendering.Universal;
 
 public class Submarine : MonoBehaviour
 {
+    [Header("Components Needed")]
     [SerializeField] private GameObject enterExitPoint;
     [SerializeField] private GameObject player;
     [SerializeField] private GameObject harpoonGun;
     [SerializeField] private SpriteRenderer spriteRenderer;
     [SerializeField] private Animator subAnimator;
     [SerializeField] private GameObject lightContainer;
+    [SerializeField] private Health subHealth;
+    [SerializeField] private FlashHit flashHit;
 
     [Header("Submarine Movement")]
     [SerializeField] private Rigidbody2D rb;
@@ -29,6 +32,8 @@ public class Submarine : MonoBehaviour
     [SerializeField] private float verticalAcceleration = 1.5f;
     [SerializeField] private float verticalDeceleration = 0.95f;
     [SerializeField] private float waterDrag = 0.97f;
+    [SerializeField] private float minSpeedForDamage = 3f;
+    [SerializeField] private float damageAmount = 10f;
 
     private PlayerController playerController;
     private SpriteRenderer playerSprite;
@@ -56,6 +61,7 @@ public class Submarine : MonoBehaviour
         playerShadow = player.GetComponent<ShadowCaster2D>();
         ees = enterExitPoint.GetComponent<EnterExitSubmarine>();
         rb = this.GetComponent<Rigidbody2D>();
+        subHealth = this.GetComponent<Health>();
         speed = 5f;
         rb.linearDamping = 0f;
         rb.angularDamping = 0f;
@@ -67,6 +73,16 @@ public class Submarine : MonoBehaviour
         //    EnterSubmarine();
         //else if (playerInside && Keyboard.current[interactKey].wasPressedThisFrame)
         //    ExitSubmarine();
+
+        if (SerialHandler.Instance.shoot)
+        {
+            mouseAiming.TriggerShoot(true);
+        }
+
+        if (playerController.inSubmarine)
+        {
+            playerController.transform.position = this.transform.position;
+        }
     }
 
     #region SUBMARINE_CONTROLS
@@ -199,6 +215,22 @@ public class Submarine : MonoBehaviour
         currentTipAngle = Mathf.Lerp(currentTipAngle, targetTipAngle, lerpSpeed * Time.fixedDeltaTime);
 
         transform.rotation = Quaternion.Euler(0f, 0f, currentTipAngle);
+    }
+
+    private void OnCollisionEnter2D(Collision2D collision)
+    {
+        if (LayerMask.LayerToName(collision.gameObject.layer) == "Terrain")
+        {
+            float inputMagnitude = new Vector2(horizontal, vertical).magnitude;
+            float currentSpeed = inputMagnitude * speed;
+
+            if (currentSpeed >= minSpeedForDamage)
+            {
+                subHealth.TakeDamage(damageAmount);
+                flashHit.TriggerFlash();
+                Debug.Log($"Sub hit terrain at speed {currentSpeed:F2}, took {damageAmount} damage");
+            }
+        }
     }
 
     public void ExitSubmarine()

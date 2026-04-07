@@ -18,9 +18,12 @@ public class MouseAiming : MonoBehaviour
     [SerializeField] private GameObject projectilePrefab;
     [SerializeField] private Transform projectileTransform;
     [SerializeField] private float timeBetweenFiring;
+    [SerializeField] private PlayerController playerController;
 
     [Header("Audio")]
     [SerializeField] private AudioClip shootSFX;
+    [SerializeField] private AudioClip shootSFX2;
+    [SerializeField] private AudioClip shootSFX3;
 
     private float timer;
     private bool canFire;
@@ -80,7 +83,11 @@ public class MouseAiming : MonoBehaviour
         {
             Projectile projectile = Instantiate(projectilePrefab, projectileTransform.position, Quaternion.identity).GetComponent<Projectile>();
             AudioEventBus.RequestSFX(new SFXEvent(shootSFX, volume: 0.5f));
+            AudioEventBus.RequestSFX(new SFXEvent(shootSFX2, volume: 0.5f));
+            AudioEventBus.RequestSFX(new SFXEvent(shootSFX3, volume: 0.5f));
             projectile.InitializeProjectile(currentAimDirection);
+            if (playerController != null)
+                playerController.ApplyKnockback(currentAimDirection);
 
             try
             {

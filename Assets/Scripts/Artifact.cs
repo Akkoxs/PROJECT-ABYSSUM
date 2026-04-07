@@ -6,9 +6,12 @@ public class Artifact : MonoBehaviour, IRadarDetectable
     [SerializeField] private ArtifactStats artifactStats;
     [SerializeField] private float spriteScale;
     [SerializeField] private ArtifactPopup pfArtifactPopup;
+    [SerializeField] private GameObject pfMinigameZone;
+
+
     private SpriteRenderer spriteRenderer;
     private GameManager gameManager;
-    private BoxCollider2D collider;
+    private BoxCollider2D _collider;
     private bool isCollected = false; 
 
     public ArtifactStats Stats => artifactStats;
@@ -31,21 +34,25 @@ public class Artifact : MonoBehaviour, IRadarDetectable
         artifactStats = stats;
 
         spriteRenderer = GetComponent<SpriteRenderer>();  //render when stats are set 
-        collider = GetComponent<BoxCollider2D>();
+        _collider = GetComponent<BoxCollider2D>();
         spriteRenderer.sprite = artifactStats.icon;
         transform.localScale = Vector3.one * spriteScale;
     }
 
     public void PickUp()
     {
+        if (isCollected) return;
         isCollected = true;
 
-        //spawn popup
-        ArtifactPopup popup = Instantiate(pfArtifactPopup, transform.position, Quaternion.identity);
-        popup.Setup(artifactStats.artifactName, artifactStats.sellValue);
-
-        gameManager.CollectArtifact(this);
-        Destroy(gameObject);
+        ModulationMinigame zone = Instantiate(pfMinigameZone, transform.position, Quaternion.identity)
+                                    .GetComponent<ModulationMinigame>();
+        zone.OnCompleted = () =>
+        {
+            ArtifactPopup popup = Instantiate(pfArtifactPopup, transform.position, Quaternion.identity);
+            popup.Setup(artifactStats.artifactName, artifactStats.sellValue);
+            gameManager.CollectArtifact(this);
+            Destroy(gameObject);
+        };
     }
 
     public RadarObjectType GetObjectType()
