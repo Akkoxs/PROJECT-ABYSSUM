@@ -13,6 +13,11 @@ public class ModulationMinigame : MonoBehaviour
     [Header("Trigger")]
     public string playerTag = "Player";
 
+    [Header("Floating Text")]
+    public GameObject floatingTextPrefab;
+    public string entryMessage = "MOVE TO ADM";
+    public string completionMessage = "DECRYPTION SUCCESSFUL";
+
     // 0 = Rotary, 1 = Horizontal Slider, 2 = Vertical Slider
     private readonly int[] channelModes = { 0, 1, 0, 2 };
 
@@ -47,24 +52,45 @@ public class ModulationMinigame : MonoBehaviour
         CheckCompletion();
     }
 
+    // void OnTriggerEnter2D(Collider2D other)
+    // {
+    //     if (completed || !other.CompareTag(playerTag)) return;
+
+    //     playerInZone = true;
+
+    //     // The math stays, but the player never sees these numbers!
+    //     for (int i = 0; i < 4; i++)
+    //         targets[i] = Random.Range(0.1f, 0.9f);
+
+    //     if (GlobalModulationUI.Instance != null)
+    //         GlobalModulationUI.Instance.ActivateUI(); // No targets passed!
+
+    //     if (!started)
+    //     {
+    //         started = true;
+    //         //MinigameProgressManager.Instance.SetMinigameStarted(minigameID);
+    //     }
+    // }
+
     void OnTriggerEnter2D(Collider2D other)
     {
         if (completed || !other.CompareTag(playerTag)) return;
 
         playerInZone = true;
 
-        // The math stays, but the player never sees these numbers!
         for (int i = 0; i < 4; i++)
             targets[i] = Random.Range(0.1f, 0.9f);
 
         if (GlobalModulationUI.Instance != null)
-            GlobalModulationUI.Instance.ActivateUI(); // No targets passed!
+            GlobalModulationUI.Instance.ActivateUI();
 
         if (!started)
         {
             started = true;
-            //MinigameProgressManager.Instance.SetMinigameStarted(minigameID);
         }
+
+        // Spawn floating text above the player
+        SpawnFloatingText(other.transform, entryMessage);
     }
 
     void OnTriggerExit2D(Collider2D other)
@@ -97,14 +123,30 @@ public class ModulationMinigame : MonoBehaviour
     IEnumerator Complete()
     {
         completed = true;
-        //MinigameProgressManager.Instance.SetMinigameCompleted(minigameID);
         OnCompleted?.Invoke();
-        
+
+        // Spawn completion text — find the player by tag
+        GameObject player = GameObject.FindWithTag(playerTag);
+        if (player != null) SpawnFloatingText(player.transform, completionMessage);
+
         yield return new WaitForSeconds(1.5f);
-        
+
         if (GlobalModulationUI.Instance != null)
             GlobalModulationUI.Instance.DeactivateUI();
-            
+
         Destroy(gameObject);
     }
+
+    //helper
+
+    void SpawnFloatingText(Transform target, string message)
+    {
+        if (floatingTextPrefab == null) return;
+
+        Vector3 spawnPos = target.position + Vector3.up * 1.5f;
+        GameObject ft = Instantiate(floatingTextPrefab, spawnPos, Quaternion.identity);
+        ft.GetComponent<FloatingText>().Init(message);
+    }
+
+
 }

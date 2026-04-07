@@ -262,6 +262,7 @@ RectTransform:
   - {fileID: 5026914421489882134}
   - {fileID: 8990747106663874400}
   - {fileID: 670469315165047902}
+  - {fileID: 1817326042609702358}
   m_Father: {fileID: 5409338233462844707}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
@@ -2737,7 +2738,7 @@ MonoBehaviour:
       m_Calls: []
   m_text: 'HEALTH [HP]'
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: 4c7c7f538da919344976145889932a70, type: 2}
+  m_fontAsset: {fileID: 0}
   m_sharedMaterial: {fileID: 8038938984663275968, guid: 4c7c7f538da919344976145889932a70, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
@@ -4796,7 +4797,6 @@ RectTransform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 5291248639054898688}
-  - {fileID: 8301195782878084885}
   m_Father: {fileID: 2872374927038675812}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
@@ -5016,7 +5016,7 @@ RectTransform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 5035598165951161746}
+  m_Father: {fileID: 2872374927038675812}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
@@ -5044,7 +5044,7 @@ Canvas:
   m_AdditionalShaderChannelsFlag: 0
   m_UpdateRectTransformForStandalone: 0
   m_SortingLayerID: 0
-  m_SortingOrder: 1
+  m_SortingOrder: 500
   m_TargetDisplay: 0
 --- !u!1 &3554083183390095290
 GameObject:
@@ -6642,6 +6642,7 @@ RectTransform:
   - {fileID: 8009566655456158857}
   - {fileID: 7201968540732367696}
   - {fileID: 6056882057434293244}
+  - {fileID: 8301195782878084885}
   - {fileID: 5035598165951161746}
   m_Father: {fileID: 5173080214233218582}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -6921,7 +6922,7 @@ GameObject:
   - component: {fileID: 3932088454288276397}
   - component: {fileID: 2173926960806523684}
   m_Layer: 5
-  m_Name: Trapezoid
+  m_Name: Trapezoid Mask
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -6940,7 +6941,6 @@ RectTransform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 6942605150341911781}
-  - {fileID: 1817326042609702358}
   m_Father: {fileID: 31319119696999753}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
@@ -9717,7 +9717,7 @@ RectTransform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 670469315165047902}
+  m_Father: {fileID: 31319119696999753}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
@@ -11534,7 +11534,7 @@ MonoBehaviour:
       m_Calls: []
   m_text: 'OXYGEN [TANK]'
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: 4c7c7f538da919344976145889932a70, type: 2}
+  m_fontAsset: {fileID: 0}
   m_sharedMaterial: {fileID: 8038938984663275968, guid: 4c7c7f538da919344976145889932a70, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}

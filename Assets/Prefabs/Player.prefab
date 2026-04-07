@@ -10,7 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 8352081241537702314}
   - component: {fileID: 7599624687736478683}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: Spot Light 2D
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -94,7 +94,7 @@ GameObject:
   m_Component:
   - component: {fileID: 5796925854059480079}
   - component: {fileID: 8607524952035776071}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: AirProbe
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -171,7 +171,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 7114918887403613292}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: GroundCheck
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -202,7 +202,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 4441013712818845415}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: CamAnchor
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -236,7 +236,7 @@ GameObject:
   - component: {fileID: 5028014924306833971}
   - component: {fileID: 2094560857799501282}
   - component: {fileID: 5361587620973916903}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: HarpoonGun
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -363,7 +363,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 4914975141302271706}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: LightContainer
   m_TagString: Untagged
   m_Icon: {fileID: 0}

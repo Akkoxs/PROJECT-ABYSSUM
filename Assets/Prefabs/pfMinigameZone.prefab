@@ -95,3 +95,6 @@ MonoBehaviour:
   successBuffer: 0.1
   holdDuration: 0.5
   playerTag: Player
+  floatingTextPrefab: {fileID: 4989238143819760854, guid: 9cb16bd75c427a64ab246a57fae574dc, type: 3}
+  entryMessage: MOVE TO ADM
+  completionMessage: DECRYPTION SUCCESSFUL
