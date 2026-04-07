@@ -29,7 +29,7 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 0.46967, y: 0.46967, z: 0.46967}
+  m_LocalScale: {x: 10, y: 10, z: 10}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 7618606518220937801}
@@ -48,17 +48,17 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: '::'
   force: 30
-  minVelocity: 0.1
-  waterDrag: 1.5
+  minVelocity: 2
+  waterDrag: 18
   harpoonAnimator: {fileID: 8849165821937594639}
   harpDamage: 10
   floorLayer:
     serializedVersion: 2
-    m_Bits: 64
+    m_Bits: 320
   enemyLayer:
     serializedVersion: 2
     m_Bits: 8
-  tipOffset: -0.31
+  tipOffset: -0.83
 --- !u!50 &3831572644774570345
 Rigidbody2D:
   serializedVersion: 5
@@ -120,7 +120,7 @@ BoxCollider2D:
   m_UsedByEffector: 0
   m_CompositeOperation: 0
   m_CompositeOrder: 0
-  m_Offset: {x: -0.011933744, y: 0.010109067}
+  m_Offset: {x: 0.001481954, y: 0.0045192093}
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
     pivot: {x: 0, y: 0}
@@ -130,7 +130,7 @@ BoxCollider2D:
     drawMode: 0
     adaptiveTiling: 0
   m_AutoTiling: 0
-  m_Size: {x: 1.132047, y: 0.40356386}
+  m_Size: {x: 0.16611749, y: 0.034632467}
   m_EdgeRadius: 0
 --- !u!1 &8210661018504406630
 GameObject:
@@ -160,7 +160,7 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 6.98417, y: 6.98417, z: 6.98417}
+  m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 6321300564293227229}

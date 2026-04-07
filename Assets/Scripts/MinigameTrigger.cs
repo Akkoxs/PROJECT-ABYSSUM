@@ -29,7 +29,12 @@ public class MinigameTrigger : MonoBehaviour
         // Strip Minigame layer from all 4 cameras so nothing leaks into other quadrants
         if (splitscreen != null)
             foreach (var cam in splitscreen.GetGameCameras())
-                if (cam != null) cam.cullingMask &= ~minigameMask;
+                if (cam != null)
+                {
+                    Debug.Log($"{cam.name} culling mask BEFORE strip: {cam.cullingMask}");
+                    cam.cullingMask &= ~minigameMask;
+                    Debug.Log($"{cam.name} culling mask AFTER strip: {cam.cullingMask}");
+                }
 
         // Make sure minigame is hidden at start
         if (minigameRoot != null) minigameRoot.SetActive(false);
@@ -54,7 +59,7 @@ public class MinigameTrigger : MonoBehaviour
         {
             minigameRoot.SetActive(true);
             // Pass the UI cam reference to the manager
-            var mgr = minigameRoot.GetComponentInChildren<MinigameManager>();
+            var mgr = minigameRoot.GetComponentInChildren<MinigameManager>(true);
             if (mgr != null)
             {
                 Camera uiCam = splitscreen != null ? splitscreen.GetUICamera() : null;

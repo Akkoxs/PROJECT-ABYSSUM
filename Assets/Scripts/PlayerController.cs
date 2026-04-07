@@ -35,14 +35,10 @@ public class PlayerController : MonoBehaviour
     private float horizontal;
     private float vertical;
     private float bobbingTimer = 0f;
-    private bool isBeingKnockedBack = false;
-
+    [HideInInspector]
+    public bool inSubmarine;
     [HideInInspector]
     public bool isInvulnerable = false;
-    [HideInInspector]
-    public bool isInteracting;
-
-    private float isInteractingTimer = 0f;
     private float invulnerabilityTimer = 0f;
     private float invulnerabilityDuration = 1.2f;
 
@@ -82,10 +78,12 @@ public class PlayerController : MonoBehaviour
             if (!submarine.playerInside)
             {
                 Debug.Log("here entering submarine");
+                inSubmarine = true;
                 submarine.EnterSubmarine();
             } else if (submarine.playerInside)
             {
                 Debug.Log("here exiting submarine");
+                inSubmarine = false;
                 submarine.ExitSubmarine();
             }
         }
@@ -165,6 +163,16 @@ public class PlayerController : MonoBehaviour
         }
     }
 
+    public void ApplyKnockback(Vector2 shotDirection)
+    {
+        // Kill current momentum first
+        rb.linearVelocity = Vector2.zero;
+
+        // Push opposite to shot direction
+        Vector2 knockbackDir = -shotDirection.normalized;
+        rb.AddForce(knockbackDir * knockbackForce, ForceMode2D.Impulse);
+    }
+
     private void FixedUpdate()
     {
         float targetVelocityX = horizontal * speed;
@@ -216,17 +224,17 @@ public class PlayerController : MonoBehaviour
 
     private void OnTriggerStay2D(Collider2D collision)
     {
-        if (collision.gameObject.CompareTag("MinigameTrigger"))
-        {
-            if (MinigameProgressManager.Instance.minigameActive)
-            {
-                playerInput.enabled = false;
-            }
-            else if (MinigameProgressManager.Instance.minigameCompleted)
-            {
-                playerInput.enabled = true;
-            }
-        }
+        //if (collision.gameObject.CompareTag("MinigameTrigger"))
+        //{
+        //    if (MinigameProgressManager.Instance.minigameActive)
+        //    {
+        //        playerInput.enabled = false;
+        //    }
+        //    else if (MinigameProgressManager.Instance.minigameCompleted)
+        //    {
+        //        playerInput.enabled = true;
+        //    }
+        //}
     }
 
     public void SetMoveSpeed(float newSpeed)

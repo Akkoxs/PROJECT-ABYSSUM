@@ -353,7 +353,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: '::'
   mouseAiming: {fileID: 8881802823708470294}
   spriteRenderer: {fileID: 5028014924306833971}
-  lightContainer: {fileID: 0}
+  lightContainer: {fileID: 8393264849021640314}
 --- !u!1 &8393264849021640314
 GameObject:
   m_ObjectHideFlags: 0
@@ -734,12 +734,12 @@ MonoBehaviour:
   mouseAiming: {fileID: 8881802823708470294}
   animator: {fileID: 1230880166355383062}
   spriteRenderer: {fileID: 7397831411424686445}
-  playerInput: {fileID: 0}
+  playerInput: {fileID: 2268685487159305399}
   submarine: {fileID: 0}
   ees: {fileID: 0}
   speed: 4
   jumpingPower: 5
-  knockbackForce: 10
+  knockbackForce: 15
   groundLayer:
     serializedVersion: 2
     m_Bits: 64
@@ -752,8 +752,8 @@ MonoBehaviour:
   bobbingStrength: 1.11
   bobbingSpeed: 1.1
   enableBobbing: 1
+  inSubmarine: 0
   isInvulnerable: 0
-  isInteracting: 0
 --- !u!114 &8881802823708470294
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -772,10 +772,13 @@ MonoBehaviour:
   needHarpoonAnimator: 1
   stickDeadzone: 0.2
   mainCamera: {fileID: 0}
-  projectilePrefab: {fileID: 0}
+  projectilePrefab: {fileID: 8044487839321092788, guid: e5733a24a4fce0540a07ace4f5428b45, type: 3}
   projectileTransform: {fileID: 0}
-  timeBetweenFiring: 1
-  shootSFX: {fileID: 0}
+  timeBetweenFiring: 2.7
+  playerController: {fileID: 5336883611615615912}
+  shootSFX: {fileID: 8300000, guid: d9419ba0bfac1e84a95418ac5851caf6, type: 3}
+  shootSFX2: {fileID: 8300000, guid: ca214fc390c87c04da8ef1f17c2f870f, type: 3}
+  shootSFX3: {fileID: 8300000, guid: 533e8a4991e68dd4f80cc91aeddd5727, type: 3}
 --- !u!114 &7774610673544867257
 MonoBehaviour:
   m_ObjectHideFlags: 0

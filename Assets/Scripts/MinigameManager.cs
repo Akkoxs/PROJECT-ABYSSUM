@@ -30,29 +30,15 @@ public class MinigameManager : MonoBehaviour
     [SerializeField] private TextMeshProUGUI phaseText;
     [SerializeField] private TextMeshProUGUI feedbackText;
 
-    // Injected by MinigameTrigger
     private Camera gameCamera;
     private MinigameTrigger triggerController;
 
-    // Target wave (randomized on init)
-    private float targetAmplitude;
-    private float targetHShift;
-    private float targetAxis;
-    private float targetPhase;
-
-    // Player wave (driven by serial pots/sliders, remapped to same ranges)
-    private float playerAmplitude;
-    private float playerHShift;
-    private float playerAxis;
-    private float playerPhase;
+    private float targetAmplitude, targetHShift, targetAxis, targetPhase;
+    private float playerAmplitude, playerHShift, playerAxis, playerPhase;
 
     private float matchTimer;
     private bool isComplete;
     private bool initialized;
-
-    // Wave draw bounds in world space
-    private float waveXMin, waveXMax;
-    private float targetWaveY, playerWaveY;
 
     // ── Initialization ───────────────────────────────────────────────────────
 
@@ -64,11 +50,11 @@ public class MinigameManager : MonoBehaviour
         isComplete = false;
 
         RandomizeTarget();
-        SetMinigameLayer();
+        SetupLineRenderers();
         SetupCanvas(uiCam);
-        ComputeWaveBounds();
 
         initialized = true;
+        Debug.Log("MinigameManager initialized successfully");
     }
 
     private void RandomizeTarget()
@@ -79,12 +65,27 @@ public class MinigameManager : MonoBehaviour
         targetPhase = Random.Range(phaseMin, phaseMax);
     }
 
-    private void SetMinigameLayer()
+    private void SetupLineRenderers()
     {
         int layer = LayerMask.NameToLayer("Minigame");
-        if (layer == -1) return;
-        if (targetWaveLine) targetWaveLine.gameObject.layer = layer;
-        if (playerWaveLine) playerWaveLine.gameObject.layer = layer;
+
+        SetupLR(targetWaveLine, new Color(0f, 0.3f, 0.8f), 100, layer);
+        SetupLR(playerWaveLine, new Color(0.3f, 0.6f, 1f), 101, layer);
+    }
+
+    private void SetupLR(LineRenderer lr, Color color, int sortOrder, int layer)
+    {
+        if (lr == null) return;
+        lr.useWorldSpace = true;
+        lr.startColor = color;
+        lr.endColor = color;
+        lr.startWidth = 0.05f;
+        lr.endWidth = 0.05f;
+        lr.sortingLayerName = "Default";
+        lr.sortingOrder = sortOrder;
+        lr.shadowCastingMode = UnityEngine.Rendering.ShadowCastingMode.Off;
+        lr.receiveShadows = false;
+        if (layer != -1) lr.gameObject.layer = layer;
     }
 
     private void SetupCanvas(Camera uiCam)
@@ -106,20 +107,6 @@ public class MinigameManager : MonoBehaviour
         SetLayerRecursively(minigameCanvas.gameObject, LayerMask.NameToLayer("UI"));
     }
 
-    private void ComputeWaveBounds()
-    {
-        if (gameCamera == null) return;
-
-        float orthoH = gameCamera.orthographicSize;
-        float orthoW = orthoH * gameCamera.aspect;
-        Vector3 c = gameCamera.transform.position;
-
-        waveXMin = c.x - orthoW * 0.6f;
-        waveXMax = c.x + orthoW * 0.6f;
-        targetWaveY = c.y + orthoH * 0.3f;
-        playerWaveY = c.y - orthoH * 0.3f;
-    }
-
     // ── Runtime ──────────────────────────────────────────────────────────────
 
     private void Update()
@@ -127,13 +114,12 @@ public class MinigameManager : MonoBehaviour
         if (!initialized || isComplete || gameCamera == null) return;
 
         ReadSerialInput();
-        DrawWave(targetWaveLine, targetAmplitude, targetHShift, targetAxis, targetPhase, targetWaveY);
-        DrawWave(playerWaveLine, playerAmplitude, playerHShift, playerAxis, playerPhase, playerWaveY);
+        DrawWave(targetWaveLine, targetAmplitude, targetHShift, targetAxis, targetPhase);
+        DrawWave(playerWaveLine, playerAmplitude, playerHShift, playerAxis, playerPhase);
         CheckMatch();
         UpdateUI();
     }
 
-    // Remap each 0-1 serial value to the same ranges used for the target
     private void ReadSerialInput()
     {
         if (SerialHandler.Instance == null) return;
@@ -144,21 +130,49 @@ public class MinigameManager : MonoBehaviour
         playerPhase = Mathf.Lerp(phaseMin, phaseMax, SerialHandler.Instance.playerSlider_c);
     }
 
-    // y = k + a * sin(h * t + c)
-    // t is a normalized [0,1] position along the wave, mapped to one full period via 2π
-    private void DrawWave(LineRenderer lr, float a, float h, float k, float c, float yCenter)
+    private void DrawWave(LineRenderer lr, float a, float h, float k, float c)
     {
-        if (lr == null) return;
+        if (lr == null || gameCamera == null) return;
+
+        float orthoH = gameCamera.orthographicSize;
+        float orthoW = orthoH * gameCamera.aspect;
+
+        // Camera world position — all wave points are offset from here
+        Vector3 camPos = gameCamera.transform.position;
+        Debug.Log($"Camera: {gameCamera.name} | camPos: {camPos} | orthoH: {orthoH} | orthoW: {orthoW} | isOrtho: {gameCamera.orthographic}");
+
+        // Z just in front of the camera's near clip plane
+        float wz = camPos.z + gameCamera.nearClipPlane + 0.1f;
+
+        // Scale amplitude to a fraction of the camera's visible height
+        float ampScale = orthoH * 0.25f / amplitudeMax;
+        float axisScale = orthoH * 0.25f / Mathf.Max(Mathf.Abs(axisMin), Mathf.Abs(axisMax));
+
         lr.positionCount = wavePoints;
 
         for (int i = 0; i < wavePoints; i++)
         {
-            float t = (float)i / (wavePoints - 1);                      // 0 → 1
-            float x = Mathf.Lerp(waveXMin, waveXMax, t);
-            float y = yCenter + k + a * Mathf.Sin(h * t * Mathf.PI * 2f + c);
-            lr.SetPosition(i, new Vector3(x, y, 0f));
+            float t = (float)i / (wavePoints - 1);
+
+            // X spans 80% of visible width, centered on camera
+            float x = camPos.x + Mathf.Lerp(-orthoW * 0.8f, orthoW * 0.8f, t);
+
+            // Y centered on camera, offset by axis (k) and amplitude (a)
+            float y = camPos.y
+                    + (a * ampScale) * Mathf.Sin(h * t * Mathf.PI * 2f + c)
+                    + (k * axisScale * Mathf.Cos(h * t * Mathf.PI * 2f + c));
+
+            lr.SetPosition(i, new Vector3(x, y, wz));
         }
+
+        // Force bounds to cover the full camera view so Unity never culls it
+        lr.bounds = new Bounds(
+            new Vector3(camPos.x, camPos.y, wz),
+            new Vector3(orthoW * 3f, orthoH * 3f, 1f)
+        );
     }
+
+    // ── Match checking ───────────────────────────────────────────────────────
 
     private void CheckMatch()
     {
@@ -198,7 +212,6 @@ public class MinigameManager : MonoBehaviour
 
         if (feedbackText && !isComplete)
         {
-            // Count how many params are close so feedback can be more specific
             int closeCount = 0;
             if (Mathf.Abs(playerAmplitude - targetAmplitude) < matchThreshold * 2f * (amplitudeMax - amplitudeMin)) closeCount++;
             if (Mathf.Abs(playerHShift - targetHShift) < matchThreshold * 2f * (hShiftMax - hShiftMin)) closeCount++;
@@ -227,8 +240,6 @@ public class MinigameManager : MonoBehaviour
         if (triggerController != null) triggerController.CloseMinigame();
         else gameObject.SetActive(false);
     }
-
-    // ── Helper ───────────────────────────────────────────────────────────────
 
     private static void SetLayerRecursively(GameObject go, int layer)
     {
