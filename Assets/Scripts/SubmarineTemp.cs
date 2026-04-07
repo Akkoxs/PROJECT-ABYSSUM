@@ -21,9 +21,6 @@ public class SubmarineTemp : MonoBehaviour
     [Header("Passive Cooling")]
     [SerializeField] private float passiveCoolStrength = 0.02f; // 2% per sec
 
-    [Header("Arduino")]
-    [SerializeField] private SerialController serialController;
-
     private float heatRate = 0f;         // heat added per sec (from lights, etc.)
     private float coolantFlow = 0f;      // 0 = off, 1 = full (from pot)
     private bool tickRunning = false;
@@ -49,6 +46,19 @@ public class SubmarineTemp : MonoBehaviour
 
     Coroutine tempTick = null;
 
+    private void Start()
+    {
+        StartCoroutine(DebugLog());
+    }
+
+    private IEnumerator DebugLog()
+    {
+        while (true)
+        {
+            Debug.Log($"[SubTemp] Temp: {currentTemp:F1}/{maxTemp} | HeatRate: {heatRate:F1} | Coolant: {currentCoolant:F1}/{maxCoolant} | Flow: {coolantFlow:F2}");
+            yield return new WaitForSeconds(1f);
+        }
+    }
     private void Awake()
     {
         currentCoolant = maxCoolant;
@@ -59,8 +69,8 @@ public class SubmarineTemp : MonoBehaviour
     {
         if (SerialHandler.Instance != null)
         {
-            Debug.Log("coolantPot: " + SerialHandler.Instance.coolantPot);
-            SetCoolantFlow(SerialHandler.Instance.coolantPot);
+            // Debug.Log("coolantPot: " + SerialHandler.Instance.coolantPot);
+            SetCoolantFlow(1f - SerialHandler.Instance.coolantPot);
         }
     }
 
@@ -110,9 +120,9 @@ public class SubmarineTemp : MonoBehaviour
                 currentTemp -= cooling;
 
                 currentCoolant = Mathf.Max(0f, currentCoolant - coolantDrainRate * coolantFlow * dt);
+                // Debug.Log(currentCoolant); 
                 coolantChanged?.Invoke(currentCoolant, maxCoolant);
 
-                // serialController.SendSerialMessage(currentCoolant.ToString("F0"));
 
                 if (currentCoolant <= 0f)
                     coolantFlow = 0f;

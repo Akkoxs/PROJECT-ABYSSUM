@@ -8,17 +8,18 @@ public class SerialHandler : MonoBehaviour
     //SHOUld be usable from any other script, this class is a SINGLETON 
 
     //should be usable like this:
-        //SerialHandler.Instance.SendSerialData("LED_ON!");
-        //SerialHandler.Instance.SendSerialData("PUMP:75");
+    //SerialHandler.Instance.SendSerialData("LED_ON!");
+    //SerialHandler.Instance.SendSerialData("PUMP:75");
 
     //singleton 
-    public static SerialHandler Instance {get; private set;}
-    
+    public static SerialHandler Instance { get; private set; }
+
     //Debu keys 
 
     private SerialController serialController;
 
     //serial catch
+    [Header("Serial Catch")]
     public float playerPot_a; //modulation minigame
     public float playerSlider_h; //modulation minigame
     public float playerPot_k; //modulation minigame
@@ -27,7 +28,7 @@ public class SerialHandler : MonoBehaviour
     public bool oxyL2; //oxy transfer ++
     public bool oxyL3; //oxy transfer +++
     public bool ping; //scan lighting
-    public bool radarOn; 
+    public bool radarOn;
     public bool radarOff;
     public bool door; //sub door
     public float coolantPot; //coolant pump rate 
@@ -38,26 +39,44 @@ public class SerialHandler : MonoBehaviour
     public float joy1Y; //sub move Y 
     public float joy2X; //sub look X 
     public float joy2Y; //sub look Y 
-    
+
+    [Header("Filtering")]
+    [SerializeField] private int averageWindowSize = 8;
+    [SerializeField] private float deadzone = 0.08f;
+
     //multipliers for analog to digi.
     float joyStickMult = 1840f;
     float joyMin = 800f;
-    float joyMax = 3200f;
+    float joyMax = 750f;
     float potentiometerMult = 1023f;
+
+    private MovingAverage joy1XFilter;
+    private MovingAverage joy1YFilter;
+    private MovingAverage joy2XFilter;
+    private MovingAverage joy2YFilter;
+
+    public bool IsSerialReady => serialController != null && serialController.enabled;
 
     void Awake()
     {
+        joy1XFilter = new MovingAverage(averageWindowSize);
+        joy1YFilter = new MovingAverage(averageWindowSize);
+        joy2XFilter = new MovingAverage(averageWindowSize);
+        joy2YFilter = new MovingAverage(averageWindowSize);
+
         if (Instance != null && Instance != this)
         {
             Destroy(gameObject);
             return;
         }
         Instance = this;
-        
+
         if (serialController == null)
         {
             serialController = GetComponentInParent<SerialController>();
         }
+
+        
     }
 
     void OnApplicationQuit()
@@ -66,19 +85,19 @@ public class SerialHandler : MonoBehaviour
             serialController.enabled = false;
     }
 
-    #if UNITY_EDITOR
+#if UNITY_EDITOR
     void OnDestroy()
     {
         // forcing Ardity to shut down before Unity tears down
         if (serialController != null)
         {
             serialController.enabled = false;
-            
+
             //give the thread time to die
             System.Threading.Thread.Sleep(200);
         }
     }
-    #endif
+#endif
 
     void Update()
     {
@@ -87,8 +106,8 @@ public class SerialHandler : MonoBehaviour
 
     //REMINDER: Might have to Mathf.clamp it between 0 and 180 
     //Send Temp by goin:
-        // SerialHandler.SendSerialData("$TEMP:{TempAngle}");
-        // SerialHandler.SendSerialData("$COOL:{CoolantAngle}");
+    // SerialHandler.SendSerialData("$TEMP:{TempAngle}");
+    // SerialHandler.SendSerialData("$COOL:{CoolantAngle}");
     public void SendSerialData(string message)
     {
         serialController.SendSerialMessage(message);
@@ -97,6 +116,7 @@ public class SerialHandler : MonoBehaviour
     void ReceiveSerialData()
     {
         string raw_message = serialController.ReadSerialMessage();
+
 
         if (raw_message == null)
             return;
@@ -111,6 +131,9 @@ public class SerialHandler : MonoBehaviour
             string trimmed_msg = raw_message.Trim();
             string[] parts = trimmed_msg.Split(',');
 
+            if (parts.Length < 19)
+                return; // incomplete packet, skip
+
             int[] serial_catch = new int[parts.Length];
             for (int i = 0; i < parts.Length; i++)
             {
@@ -119,7 +142,7 @@ public class SerialHandler : MonoBehaviour
                     Debug.LogError("Failed to parse integer from serial: " + parts[i]);
                 }
             }
-            
+
             playerPot_a = serial_catch[0] / potentiometerMult;
             playerSlider_h = serial_catch[1] / potentiometerMult;
             playerPot_k = serial_catch[2] / potentiometerMult;
@@ -130,19 +153,19 @@ public class SerialHandler : MonoBehaviour
             ping = serial_catch[7] == 1;
             radarOn = serial_catch[8] == 1;
             radarOff = serial_catch[9] == 1;
-            door = serial_catch[10] == 1;  
-            coolantPot = serial_catch[11] / potentiometerMult; 
+            door = serial_catch[10] == 1;
+            coolantPot = serial_catch[11] / potentiometerMult;
             headSlider = serial_catch[12] / potentiometerMult;
             floodSlider = serial_catch[13] / potentiometerMult;
-            shoot = serial_catch [14] == 1;
-            // joy1X = NormalizeJoystick(serial_catch[15]);
-            // joy1Y = NormalizeJoystick(serial_catch[16]);
-            // joy2X = NormalizeJoystick(serial_catch[17]);
-            // joy2Y = NormalizeJoystick(serial_catch[18]);
-            joy1X = (serial_catch[15]);
-            joy1Y = (serial_catch[16]);
-            joy2X = (serial_catch[17]);
-            joy2Y = (serial_catch[18]);
+            shoot = serial_catch[14] == 1;
+            joy1X = ApplyDeadzone(joy1XFilter.Add(NormalizeJoystick(serial_catch[15], 270, 750)));
+            joy1Y = ApplyDeadzone(joy1YFilter.Add(NormalizeJoystick(serial_catch[16], 250, 770)));
+            joy2X = ApplyDeadzone(joy2XFilter.Add(NormalizeJoystick(serial_catch[17], 250, 770)));
+            joy2Y = ApplyDeadzone(joy2YFilter.Add(NormalizeJoystick(serial_catch[18], 235, 785)));
+            // joy1X = (serial_catch[15]);
+            // joy1Y = (serial_catch[16]);
+            // joy2X = (serial_catch[17]);
+            // joy2Y = (serial_catch[18]);
 
             // JoyX = NormalizeJoystick(serial_catch[0]);
             // JoyY = NormalizeJoystick(serial_catch[1]);
@@ -155,12 +178,40 @@ public class SerialHandler : MonoBehaviour
         }
     }
 
-    //the Joystick is a Grove joystick v1.1, which has a raw val scale of 800-3200 for its x and y axes with the center ~2048, this is with the 12-bit ADC we have on the ESP32
-    float NormalizeJoystick(float raw)
+    float NormalizeJoystick(float raw, float rawMin, float rawMax)
     {
-        if (raw > 3500f) return 0f; //this is for when joystick is pressed down (like a button), it gives a high value which we interpret as 0, which is same as center rn. MAY CHANGE THIS LATER
-
+        if (raw > 1000f) return 0f;
+        float clamped = Mathf.Clamp(raw, rawMin, rawMax);
         //inverse lerp returns a 0-1 value depending on where raw is between joyMin and joyMax
-        return Mathf.InverseLerp(joyMin, joyMax, raw)* 2f - 1f; //the *2f -1f is to remap the 0-1 range to -1 to 1 so get directions
+        return Mathf.InverseLerp(rawMin, rawMax, clamped) * 2f - 1f; //the *2f -1f is to remap the 0-1 range to -1 to 1 so get directions
+    }
+
+    float ApplyDeadzone(float value)
+    {
+        if (Mathf.Abs(value) < deadzone) return 0f;
+        // Rescale so output still reaches -1/+1 at the edges
+        return Mathf.Sign(value) * (Mathf.Abs(value) - deadzone) / (1f - deadzone);
+    }
+}
+
+//helper class for filtering 
+public class MovingAverage
+{
+    private float[] buffer;
+    private int index = 0;
+    private float sum = 0f;
+
+    public MovingAverage(int windowSize)
+    {
+        buffer = new float[windowSize];
+    }
+
+    public float Add(float value)
+    {
+        sum -= buffer[index];
+        buffer[index] = value;
+        sum += value;
+        index = (index + 1) % buffer.Length;
+        return sum / buffer.Length;
     }
 }

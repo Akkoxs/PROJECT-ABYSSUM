@@ -4,9 +4,9 @@
 // ─── PIN DEFINITIONS ──────────────────────────────────────────────
 // Player sliders (analog)
 const int PIN_playerPot_a    = A9;
-const int PIN_playerSlider_h = A0;
+const int PIN_playerSlider_h = A14;
 const int PIN_playerPot_k    = A10;
-const int PIN_playerSlider_c = A14;
+const int PIN_playerSlider_c = A15;
 
 // Sub control panel (digital inputs)
 const int PIN_oxyL1    = 35;
@@ -37,6 +37,7 @@ const int PIN_joy2Y = A8;
 unsigned long lastSend = 0;
 const unsigned long SEND_INTERVAL = 250; // 20ms = ~50Hz
 
+
 // ─── LED BLINK STATE ──────────────────────────────────────────────
 bool ledBlinking = false;
 bool ledState = false;
@@ -49,7 +50,7 @@ Servo coolantServo;
 
 // ─────────────────────────────────────────────────────────────────
 void setup() {
-  Serial.begin(115200);
+  Serial.begin(9600);
 
   // Digital inputs
   pinMode(PIN_oxyL1,    INPUT);
@@ -66,11 +67,11 @@ void setup() {
   pinMode(PIN_tempServo,    OUTPUT);
 
   //servo setup
-  //tempServo = attach(PIN_tempServo);
-  //coolantServo = attach(PIN_coolantServo);
+  tempServo.attach(PIN_tempServo);
+  coolantServo.attach(PIN_coolantServo);
 
-  //tempServo.write = write(0);
-  //coolantServo.write = write(180);
+  tempServo.write(0);
+  coolantServo.write(180);
 }
 
 // ─────────────────────────────────────────────────────────────────
@@ -90,29 +91,31 @@ void loop() {
 void receiveSerialValues() {
   if (!Serial.available()) return;
 
-  String command = Serial.readStringUntil('\n');
-  command.trim();
+  while (Serial.available()){
+    String command = Serial.readStringUntil('\n');
+    command.trim();
 
-  //parse temp commands 
-  if (command.startsWith("TEMP:")) {
-      // Extract the substring after "TEMP:" and convert to integer
-      String valueStr = command.substring(5); 
+    //parse temp commands 
+    if (command.startsWith("TEMP:")) {
+        // Extract the substring after "TEMP:" and convert to integer
+        String valueStr = command.substring(5); 
+        int angle = valueStr.toInt();
+        
+        // Constrain to safe servo angles and write
+        angle = constrain(angle, 0, 180);
+        tempServo.write(angle);
+    }
+
+    // Parse Coolant Command
+    else if (command.startsWith("COOL:")) {
+      // Extract the substring after "COOL:" and convert to integer
+      String valueStr = command.substring(5);
       int angle = valueStr.toInt();
       
       // Constrain to safe servo angles and write
       angle = constrain(angle, 0, 180);
-      tempServo.write(angle);
-  }
-
-  // Parse Coolant Command
-  else if (command.startsWith("COOL:")) {
-    // Extract the substring after "COOL:" and convert to integer
-    String valueStr = command.substring(5);
-    int angle = valueStr.toInt();
-    
-    // Constrain to safe servo angles and write
-    angle = constrain(angle, 0, 180);
-    coolantServo.write(angle);
+      coolantServo.write(angle);
+    }
   }
 }
 
