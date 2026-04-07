@@ -119,14 +119,14 @@ public class Submarine : MonoBehaviour
     {
         if (SerialHandler.Instance.door)
         {
-            if (!doorOpen) //horizontal == 0 && vertical == 0 &&
+            if (horizontal == 0 && vertical == 0 && !doorOpen)
             {
                 subAnimator.SetBool("door", true);
                 doorOpen = true;
             }
         } else if (!SerialHandler.Instance.door)
         {
-           if (doorOpen) //horizontal == 0 && vertical == 0 && 
+           if (horizontal == 0 && vertical == 0 && doorOpen)
             {
                 subAnimator.SetBool("door", false);
                 doorOpen = false;

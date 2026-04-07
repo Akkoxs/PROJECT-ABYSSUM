@@ -180,7 +180,7 @@ public class SerialHandler : MonoBehaviour
 
     float NormalizeJoystick(float raw, float rawMin, float rawMax)
     {
-        if (raw > 1000f) return 0f;
+        //if (raw > 1000f) return 0f;
         float clamped = Mathf.Clamp(raw, rawMin, rawMax);
         //inverse lerp returns a 0-1 value depending on where raw is between joyMin and joyMax
         return Mathf.InverseLerp(rawMin, rawMax, clamped) * 2f - 1f; //the *2f -1f is to remap the 0-1 range to -1 to 1 so get directions
