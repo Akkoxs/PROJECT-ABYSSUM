@@ -6,6 +6,9 @@ public class Artifact : MonoBehaviour, IRadarDetectable
     [SerializeField] private ArtifactStats artifactStats;
     [SerializeField] private float spriteScale;
     [SerializeField] private ArtifactPopup pfArtifactPopup;
+    [SerializeField] private GameObject pfMinigameZone;
+
+
     private SpriteRenderer spriteRenderer;
     private GameManager gameManager;
     private BoxCollider2D collider;
@@ -38,14 +41,18 @@ public class Artifact : MonoBehaviour, IRadarDetectable
 
     public void PickUp()
     {
+        if (isCollected) return;
         isCollected = true;
 
-        //spawn popup
-        ArtifactPopup popup = Instantiate(pfArtifactPopup, transform.position, Quaternion.identity);
-        popup.Setup(artifactStats.artifactName, artifactStats.sellValue);
-
-        gameManager.CollectArtifact(this);
-        Destroy(gameObject);
+        ModulationMinigame zone = Instantiate(pfMinigameZone, transform.position, Quaternion.identity)
+                                    .GetComponent<ModulationMinigame>();
+        zone.OnCompleted = () =>
+        {
+            ArtifactPopup popup = Instantiate(pfArtifactPopup, transform.position, Quaternion.identity);
+            popup.Setup(artifactStats.artifactName, artifactStats.sellValue);
+            gameManager.CollectArtifact(this);
+            Destroy(gameObject);
+        };
     }
 
     public RadarObjectType GetObjectType()

@@ -30,7 +30,8 @@ public class PingSonarSystem : MonoBehaviour
     [Header("UI Feedback (Optional)")]
     [SerializeField] private TextMeshProUGUI cooldownText;
     [SerializeField] private UnityEngine.UI.Image cooldownFillImage;
-
+    [SerializeField] private SubmarineTemp submarineTemp;
+    [SerializeField] private float tempCost = 15f; 
     private bool isPinging = false;
     private bool isOnCooldown = false;
     private float cooldownTimer = 0f;
@@ -76,6 +77,7 @@ public class PingSonarSystem : MonoBehaviour
 
     public void ActivatePing()
     {
+        submarineTemp.AddFlatHeat(tempCost);
         if (isPinging || isOnCooldown) return;
 
         if (audioSource != null && pingSound != null)

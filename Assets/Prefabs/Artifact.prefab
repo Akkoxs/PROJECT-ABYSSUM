@@ -155,6 +155,7 @@ MonoBehaviour:
   artifactStats: {fileID: 0}
   spriteScale: 1.3
   pfArtifactPopup: {fileID: 3445648002813479539, guid: d8524b6947ed4724bbc7abc61c3d6864, type: 3}
+  pfMinigameZone: {fileID: 4473835246383357778, guid: 3a2a0ef419497cb4c91b4d0b3234a3d1, type: 3}
 --- !u!114 &1362484019064075618
 MonoBehaviour:
   m_ObjectHideFlags: 0

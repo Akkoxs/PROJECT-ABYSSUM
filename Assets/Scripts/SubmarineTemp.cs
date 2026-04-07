@@ -74,6 +74,12 @@ public class SubmarineTemp : MonoBehaviour
         }
     }
 
+    public void AddFlatHeat(float heat)
+    {
+        currentTemp += heat; 
+        tempChanged?.Invoke(currentTemp, maxTemp);
+    }
+
     public void AddHeatSource(float rate)
     {
         heatRate += rate;
