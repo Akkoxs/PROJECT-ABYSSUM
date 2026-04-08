@@ -129,7 +129,7 @@ public class TrapEnemy : MonoBehaviour, IRadarDetectable
 
         stateTimer -= Time.deltaTime;
 
-        if (health.CurrentHealth <= 0)
+        if (health.CurrentHealth <= 0 && health != null && isActivated)
         {
             AudioEventBus.RequestSFX(new SFXEvent(deathSFX, volume: 1f, pitch: Random.Range(0.9f, 1.1f), pos: transform.position));
             Destroy(gameObject);

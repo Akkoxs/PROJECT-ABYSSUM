@@ -16,7 +16,7 @@ GameObject:
   - component: {fileID: 7966292825631397916}
   - component: {fileID: 2901092333161125296}
   - component: {fileID: 4269557804163604851}
-  m_Layer: 3
+  m_Layer: 7
   m_Name: Anglerfish
   m_TagString: Enemy
   m_Icon: {fileID: 0}
@@ -202,7 +202,7 @@ BoxCollider2D:
   m_Offset: {x: 0.08933151, y: 0.09854388}
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
-    pivot: {x: 0.5, y: 0.5}
+    pivot: {x: 0.45454547, y: -0.107142754}
     oldSize: {x: 1.03125, y: 0.875}
     newSize: {x: 0.55, y: 0.27}
     adaptiveTilingThreshold: 0.5
@@ -243,6 +243,8 @@ MonoBehaviour:
   waterDrag: 0.95
   damageAmount: 15
   invulnerabilityDuration: 1.1
+  hurtSFX: {fileID: 0}
+  deathSFX: {fileID: 0}
 --- !u!114 &4269557804163604851
 MonoBehaviour:
   m_ObjectHideFlags: 0
