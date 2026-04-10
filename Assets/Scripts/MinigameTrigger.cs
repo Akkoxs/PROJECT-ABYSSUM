@@ -2,6 +2,10 @@ using UnityEngine;
 
 public class MinigameTrigger : MonoBehaviour
 {
+
+    //DEPRECATED
+    //I believe this script is not actually used in the game.
+    
     [Header("References")]
     [SerializeField] private GameObject minigameRoot; // The parent GO holding all minigame objects
     [SerializeField] private Splitscreen splitscreen;

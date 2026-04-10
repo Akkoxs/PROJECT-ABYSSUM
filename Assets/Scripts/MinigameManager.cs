@@ -3,6 +3,10 @@ using TMPro;
 
 public class MinigameManager : MonoBehaviour
 {
+
+    //DEPRECATED
+    //I believe this script is not actually used in the game.
+
     [Header("Waves")]
     [SerializeField] private LineRenderer targetWaveLine;
     [SerializeField] private LineRenderer playerWaveLine;

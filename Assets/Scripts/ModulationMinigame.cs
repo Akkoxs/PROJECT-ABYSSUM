@@ -3,23 +3,26 @@ using UnityEngine;
 
 public class ModulationMinigame : MonoBehaviour
 {
+    //Actually used in the modulation minigame 
+
     [Header("Identity")]
     public string minigameID = "modulation_minigame_01";
+    public string playerTag = "Player";
 
-    [Header("Tuning")]
+    [Header("Game Tuning")]
     public float successBuffer = 0.08f;
     public float holdDuration = 0.5f;
-
-    [Header("Trigger")]
-    public string playerTag = "Player";
+    public float completionDelay = 1.5f;
 
     [Header("Floating Text")]
     public GameObject floatingTextPrefab;
     public string entryMessage = "MOVE TO ADM";
     public string completionMessage = "DECRYPTION SUCCESSFUL";
 
-    // 0 = Rotary, 1 = Horizontal Slider, 2 = Vertical Slider
-    private readonly int[] channelModes = { 0, 1, 0, 2 };
+    //0 = rotary 
+    // 1 = horizontal Slider 
+    // 2 = vertical Slider
+    private readonly int[] channelModes = { 0, 1, 0, 2 }; //arrangement 
 
     private float[] targets = new float[4];
     private bool[] inRange = new bool[4];
@@ -32,18 +35,18 @@ public class ModulationMinigame : MonoBehaviour
 
     void Update()
     {
-        // Only run minigame logic if the player is physically standing in the zone
+        //minigame logic only runs when player is in the zone or the game is complete
         if (!playerInZone || completed) return;
 
         float[] current = GetCurrentValues();
 
-        // Calculate hits
+        //calculate for each target if we are within the sweetspot 
         for (int i = 0; i < 4; i++)
         {
             inRange[i] = Mathf.Abs(current[i] - targets[i]) <= successBuffer;
         }
 
-        // Send the data to the Global UI screen
+        //ensure globalMOdulationUi singleton
         if (GlobalModulationUI.Instance != null)
         {
             GlobalModulationUI.Instance.UpdateVisuals(current, inRange, channelModes);
@@ -52,26 +55,7 @@ public class ModulationMinigame : MonoBehaviour
         CheckCompletion();
     }
 
-    // void OnTriggerEnter2D(Collider2D other)
-    // {
-    //     if (completed || !other.CompareTag(playerTag)) return;
-
-    //     playerInZone = true;
-
-    //     // The math stays, but the player never sees these numbers!
-    //     for (int i = 0; i < 4; i++)
-    //         targets[i] = Random.Range(0.1f, 0.9f);
-
-    //     if (GlobalModulationUI.Instance != null)
-    //         GlobalModulationUI.Instance.ActivateUI(); // No targets passed!
-
-    //     if (!started)
-    //     {
-    //         started = true;
-    //         //MinigameProgressManager.Instance.SetMinigameStarted(minigameID);
-    //     }
-    // }
-
+    //triger the minigame when we enter the collider 
     void OnTriggerEnter2D(Collider2D other)
     {
         if (completed || !other.CompareTag(playerTag)) return;
@@ -89,7 +73,7 @@ public class ModulationMinigame : MonoBehaviour
             started = true;
         }
 
-        // Spawn floating text above the player
+        //spawn floating text entry message
         SpawnFloatingText(other.transform, entryMessage);
     }
 
@@ -99,11 +83,12 @@ public class ModulationMinigame : MonoBehaviour
         
         playerInZone = false;
         
-        // Turn off the global UI if they step out
+        //turn off the global UI if they step out
         if (GlobalModulationUI.Instance != null)
             GlobalModulationUI.Instance.DeactivateUI();
     }
 
+    //fetch the current vals from the SerialHandler
     float[] GetCurrentValues()
     {
         SerialHandler sh = SerialHandler.Instance;
@@ -125,20 +110,21 @@ public class ModulationMinigame : MonoBehaviour
         completed = true;
         OnCompleted?.Invoke();
 
-        // Spawn completion text — find the player by tag
-        GameObject player = GameObject.FindWithTag(playerTag);
-        if (player != null) SpawnFloatingText(player.transform, completionMessage);
-
-        yield return new WaitForSeconds(1.5f);
+        yield return new WaitForSeconds(completionDelay); //give player some time to move back to other screen
 
         if (GlobalModulationUI.Instance != null)
+        {
             GlobalModulationUI.Instance.DeactivateUI();
+        }
+
+        //spawn completion text & find the player by tag
+        GameObject player = GameObject.FindWithTag(playerTag);
+        if (player != null) SpawnFloatingText(player.transform, completionMessage);
 
         Destroy(gameObject);
     }
 
     //helper
-
     void SpawnFloatingText(Transform target, string message)
     {
         if (floatingTextPrefab == null) return;

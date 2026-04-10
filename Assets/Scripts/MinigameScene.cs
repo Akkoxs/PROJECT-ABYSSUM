@@ -4,6 +4,10 @@ using UnityEngine.SceneManagement;
 
 public class MinigameScene : MonoBehaviour
 {
+
+    //DEPRECATED
+    //I believe this script is not actually used in the game.
+    
     [Header("Scene Settings")]
     [SerializeField] private string sceneToLoad;
     [SerializeField] private bool oneTimeUse = true;

@@ -3,6 +3,10 @@ using UnityEngine;
 
 public class MinigameProgressManager : MonoBehaviour
 {
+
+    //DEPRECATED
+    //I believe this script is not actually used in the game. 
+
     private static MinigameProgressManager instance;
     public static MinigameProgressManager Instance => instance;
 
