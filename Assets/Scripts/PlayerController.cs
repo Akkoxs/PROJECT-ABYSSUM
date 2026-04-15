@@ -175,7 +175,7 @@ public class PlayerController : MonoBehaviour
 
     private void FixedUpdate()
     {
-        float targetVelocityX = horizontal * speed;
+        float targetVelocityX = -1f*horizontal * speed;
         float currentVelocityX = rb.linearVelocity.x;
 
         if (horizontal != 0)

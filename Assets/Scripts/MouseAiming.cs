@@ -54,7 +54,8 @@ public class MouseAiming : MonoBehaviour
     {
         if (rightStickInput.magnitude > stickDeadzone)
         {
-            currentAimDirection = rightStickInput.normalized;
+            // Mirror only X for Pepper's Ghost horizontal reflection
+            currentAimDirection = new Vector2(-rightStickInput.x, rightStickInput.y).normalized;
         }
         aimPosition = transform.position + (Vector3)currentAimDirection * aimRadius;
     }

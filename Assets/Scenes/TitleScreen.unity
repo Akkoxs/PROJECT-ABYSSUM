@@ -708,7 +708,7 @@ PrefabInstance:
     - target: {fileID: 7544667276449972175, guid: 4f0a643a363007044b9851035f7b7c24, type: 3}
       propertyPath: titleMusic
       value: 
-      objectReference: {fileID: 8300000, guid: 263d90092d9e744408635451b9884999, type: 3}
+      objectReference: {fileID: 8300000, guid: 26e2151d8775e48a3b84ac0a149015f4, type: 3}
     - target: {fileID: 7544667276449972175, guid: 4f0a643a363007044b9851035f7b7c24, type: 3}
       propertyPath: normalColor.a
       value: 1
@@ -830,7 +830,9 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 1145184835}
     m_RemovedComponents: []
-    m_RemovedGameObjects: []
+    m_RemovedGameObjects:
+    - {fileID: 699755777505760101, guid: 4f0a643a363007044b9851035f7b7c24, type: 3}
+    - {fileID: 6209949437215164031, guid: 4f0a643a363007044b9851035f7b7c24, type: 3}
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 4f0a643a363007044b9851035f7b7c24, type: 3}

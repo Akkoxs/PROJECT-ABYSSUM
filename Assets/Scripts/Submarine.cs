@@ -189,13 +189,13 @@ public class Submarine : MonoBehaviour
 
         if (horizontal < 0)
         {
-            spriteRenderer.flipX = false;
-            FlipLightContainer(true);
+            spriteRenderer.flipX = true;
+            FlipLightContainer(false);
         }
         else if (horizontal > 0)
         {
-            spriteRenderer.flipX = true;
-            FlipLightContainer(false);
+            spriteRenderer.flipX = false;
+            FlipLightContainer(true);
         }
 
         subAnimator.SetInteger("horizontal", (int)horizontal);

@@ -117,7 +117,7 @@ public class TitleScreenManager : MonoBehaviour
     {
         if (navigating) return;
         AudioEventBus.StopMusic();
-        StartCoroutine(FadeToScene("MarkChud"));
+        StartCoroutine(FadeToScene("FinalMaster"));
     }
 
     void OnCredits()

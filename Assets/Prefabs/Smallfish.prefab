@@ -85,7 +85,7 @@ SpriteRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_Sprite: {fileID: -8848205129115845381, guid: d2f83e243c1fc2548afcbb3f57d0459e, type: 3}
-  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_Color: {r: 0.5566038, g: 0.5566038, b: 0.5566038, a: 1}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
@@ -239,3 +239,5 @@ MonoBehaviour:
   waterDrag: 0.95
   damageAmount: 10
   invulnerabilityDuration: 2
+  hurtSFX: {fileID: 0}
+  deathSFX: {fileID: 0}
