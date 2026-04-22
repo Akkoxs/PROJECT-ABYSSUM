@@ -15,6 +15,7 @@ public class Submarine : MonoBehaviour
     [SerializeField] private GameObject lightContainer;
     [SerializeField] private Health subHealth;
     [SerializeField] private FlashHit flashHit;
+    [SerializeField] private GameObject controlCue; 
 
     [Header("Submarine Movement")]
     [SerializeField] private Rigidbody2D rb;
@@ -122,7 +123,7 @@ public class Submarine : MonoBehaviour
             playerShadow.enabled = false;
             harpoonGun.SetActive(false);
             //mouseAiming.enabled = true;
-            Debug.Log("Entered submarine!");
+            //Debug.Log("Entered submarine!");
         }
     }
 
@@ -134,6 +135,7 @@ public class Submarine : MonoBehaviour
             {
                 subAnimator.SetBool("door", true);
                 doorOpen = true;
+                controlCue.SetActive(true);
             }
         } else if (!SerialHandler.Instance.door)
         {
@@ -141,6 +143,7 @@ public class Submarine : MonoBehaviour
             {
                 subAnimator.SetBool("door", false);
                 doorOpen = false;
+                controlCue.SetActive(false);
             }
 
         }
@@ -250,7 +253,7 @@ public class Submarine : MonoBehaviour
             rb.linearVelocity = Vector2.zero;
             currentTipAngle = 0f;
             transform.rotation = Quaternion.identity;
-            Debug.Log("Exited submarine!");
+            //Debug.Log("Exited submarine!");
         }
     }
 
