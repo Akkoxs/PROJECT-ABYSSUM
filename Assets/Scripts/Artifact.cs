@@ -11,7 +11,6 @@ public class Artifact : MonoBehaviour, IRadarDetectable
 
     private SpriteRenderer spriteRenderer;
     private GameManager gameManager;
-    private BoxCollider2D _collider;
     private bool isCollected = false; 
 
     public ArtifactStats Stats => artifactStats;
@@ -34,7 +33,6 @@ public class Artifact : MonoBehaviour, IRadarDetectable
         artifactStats = stats;
 
         spriteRenderer = GetComponent<SpriteRenderer>();  //render when stats are set 
-        _collider = GetComponent<BoxCollider2D>();
         spriteRenderer.sprite = artifactStats.icon;
         transform.localScale = Vector3.one * spriteScale;
     }
@@ -44,8 +42,18 @@ public class Artifact : MonoBehaviour, IRadarDetectable
         if (isCollected) return;
         isCollected = true;
 
-        ModulationMinigame zone = Instantiate(pfMinigameZone, transform.position, Quaternion.identity)
-                                    .GetComponent<ModulationMinigame>();
+        GameObject zoneObj = Instantiate(pfMinigameZone, transform.position, Quaternion.identity);
+        ModulationMinigame zone = zoneObj.GetComponent<ModulationMinigame>();
+
+        // ModulationMinigame zone = Instantiate(pfMinigameZone, transform.position, Quaternion.identity)
+        //                             .GetComponent<ModulationMinigame>();
+        
+        ArtifactEnemySpawner spawner = zone.GetComponent<ArtifactEnemySpawner>();
+        if (spawner != null)
+        {
+            spawner.TriggerSpawn();
+        }
+        
         zone.OnCompleted = () =>
         {
             ArtifactPopup popup = Instantiate(pfArtifactPopup, transform.position, Quaternion.identity);

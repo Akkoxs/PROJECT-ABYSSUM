@@ -11,6 +11,7 @@ GameObject:
   - component: {fileID: 5865835450591378088}
   - component: {fileID: 825731934938005282}
   - component: {fileID: 699514168849512138}
+  - component: {fileID: 4476026487467414572}
   m_Layer: 0
   m_Name: pfMinigameZone
   m_TagString: Untagged
@@ -92,10 +93,30 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ModulationMinigame
   minigameID: modulation_minigame_01
-  playerTag: Player
   successBuffer: 0.1
   holdDuration: 0.5
   completionDelay: 1.5
   floatingTextPrefab: {fileID: 4989238143819760854, guid: 9cb16bd75c427a64ab246a57fae574dc, type: 3}
-  entryMessage: 
   completionMessage: DECRYPTION SUCCESSFUL
+--- !u!114 &4476026487467414572
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4473835246383357778}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 425fff136a5b6bb4380a2dc359d127da, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::ArtifactEnemySpawner
+  enemyPrefabs:
+  - {fileID: 2395534887309443490, guid: 9ba5502fa59f88b4ebe8c87f5f792950, type: 3}
+  - {fileID: 2043485153893007799, guid: d7583456002d79f4dae7373f74262b9d, type: 3}
+  minSpawnRadius: 10
+  maxSpawnRadius: 15
+  terrain:
+    serializedVersion: 2
+    m_Bits: 256
+  enemyRadius: 0.4
+  maxAttemptsPerEnemy: 30

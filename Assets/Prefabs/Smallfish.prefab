@@ -31,8 +31,8 @@ Transform:
   m_GameObject: {fileID: 2395534887309443490}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 3.4627085, y: 3.4627085, z: 3.4627085}
+  m_LocalPosition: {x: 0.722, y: 0.4051, z: 0}
+  m_LocalScale: {x: 6.0884523, y: 6.46305, z: 3.4627085}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
@@ -224,17 +224,17 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::FishEnemy
   playerTransform: {fileID: 0}
   animator: {fileID: 244154776968237181}
-  detectionRange: 10
+  detectionRange: 15
   attackRange: 7
   patrolSpeed: 2
   initialDirection: 1
-  chargeSpeed: 8
+  chargeSpeed: 9.25
   retreatSpeed: 4
-  chargeDuration: 0.8
+  chargeDuration: 0.9
   retreatDuration: 0.6
   pauseBetweenBites: 0.5
   minAttackDistance: 1.5
-  acceleration: 3
+  acceleration: 6
   deceleration: 0.92
   waterDrag: 0.95
   damageAmount: 10

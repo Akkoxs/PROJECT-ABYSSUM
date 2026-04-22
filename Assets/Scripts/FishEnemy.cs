@@ -77,6 +77,8 @@ public class FishEnemy : MonoBehaviour, IRadarDetectable
 
     void Update()
     {
+
+
         if (subTransform == null)
         {
             GameObject submarine = GameObject.FindGameObjectWithTag("Submarine");
@@ -93,10 +95,13 @@ public class FishEnemy : MonoBehaviour, IRadarDetectable
         //{
         //    mainTransform = playerTransform;
         //}
-        mainTransform = playerTransform;
+
+        UpdateMainTarget();
+
         if (mainTransform == null)
         {
             currentState = FishState.Patrol;
+            return;
         }
 
         if (isInvulnerable)
@@ -154,6 +159,29 @@ public class FishEnemy : MonoBehaviour, IRadarDetectable
         }
         rb.linearVelocity = currentVelocity * waterDrag;
     }
+
+    void UpdateMainTarget()
+    {
+        float distToPlayer = playerTransform != null
+            ? Vector2.Distance(transform.position, playerTransform.position)
+            : float.MaxValue;
+
+        float distToSub = subTransform != null
+            ? Vector2.Distance(transform.position, subTransform.position)
+            : float.MaxValue;
+
+        bool playerInRange = distToPlayer <= detectionRange;
+        bool subInRange = distToSub <= detectionRange;
+
+        if (playerInRange && subInRange)
+            mainTransform = distToPlayer < distToSub ? playerTransform : subTransform; // both in range, pick closer
+        else if (playerInRange)
+            mainTransform = playerTransform;
+        else if (subInRange)
+            mainTransform = subTransform;
+        //neither in range - leave mainTransform unchanged so enemy finishes current chase
+    }
+
 
     void HandlePatrol(float distanceToPlayer)
     {
