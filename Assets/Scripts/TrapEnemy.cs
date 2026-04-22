@@ -62,6 +62,7 @@ public class TrapEnemy : MonoBehaviour, IRadarDetectable
         health = GetComponent<Health>();
         boxCollider2D = GetComponent<BoxCollider2D>();
         rb = GetComponent<Rigidbody2D>();
+
         if (rb != null)
         {
             rb.gravityScale = 0f;
@@ -78,22 +79,29 @@ public class TrapEnemy : MonoBehaviour, IRadarDetectable
             {
                 playerTransform = player.transform;
             }
+            else
+            {
+            }
         }
+
     }
 
     void Update()
     {
-        if (playerTransform == null) return;
+        if (playerTransform == null)
+        {
+            return;
+        }
 
         // Handle invulnerability
         if (isInvulnerable)
         {
-            animator.SetBool("nohit", true);
+            if (animator != null) animator.SetBool("nohit", true);
             invulnerabilityTimer -= Time.deltaTime;
             if (invulnerabilityTimer <= 0f)
             {
                 isInvulnerable = false;
-                animator.SetBool("nohit", false);
+                if (animator != null) animator.SetBool("nohit", false);
             }
         }
 
@@ -129,7 +137,7 @@ public class TrapEnemy : MonoBehaviour, IRadarDetectable
 
         stateTimer -= Time.deltaTime;
 
-        if (health.CurrentHealth <= 0 && health != null && isActivated)
+        if (health != null && health.CurrentHealth <= 0 && health != null && isActivated)
         {
             AudioEventBus.RequestSFX(new SFXEvent(deathSFX, volume: 1f, pitch: Random.Range(0.9f, 1.1f), pos: transform.position));
             Destroy(gameObject);
@@ -153,22 +161,18 @@ public class TrapEnemy : MonoBehaviour, IRadarDetectable
 
     void HandleDormant(float distanceToPlayer)
     {
-        // Stay completely still
         targetVelocity = Vector2.zero;
         rb.linearVelocity = Vector2.zero;
 
-        // Check if player is close enough to activate
         if (distanceToPlayer <= activationRange)
         {
             currentState = TrapState.Activating;
             stateTimer = activationDelay;
             isActivated = true;
+            boxCollider2D.enabled = true;
 
-            // Trigger activation animation
             if (animator != null)
-            {
                 animator.SetTrigger(activationAnimationTrigger);
-            }
 
             Debug.Log("Trap activated!");
         }
@@ -176,25 +180,20 @@ public class TrapEnemy : MonoBehaviour, IRadarDetectable
 
     void HandleActivating()
     {
-        // Stay still during activation animation
         targetVelocity = Vector2.zero;
 
         float distanceToPlayer = Vector2.Distance(transform.position, playerTransform.position);
 
-        // After activation delay, decide what to do based on player distance
         if (stateTimer <= 0f)
         {
             if (distanceToPlayer <= attackRange)
             {
-                // Player is close - start attacking immediately
                 currentState = TrapState.Charging;
                 stateTimer = chargeDuration;
-                boxCollider2D.enabled = true;
                 Debug.Log("Trap activated - player close, charging!");
             }
             else
             {
-                // Player is far - start patrolling
                 currentState = TrapState.Patrol;
                 Debug.Log("Trap activated - patrolling!");
             }
@@ -210,7 +209,6 @@ public class TrapEnemy : MonoBehaviour, IRadarDetectable
             spriteRenderer.flipX = patrolDirection > 0;
         }
 
-        // Only start charging if player is within attack range (not detection range)
         if (distanceToPlayer <= attackRange)
         {
             currentState = TrapState.Charging;
@@ -234,7 +232,6 @@ public class TrapEnemy : MonoBehaviour, IRadarDetectable
             stateTimer = retreatDuration;
         }
 
-        // Return to patrol if player gets too far
         if (distanceToPlayer > attackRange * 1.5f)
         {
             currentState = TrapState.Patrol;
@@ -278,23 +275,29 @@ public class TrapEnemy : MonoBehaviour, IRadarDetectable
         {
             isInvulnerable = true;
             invulnerabilityTimer = invulnerabilityDuration;
-            animator.SetTrigger("hurt");
-            AudioEventBus.RequestSFX(new SFXEvent(hurtSFX, volume: 1f, pitch: Random.Range(0.8f, 1.2f), pos: transform.position)); 
-            Debug.Log("Trap hit! Now invulnerable for " + invulnerabilityDuration + " seconds");
-
+            if (animator != null) animator.SetTrigger("hurt");
+            AudioEventBus.RequestSFX(new SFXEvent(hurtSFX, volume: 1f, pitch: Random.Range(0.8f, 1.2f), pos: transform.position));
             currentState = TrapState.Patrol;
         }
 
         IDamageable damageable = collision.gameObject.GetComponent<IDamageable>();
-
-        if (damageable != null && isActivated && !playerTransform.gameObject.GetComponent<PlayerController>().isInvulnerable)
+        if (damageable != null && isActivated)
         {
-            damageable.TakeDamage(damageAmount);
-            animator.SetTrigger("attack");
-            
+            PlayerController pc = playerTransform != null
+                ? playerTransform.gameObject.GetComponent<PlayerController>()
+                : null;
+
+            bool playerIsInvulnerable = pc != null && pc.isInvulnerable;
+
+            if (!playerIsInvulnerable)
+            {
+                damageable.TakeDamage(damageAmount);
+                if (animator != null) animator.SetTrigger("attack");
+            }
         }
 
-        if (collision.gameObject.layer == LayerMask.NameToLayer("Terrain") || collision.gameObject.layer == LayerMask.NameToLayer("Floor"))
+        if (collision.gameObject.layer == LayerMask.NameToLayer("Terrain") ||
+            collision.gameObject.layer == LayerMask.NameToLayer("Floor"))
         {
             patrolDirection *= -1f;
         }
