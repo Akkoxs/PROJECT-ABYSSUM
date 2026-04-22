@@ -25,8 +25,9 @@ public class Splitscreen : MonoBehaviour
     public float deadZoneHalf = 0.27f;   // fraction of the square's side length
     public Color sidebarColor = Color.black;
     public float playAreaSize = 0f; //0 is full screen resolution 
-    public int rtWidth  = 1920;
-    public int rtHeight = 1080;
+    //changed from 1920 x 1080
+    public int rtWidth  = 1280; 
+    public int rtHeight = 720;
 
     private Camera uiCam;
     private GameObject uiCamGO;
@@ -186,10 +187,10 @@ void RestoreCameras()
         float pL = -half, pR = half, pT = half, pB = -half;
 
         //building the 4 quadrants, each quad covers the full play area but the shader clips the correct portion out of each. 
-        CreateViewQuad(camBottom, pL, pR, pT, pB, 0, 0, "Bottom S3 Diver Pilot");
-        CreateViewQuad(camTop, pL, pR, pT, pB, 1, 180f, "Top S1 Sub Pilot");
-        CreateViewQuad(camLeft, pL, pR, pT, pB, 2, 90f, "Left S2 Sub Control");
-        CreateViewQuad(camRight, pL, pR, pT, pB, 3, -90f, "Right S4 Diver Control");
+        if (camBottom != null) CreateViewQuad(camBottom, pL, pR, pT, pB, 0, 0, "Bottom S3 Diver Pilot", 24);
+        if (camTop != null) CreateViewQuad(camTop, pL, pR, pT, pB, 1, 180f, "Top S1 Sub Pilot", 24);
+        if (camLeft != null) CreateViewQuad(camLeft, pL, pR, pT, pB, 2, 90f, "Left S2 Sub Control", 0);
+        if (camRight != null) CreateViewQuad(camRight, pL, pR, pT, pB, 3, -90f, "Right S4 Diver Control", 0);
 
         //build deadzone
         deadZoneGO = BuildColorRect("DeadZone", Color.black, -dz, dz, dz, -dz, localZ: 0.2f, sortOrder: 10);
@@ -224,13 +225,13 @@ void RestoreCameras()
     }
 
     //builds a quad for a camera to render into, the clipping is handled by the PeppersGhostSplit shader itself 
-    void CreateViewQuad(Camera cam, float xMin, float xMax, float yTop, float yBot, int sortOrder, float rotationZ, string label)
+    void CreateViewQuad(Camera cam, float xMin, float xMax, float yTop, float yBot, int sortOrder, float rotationZ, string label, int depth)
     {
         //create a new render texture and assign it to the camera + name it 
         cam.enabled = true;
     
 
-        var rt = new RenderTexture(rtWidth, rtHeight, 24, RenderTextureFormat.ARGB32) //changed from .DefaultHDR
+        var rt = new RenderTexture(rtWidth, rtHeight, depth, RenderTextureFormat.ARGB32) //changed from .DefaultHDR
         {
             name = $"RT_{label}"
         };

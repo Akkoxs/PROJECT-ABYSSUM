@@ -38,7 +38,7 @@ public IEnumerator Translate(RectTransform panel, RectTransform target, float mo
 
 public Vector3 GetVectorFromAngle(float angle)
    {
-      float angleRad = angle * (Mathf.PI/180f);
+      float angleRad = (angle) * (Mathf.PI/180f); //the (90f + angle) instead of just (angle) was added to make the sweeper line up with the scan because it is oriented sideways
       return new Vector3(Mathf.Cos(angleRad), Mathf.Sin(angleRad));
    }
 }

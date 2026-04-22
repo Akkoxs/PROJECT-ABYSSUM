@@ -1,4 +1,5 @@
 using System.Collections;
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class ModulationMinigame : MonoBehaviour
@@ -7,7 +8,6 @@ public class ModulationMinigame : MonoBehaviour
 
     [Header("Identity")]
     public string minigameID = "modulation_minigame_01";
-    public string playerTag = "Player";
 
     [Header("Game Tuning")]
     public float successBuffer = 0.08f;
@@ -16,7 +16,7 @@ public class ModulationMinigame : MonoBehaviour
 
     [Header("Floating Text")]
     public GameObject floatingTextPrefab;
-    public string entryMessage = "MOVE TO ADM";
+    private string entryMessage = "ADM ONLINE\nSWITCH SCREENS";
     public string completionMessage = "DECRYPTION SUCCESSFUL";
 
     //0 = rotary 
@@ -24,6 +24,7 @@ public class ModulationMinigame : MonoBehaviour
     // 2 = vertical Slider
     private readonly int[] channelModes = { 0, 1, 0, 2 }; //arrangement 
 
+    private string playertag = "Player";
     private float[] targets = new float[4];
     private bool[] inRange = new bool[4];
     private bool completed = false;
@@ -58,7 +59,7 @@ public class ModulationMinigame : MonoBehaviour
     //triger the minigame when we enter the collider 
     void OnTriggerEnter2D(Collider2D other)
     {
-        if (completed || !other.CompareTag(playerTag)) return;
+        if (completed || other.gameObject.name != "Player") return;
 
         playerInZone = true;
 
@@ -79,7 +80,7 @@ public class ModulationMinigame : MonoBehaviour
 
     void OnTriggerExit2D(Collider2D other)
     {
-        if (!other.CompareTag(playerTag)) return;
+        if (other.gameObject.name != "Player") return;
         
         playerInZone = false;
         
@@ -118,7 +119,7 @@ public class ModulationMinigame : MonoBehaviour
         }
 
         //spawn completion text & find the player by tag
-        GameObject player = GameObject.FindWithTag(playerTag);
+        GameObject player = GameObject.FindGameObjectWithTag(playertag);
         if (player != null) SpawnFloatingText(player.transform, completionMessage);
 
         Destroy(gameObject);

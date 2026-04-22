@@ -227,8 +227,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::ArtifactPopup
   artifactNameText: {fileID: 240008198284201295}
   moneyText: {fileID: 5069241477323444531}
-  floatSpeed: 1.5
-  fadeDuration: 3
+  floatSpeed: 0.5
+  fadeDuration: 10
 --- !u!1 &5735502427263933731
 GameObject:
   m_ObjectHideFlags: 0
