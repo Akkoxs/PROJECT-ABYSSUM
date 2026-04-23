@@ -8,16 +8,10 @@ public class PauseMenu : MonoBehaviour
 {
     [Header("Panels")]
     public GameObject pausePanel;
-    public GameObject optionsPanel;
 
     [Header("Main Menu Buttons")]
     public Button optionsButton;
     public Button titleScreenButton;
-
-    [Header("Options")]
-    public Slider volumeSlider;
-    public TextMeshProUGUI volumeValueText;
-    public Button optionsBackButton;
 
     [Header("Button Highlight Colors")]
     public Color normalColor = new Color(1f, 1f, 1f, 0.6f);
@@ -25,6 +19,7 @@ public class PauseMenu : MonoBehaviour
 
     [Header("Scene Names")]
     public string titleSceneName = "TitleScreen";
+    public string optionsSceneName = "OptionsScreen";
 
     [Header("Holocade Cameras")]
     public Cam2DFollow[] camerasToRedirect;
@@ -38,7 +33,6 @@ public class PauseMenu : MonoBehaviour
     private int selectedIndex = 0;
     private bool isPaused = false;
     private bool inOptions = false;
-    private float volumeStep = 0.05f;
     private Transform[] originalTargets;
 
     void Start()
@@ -48,24 +42,13 @@ public class PauseMenu : MonoBehaviour
 
         optionsButton.onClick.AddListener(OpenOptions);
         titleScreenButton.onClick.AddListener(GoToTitleScreen);
-        optionsBackButton.onClick.AddListener(CloseOptions);
 
         originalTargets = new Transform[camerasToRedirect.Length];
         for (int i = 0; i < camerasToRedirect.Length; i++)
             if (camerasToRedirect[i] != null)
                 originalTargets[i] = camerasToRedirect[i].target;
 
-        float saved = PlayerPrefs.GetFloat("MasterVolume", 1f);
-        AudioListener.volume = saved;
-        if (volumeSlider != null)
-        {
-            volumeSlider.value = saved;
-            volumeSlider.onValueChanged.AddListener(OnVolumeChanged);
-        }
-        UpdateVolumeDisplay(saved);
-
         pausePanel.SetActive(false);
-        optionsPanel.SetActive(false);
     }
 
     void Update()
@@ -81,12 +64,9 @@ public class PauseMenu : MonoBehaviour
             return;
         }
 
-        if (!isPaused) return;
+        if (!isPaused || inOptions) return;
 
-        if (inOptions)
-            HandleOptionsInput();
-        else
-            HandleMainMenuInput();
+        HandleMainMenuInput();
     }
 
     void OpenPause()
@@ -94,7 +74,6 @@ public class PauseMenu : MonoBehaviour
         isPaused = true;
         Time.timeScale = 0f;
         pausePanel.SetActive(true);
-        optionsPanel.SetActive(false);
         selectedIndex = 0;
         UpdateButtonHighlights();
 
@@ -113,7 +92,6 @@ public class PauseMenu : MonoBehaviour
         isPaused = false;
         Time.timeScale = 1f;
         pausePanel.SetActive(false);
-        optionsPanel.SetActive(false);
         inOptions = false;
 
         if (audioSource != null) StartCoroutine(FadeOutAudio(0.5f));
@@ -193,49 +171,24 @@ public class PauseMenu : MonoBehaviour
     void OpenOptions()
     {
         inOptions = true;
-        optionsPanel.SetActive(true);
-        if (volumeSlider != null)
-            volumeSlider.value = AudioListener.volume;
-        UpdateVolumeDisplay(AudioListener.volume);
+        StartCoroutine(LoadOptionsScene());
     }
 
     void CloseOptions()
     {
         inOptions = false;
-        optionsPanel.SetActive(false);
         PlayerPrefs.SetFloat("MasterVolume", AudioListener.volume);
         PlayerPrefs.Save();
+        StartCoroutine(UnloadOptionsScene());
     }
 
-    void HandleOptionsInput()
+    IEnumerator LoadOptionsScene()
     {
-        if (Input.GetKeyDown(KeyCode.RightArrow) || Input.GetKeyDown(KeyCode.UpArrow))
-            ChangeVolume(volumeStep);
-        else if (Input.GetKeyDown(KeyCode.LeftArrow) || Input.GetKeyDown(KeyCode.DownArrow))
-            ChangeVolume(-volumeStep);
-
-        if (Input.GetKeyDown(KeyCode.Return) || Input.GetKeyDown(KeyCode.Space) || Input.GetKeyDown(KeyCode.Backspace))
-            CloseOptions();
+        yield return SceneManager.LoadSceneAsync(optionsSceneName, LoadSceneMode.Additive);
     }
 
-    void ChangeVolume(float delta)
+    IEnumerator UnloadOptionsScene()
     {
-        float newVol = Mathf.Clamp01(AudioListener.volume + delta);
-        AudioListener.volume = newVol;
-        if (volumeSlider != null)
-            volumeSlider.value = newVol;
-        UpdateVolumeDisplay(newVol);
-    }
-
-    void OnVolumeChanged(float val)
-    {
-        AudioListener.volume = val;
-        UpdateVolumeDisplay(val);
-    }
-
-    void UpdateVolumeDisplay(float vol)
-    {
-        if (volumeValueText != null)
-            volumeValueText.text = Mathf.RoundToInt(vol * 100f) + "%";
+        yield return SceneManager.UnloadSceneAsync(optionsSceneName);
     }
 }
