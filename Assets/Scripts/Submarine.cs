@@ -158,7 +158,7 @@ public class Submarine : MonoBehaviour
 
     private void HandleMovement()
     {
-        horizontal = SerialHandler.Instance.joy1X;
+        horizontal = -SerialHandler.Instance.joy1X; //change to positive to uninvert controls
         vertical = SerialHandler.Instance.joy1Y;
 
         float targetVelocityX = horizontal * speed;

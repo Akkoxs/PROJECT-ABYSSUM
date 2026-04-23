@@ -36,7 +36,7 @@ public class CombatDetector : MonoBehaviour
                 enemyLayer
             );
 
-            Debug.Log("Scanning at: " + scanPosition + " found: " + nearby.Length + " enemies");
+            //Debug.Log("Scanning at: " + scanPosition + " found: " + nearby.Length + " enemies");
 
             bool enemiesNearby = nearby.Length > 0;
 

@@ -14,8 +14,9 @@ public class TilemapColorPair
 
 public class PingSonarSystem : MonoBehaviour
 {
-    [Header("Tilemap References")]
+    [Header("Tilemap References and Others")]
     [SerializeField] private List<TilemapColorPair> tilemapColors = new List<TilemapColorPair>();
+    [SerializeField] private SubmarineTemp submarineTemp;
 
     [Header("Ping Settings")]
     [SerializeField] private Color pingColor = Color.white;
@@ -27,10 +28,6 @@ public class PingSonarSystem : MonoBehaviour
     [SerializeField] private AudioSource audioSource;
     [SerializeField] private AudioClip pingSound;
 
-    [Header("UI Feedback (Optional)")]
-    [SerializeField] private TextMeshProUGUI cooldownText;
-    [SerializeField] private UnityEngine.UI.Image cooldownFillImage;
-    [SerializeField] private SubmarineTemp submarineTemp;
     [SerializeField] private float tempCost = 15f; 
     private bool isPinging = false;
     private bool isOnCooldown = false;
@@ -63,6 +60,7 @@ public class PingSonarSystem : MonoBehaviour
 
         if (SerialHandler.Instance.ping && !isPinging && !isOnCooldown)
         {
+            Debug.Log("ping activated");
             ActivatePing();
         }
     }

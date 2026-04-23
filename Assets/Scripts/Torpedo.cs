@@ -54,7 +54,7 @@ public class Torpedo : MonoBehaviour
 
     private void OnCollisionEnter2D(Collision2D collision)
     {
-        if (collision.gameObject.TryGetComponent<IDamageable>(out var damageInterface))
+        if (collision.gameObject.TryGetComponent<IDamageable>(out var damageInterface) && !collision.gameObject.CompareTag("Player"))
         {
             damageInterface.TakeDamage(harpDamage);
             Destroy(gameObject, 0.2f);
