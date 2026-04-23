@@ -45,9 +45,9 @@ public class SerialHandler : MonoBehaviour
     [SerializeField] private float deadzone = 0.08f;
 
     //multipliers for analog to digi.
-    float joyStickMult = 1840f;
-    float joyMin = 800f;
-    float joyMax = 750f;
+    //float joyStickMult = 1840f;
+    //float joyMin = 800f;
+    //float joyMax = 750f;
     float potentiometerMult = 1023f;
 
     private MovingAverage joy1XFilter;

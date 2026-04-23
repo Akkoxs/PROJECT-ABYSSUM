@@ -89,15 +89,25 @@ public class MouseAiming : MonoBehaviour
             projectile.InitializeProjectile(currentAimDirection);
             if (playerController != null)
                 playerController.ApplyKnockback(currentAimDirection);
-
-            try
+            
+            if (needHarpoonAnimator)
             {
-                if (needHarpoonAnimator) harpoonAnimator.SetTrigger("shoot");
+                harpoonAnimator.SetTrigger("shoot");  
             }
-            catch (NullReferenceException e)
+            else
             {
                 Debug.Log("DONT NEED HARPOON GUN ANIMATOR ON SUBMARINE");
             }
+
+
+            //try
+            // {
+            //     if (needHarpoonAnimator) harpoonAnimator.SetTrigger("shoot");
+            // }
+            // catch (NullReferenceException e)
+            // {
+            //     Debug.Log("DONT NEED HARPOON GUN ANIMATOR ON SUBMARINE");
+            // } 
 
             shoot = false;
             canFire = false;

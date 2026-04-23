@@ -10,7 +10,7 @@ public class SubmarineTemp : MonoBehaviour
     [Header("OverHeatings")]
     private bool overheating = false;
     private Coroutine overheatRoutine = null;
-    private Coroutine coolantRoutine = null;
+    //private Coroutine coolantRoutine = null;
 
     [Header("Coolant Tank")]
     [SerializeField] private float currentCoolant;

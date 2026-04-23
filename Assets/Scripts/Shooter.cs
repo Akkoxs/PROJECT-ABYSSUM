@@ -14,7 +14,7 @@ public class Shooter : MonoBehaviour
     [SerializeField] private Camera mainCamera;
 
     [SerializeField] private SubmarineTemp submarineTemp;
-    [SerializeField] private float flatHeat = 10f;
+    //[SerializeField] private float flatHeat = 10f;
     private float shootTime;
     private bool canShoot;
     private void Start()
