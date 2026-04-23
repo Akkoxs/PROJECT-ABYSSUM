@@ -9,11 +9,13 @@ public class ArtifactSpawnPoint : MonoBehaviour
     private bool isOccupied;
 
     [SerializeField] private float spawnRadius = 2f;
+    [SerializeField] private bool guaranteedFirstSpawn = false; //for tutorial
 
     //Expose
     [SerializeField] public int SpawnLevel => spawnLevel;
     public bool IsOccupied => isOccupied;
     public Vector2 SpawnPosition => (Vector2)transform.position;
+    public bool GuaranteedFirstSpawn => guaranteedFirstSpawn;
 
     private void Awake()
     {

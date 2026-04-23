@@ -113,9 +113,19 @@ public class GameManager : MonoBehaviour
     ////////////////////////////////////////////////////////////////////////////////////
     private void SpawnInitialArtifacts()
     {
-        int artifactsToSpawn = Mathf.Min(maxArtifactsInWorld, spManager.GetTotalSpawnPoints());
-
-        for (int i = 0; i < artifactsToSpawn; i++)
+        List<ArtifactSpawnPoint> guaranteedPoints = spManager.GetGuaranteedSpawnPoints();
+        foreach (ArtifactSpawnPoint sp in guaranteedPoints)
+        {
+            List<ArtifactStats> allSpawnable = GetAllSpawnableArtifacts();
+            if (allSpawnable.Count > 0)
+            {
+                ArtifactStats selected = allSpawnable[Random.Range(0, allSpawnable.Count)];
+                SpawnArtifact(selected, sp);
+            }
+        }
+        
+        int remaining = Mathf.Min(maxArtifactsInWorld, spManager.GetTotalSpawnPoints());
+        for (int i = 0; i < remaining; i++)
         {
             SpawnArtifactBasedonNeeds();
         }

@@ -34,6 +34,11 @@ public class SpawnPointManager : MonoBehaviour
         // LINQ, find all obj. in artifactSpawns that match with the method arg and are not alr occupied
     }
 
+    public List<ArtifactSpawnPoint> GetGuaranteedSpawnPoints()
+    {
+        return artifactSpawns.Where(sp => sp.GuaranteedFirstSpawn && !sp.IsOccupied).ToList();
+    }
+
     //Get all possible spawn points for an array of levels
     public List<ArtifactSpawnPoint> GetAvailableSpawnPointsForLevels(int[] levels)
     {
