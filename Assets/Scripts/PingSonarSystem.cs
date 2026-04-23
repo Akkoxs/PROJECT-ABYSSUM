@@ -24,6 +24,12 @@ public class PingSonarSystem : MonoBehaviour
     [SerializeField] private float fadeSpeed = 2f;
     [SerializeField] private float cooldownTime = 30f;
 
+    [Header("Zoom Settings")]
+    [SerializeField] private Camera sonarCamera;
+    [SerializeField] private float normalOrthoSize = 5f;
+    [SerializeField] private float pingOrthoSize = 12f;
+    [SerializeField] private float zoomSpeed = 3f;
+
     [Header("Audio (Optional)")]
     [SerializeField] private AudioSource audioSource;
     [SerializeField] private AudioClip pingSound;
@@ -95,11 +101,14 @@ public class PingSonarSystem : MonoBehaviour
     {
         isPinging = true;
 
-        // Flash all tilemaps to ping color
         SetAllTilemapsToColor(pingColor);
+
+        // Zoom out
+        yield return StartCoroutine(ZoomCamera(normalOrthoSize, pingOrthoSize));
 
         yield return new WaitForSeconds(pingDuration);
 
+        // Fade tilemaps back
         float elapsed = 0f;
         float fadeDuration = 1f / fadeSpeed;
 
@@ -107,17 +116,34 @@ public class PingSonarSystem : MonoBehaviour
         {
             elapsed += Time.deltaTime;
             float t = elapsed / fadeDuration;
-
-            // Fade each tilemap back to its individual normal color
             FadeTilemapsToNormal(t);
-
             yield return null;
         }
 
-        // Ensure all tilemaps are back to their exact normal colors
         SetTilemapsToNormal();
 
+        // Zoom back in
+        yield return StartCoroutine(ZoomCamera(pingOrthoSize, normalOrthoSize));
+
         isPinging = false;
+    }
+
+    IEnumerator ZoomCamera(float from, float to)
+    {
+        if (sonarCamera == null) yield break;
+
+        float elapsed = 0f;
+        float duration = 1f / zoomSpeed;
+
+        while (elapsed < duration)
+        {
+            elapsed += Time.deltaTime;
+            float t = elapsed / duration;
+            sonarCamera.orthographicSize = Mathf.Lerp(from, to, t);
+            yield return null;
+        }
+
+        sonarCamera.orthographicSize = to;
     }
 
     void SetAllTilemapsToColor(Color color)
