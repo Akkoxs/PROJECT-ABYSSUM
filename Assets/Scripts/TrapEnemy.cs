@@ -7,9 +7,9 @@ public class TrapEnemy : MonoBehaviour, IRadarDetectable
     [SerializeField] private Animator animator;
 
     [Header("Activation")]
-    [SerializeField] private float activationRange = 5f; // Distance to activate trap
-    [SerializeField] private string activationAnimationTrigger = "activate"; // Animation trigger name
-    [SerializeField] private float activationDelay = 0.5f; // Time before trap starts moving after activation
+    [SerializeField] private float activationRange = 5f;
+    [SerializeField] private string activationAnimationTrigger = "activate";
+    [SerializeField] private float activationDelay = 0.5f;
 
     [Header("Detection")]
     [SerializeField] private float detectionRange = 8f;
@@ -44,7 +44,6 @@ public class TrapEnemy : MonoBehaviour, IRadarDetectable
     private SpriteRenderer spriteRenderer;
     private Health health;
 
-    // State machine
     private enum TrapState { Dormant, Activating, Patrol, Charging, Retreating, Pausing }
     private TrapState currentState = TrapState.Dormant;
     private float stateTimer = 0f;
@@ -55,6 +54,9 @@ public class TrapEnemy : MonoBehaviour, IRadarDetectable
     private Vector2 targetVelocity = Vector2.zero;
     private bool isActivated = false;
     private BoxCollider2D boxCollider2D;
+
+    private Transform subTransform;
+    private Transform mainTransform; // the active chase target, either player or submarine
 
     void Start()
     {
@@ -76,24 +78,30 @@ public class TrapEnemy : MonoBehaviour, IRadarDetectable
         {
             GameObject player = GameObject.FindGameObjectWithTag("Player");
             if (player != null)
-            {
                 playerTransform = player.transform;
-            }
-            else
-            {
-            }
         }
-
     }
 
     void Update()
     {
+        // Fallback find for player
         if (playerTransform == null)
         {
-            return;
+            GameObject player = GameObject.FindGameObjectWithTag("Player");
+            if (player != null) playerTransform = player.transform;
+            else return;
         }
 
-        // Handle invulnerability
+        // Fallback find for submarine
+        if (subTransform == null)
+        {
+            GameObject submarine = GameObject.FindGameObjectWithTag("Submarine");
+            if (submarine != null)
+                subTransform = submarine.transform;
+        }
+
+        UpdateMainTarget();
+
         if (isInvulnerable)
         {
             if (animator != null) animator.SetBool("nohit", true);
@@ -105,43 +113,62 @@ public class TrapEnemy : MonoBehaviour, IRadarDetectable
             }
         }
 
-        float distanceToPlayer = Vector2.Distance(transform.position, playerTransform.position);
+        // Use mainTransform for distance checks when activated, playerTransform for dormant activation
+        float distanceToTarget = mainTransform != null
+            ? Vector2.Distance(transform.position, mainTransform.position)
+            : Vector2.Distance(transform.position, playerTransform.position);
 
-        // State machine
         switch (currentState)
         {
             case TrapState.Dormant:
-                HandleDormant(distanceToPlayer);
+                HandleDormant(distanceToTarget);
                 break;
-
             case TrapState.Activating:
                 HandleActivating();
                 break;
-
             case TrapState.Patrol:
-                HandlePatrol(distanceToPlayer);
+                HandlePatrol(distanceToTarget);
                 break;
-
             case TrapState.Charging:
-                HandleCharging(distanceToPlayer);
+                HandleCharging(distanceToTarget);
                 break;
-
             case TrapState.Retreating:
                 HandleRetreating();
                 break;
-
             case TrapState.Pausing:
-                HandlePausing(distanceToPlayer);
+                HandlePausing(distanceToTarget);
                 break;
         }
 
         stateTimer -= Time.deltaTime;
 
-        if (health != null && health.CurrentHealth <= 0 && health != null && isActivated)
+        if (health != null && health.CurrentHealth <= 0 && isActivated)
         {
             AudioEventBus.RequestSFX(new SFXEvent(deathSFX, volume: 1f, pitch: Random.Range(0.9f, 1.1f), pos: transform.position));
             Destroy(gameObject);
         }
+    }
+
+    void UpdateMainTarget()
+    {
+        float distToPlayer = playerTransform != null
+            ? Vector2.Distance(transform.position, playerTransform.position)
+            : float.MaxValue;
+
+        float distToSub = subTransform != null
+            ? Vector2.Distance(transform.position, subTransform.position)
+            : float.MaxValue;
+
+        bool playerInRange = distToPlayer <= detectionRange;
+        bool subInRange = distToSub <= detectionRange;
+
+        if (playerInRange && subInRange)
+            mainTransform = distToPlayer < distToSub ? playerTransform : subTransform;
+        else if (playerInRange)
+            mainTransform = playerTransform;
+        else if (subInRange)
+            mainTransform = subTransform;
+        // neither in range — leave mainTransform unchanged so enemy finishes current chase
     }
 
     void FixedUpdate()
@@ -149,22 +176,19 @@ public class TrapEnemy : MonoBehaviour, IRadarDetectable
         Vector2 currentVelocity = rb.linearVelocity;
 
         if (targetVelocity.magnitude > 0.1f)
-        {
             currentVelocity = Vector2.Lerp(currentVelocity, targetVelocity, acceleration * Time.fixedDeltaTime);
-        }
         else
-        {
             currentVelocity *= deceleration;
-        }
+
         rb.linearVelocity = currentVelocity * waterDrag;
     }
 
-    void HandleDormant(float distanceToPlayer)
+    void HandleDormant(float distanceToTarget)
     {
         targetVelocity = Vector2.zero;
         rb.linearVelocity = Vector2.zero;
 
-        if (distanceToPlayer <= activationRange)
+        if (distanceToTarget <= activationRange)
         {
             currentState = TrapState.Activating;
             stateTimer = activationDelay;
@@ -182,15 +206,17 @@ public class TrapEnemy : MonoBehaviour, IRadarDetectable
     {
         targetVelocity = Vector2.zero;
 
-        float distanceToPlayer = Vector2.Distance(transform.position, playerTransform.position);
+        if (mainTransform == null) return;
+
+        float distanceToTarget = Vector2.Distance(transform.position, mainTransform.position);
 
         if (stateTimer <= 0f)
         {
-            if (distanceToPlayer <= attackRange)
+            if (distanceToTarget <= attackRange)
             {
                 currentState = TrapState.Charging;
                 stateTimer = chargeDuration;
-                Debug.Log("Trap activated - player close, charging!");
+                Debug.Log("Trap activated - target close, charging!");
             }
             else
             {
@@ -200,48 +226,46 @@ public class TrapEnemy : MonoBehaviour, IRadarDetectable
         }
     }
 
-    void HandlePatrol(float distanceToPlayer)
+    void HandlePatrol(float distanceToTarget)
     {
         targetVelocity = new Vector2(patrolDirection * patrolSpeed, 0f);
 
         if (spriteRenderer != null)
-        {
             spriteRenderer.flipX = patrolDirection > 0;
-        }
 
-        if (distanceToPlayer <= attackRange)
+        if (distanceToTarget <= attackRange)
         {
             currentState = TrapState.Charging;
             stateTimer = chargeDuration;
         }
     }
 
-    void HandleCharging(float distanceToPlayer)
+    void HandleCharging(float distanceToTarget)
     {
-        Vector2 directionToPlayer = (playerTransform.position - transform.position).normalized;
-        targetVelocity = directionToPlayer * chargeSpeed;
+        if (mainTransform == null) return;
+
+        Vector2 directionToTarget = (mainTransform.position - transform.position).normalized;
+        targetVelocity = directionToTarget * chargeSpeed;
 
         if (spriteRenderer != null)
-        {
-            spriteRenderer.flipX = directionToPlayer.x > 0;
-        }
+            spriteRenderer.flipX = directionToTarget.x > 0;
 
-        if (distanceToPlayer <= minAttackDistance || stateTimer <= 0f)
+        if (distanceToTarget <= minAttackDistance || stateTimer <= 0f)
         {
             currentState = TrapState.Retreating;
             stateTimer = retreatDuration;
         }
 
-        if (distanceToPlayer > attackRange * 1.5f)
-        {
+        if (distanceToTarget > attackRange * 1.5f)
             currentState = TrapState.Patrol;
-        }
     }
 
     void HandleRetreating()
     {
-        Vector2 directionFromPlayer = (transform.position - playerTransform.position).normalized;
-        targetVelocity = directionFromPlayer * retreatSpeed;
+        if (mainTransform == null) return;
+
+        Vector2 directionFromTarget = (transform.position - mainTransform.position).normalized;
+        targetVelocity = directionFromTarget * retreatSpeed;
 
         if (stateTimer <= 0f)
         {
@@ -251,13 +275,13 @@ public class TrapEnemy : MonoBehaviour, IRadarDetectable
         }
     }
 
-    void HandlePausing(float distanceToPlayer)
+    void HandlePausing(float distanceToTarget)
     {
         targetVelocity = Vector2.zero;
 
         if (stateTimer <= 0f)
         {
-            if (distanceToPlayer <= attackRange)
+            if (distanceToTarget <= attackRange)
             {
                 currentState = TrapState.Charging;
                 stateTimer = chargeDuration;
@@ -305,30 +329,16 @@ public class TrapEnemy : MonoBehaviour, IRadarDetectable
 
     void OnDrawGizmosSelected()
     {
-        // Activation range
         Gizmos.color = Color.cyan;
         Gizmos.DrawWireSphere(transform.position, activationRange);
-
-        // Detection range
         Gizmos.color = Color.yellow;
         Gizmos.DrawWireSphere(transform.position, detectionRange);
-
-        // Attack range
         Gizmos.color = Color.red;
         Gizmos.DrawWireSphere(transform.position, attackRange);
-
-        // Min attack distance
         Gizmos.color = Color.green;
         Gizmos.DrawWireSphere(transform.position, minAttackDistance);
     }
 
-    public RadarObjectType GetObjectType()
-    {
-        return RadarObjectType.Artifact;
-    }
-
-    public string GetRadarDisplayName()
-    {
-        return "HP+";
-    }
+    public RadarObjectType GetObjectType() => RadarObjectType.Artifact;
+    public string GetRadarDisplayName() => "HP+";
 }
