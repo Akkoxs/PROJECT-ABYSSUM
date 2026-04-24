@@ -56,6 +56,12 @@ public class TitleScreenManager : MonoBehaviour
     private int selectedIndex = 0;
     private bool navigating = false;
 
+    // Replace the two actions with four directional button actions
+    private UnityEngine.InputSystem.InputAction dpadUpAction;
+    private UnityEngine.InputSystem.InputAction dpadDownAction;
+    private UnityEngine.InputSystem.InputAction confirmAction;
+
+
     // ───────────────────────────────────────────────
     //  INIT
     // ───────────────────────────────────────────────
@@ -76,10 +82,33 @@ public class TitleScreenManager : MonoBehaviour
 
         if (titleMusic != null)
             AudioEventBus.RequestMusic(new MusicEvent(titleMusic, fadeDuration: 1f, loop: true));
+
+        // Set up gamepad input directly without needing an InputActionAsset
+        dpadUpAction = new UnityEngine.InputSystem.InputAction(
+            type: UnityEngine.InputSystem.InputActionType.Button,
+            binding: "<Gamepad>/dpad/up");
+        dpadUpAction.Enable();
+
+        dpadDownAction = new UnityEngine.InputSystem.InputAction(
+            type: UnityEngine.InputSystem.InputActionType.Button,
+            binding: "<Gamepad>/dpad/down");
+        dpadDownAction.Enable();
+
+        confirmAction = new UnityEngine.InputSystem.InputAction(
+            type: UnityEngine.InputSystem.InputActionType.Button,
+            binding: "<Gamepad>/buttonEast");
+        confirmAction.Enable();
+    }
+
+    void OnDisable()
+    {
+        dpadUpAction?.Disable();
+        dpadDownAction?.Disable();
+        confirmAction?.Disable();
     }
 
     // ───────────────────────────────────────────────
-    //  UPDATE — keyboard / WASD navigation
+    //  UPDATE — gamepad navigation
     // ───────────────────────────────────────────────
     void Update()
     {
@@ -87,27 +116,27 @@ public class TitleScreenManager : MonoBehaviour
 
         if (creditsPanel.activeSelf)
         {
-            if (Input.GetKeyDown(KeyCode.Return) || Input.GetKeyDown(KeyCode.Space) || Input.GetKeyDown(KeyCode.Backspace))
+            if (confirmAction.WasPressedThisFrame())
                 OnBack();
             return;
         }
 
         if (!mainPanel.activeSelf) return;
 
-        if (Input.GetKeyDown(KeyCode.W) || Input.GetKeyDown(KeyCode.UpArrow))
+        // Read dpad
+        if (dpadUpAction.WasPressedThisFrame())
         {
             selectedIndex = (selectedIndex - 1 + mainButtons.Length) % mainButtons.Length;
             UpdateButtonHighlights();
         }
-        else if (Input.GetKeyDown(KeyCode.S) || Input.GetKeyDown(KeyCode.DownArrow))
+        else if (dpadDownAction.WasPressedThisFrame())
         {
             selectedIndex = (selectedIndex + 1) % mainButtons.Length;
             UpdateButtonHighlights();
         }
-        else if (Input.GetKeyDown(KeyCode.Return) || Input.GetKeyDown(KeyCode.Space))
-        {
+
+        if (confirmAction.WasPressedThisFrame())
             mainButtons[selectedIndex].onClick.Invoke();
-        }
     }
 
     // ───────────────────────────────────────────────
