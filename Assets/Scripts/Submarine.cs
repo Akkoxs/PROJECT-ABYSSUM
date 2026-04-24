@@ -136,7 +136,7 @@ public class Submarine : MonoBehaviour
     {
         if (SerialHandler.Instance.door)
         {
-            if (horizontal == 0 && vertical == 0 && !doorOpen)
+            if (!doorOpen)
             {
                 subAnimator.SetBool("door", true);
                 doorOpen = true;
@@ -145,7 +145,7 @@ public class Submarine : MonoBehaviour
             }
         } else if (!SerialHandler.Instance.door)
         {
-           if (horizontal == 0 && vertical == 0 && doorOpen)
+           if (doorOpen)
             {
                 subAnimator.SetBool("door", false);
                 doorOpen = false;

@@ -156,10 +156,10 @@ public class SerialHandler : MonoBehaviour
                 }
             }
 
-            playerPot_a = serial_catch[0] / potentiometerMult;
-            playerSlider_h = serial_catch[1] / potentiometerMult;
-            playerPot_k = serial_catch[2] / potentiometerMult;
-            playerSlider_c = serial_catch[3] / potentiometerMult;
+            playerPot_a = serial_catch[0] / potentiometerMult; 
+            playerSlider_h = serial_catch[3] / potentiometerMult; //swapping with playerSlider_c index 1
+            playerPot_k = serial_catch[2] / potentiometerMult; 
+            playerSlider_c = serial_catch[1] / potentiometerMult; //swapping with playerSlider_h index 3
             oxyL1 = serial_catch[4] == 1;
             oxyL2 = serial_catch[5] == 1;
             oxyL3 = serial_catch[6] == 1;

@@ -232,7 +232,7 @@ MonoBehaviour:
   attackRange: 7.5
   patrolSpeed: 20
   initialDirection: 1
-  chargeSpeed: 25
+  chargeSpeed: 20
   retreatSpeed: 4
   chargeDuration: 0.6
   retreatDuration: 0.4
@@ -243,7 +243,7 @@ MonoBehaviour:
   waterDrag: 0.95
   damageAmount: 15
   invulnerabilityDuration: 1.1
-  hurtSFX: {fileID: 0}
+  attackSFX: {fileID: 0}
   deathSFX: {fileID: 0}
 --- !u!114 &4269557804163604851
 MonoBehaviour:

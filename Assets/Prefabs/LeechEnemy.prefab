@@ -70,12 +70,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: '::'
   playerTransform: {fileID: 0}
-  animator: {fileID: 0}
   detectionRange: 15
   attackRange: 2
   patrolSpeed: 2
   initialDirection: 1
-  chargeSpeed: 9
+  chargeSpeed: 6.5
   retreatSpeed: 4
   chargeDuration: 2
   retreatDuration: 0.1
