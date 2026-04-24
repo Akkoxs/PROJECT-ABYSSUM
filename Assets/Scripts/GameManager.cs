@@ -20,6 +20,7 @@ public class GameManager : MonoBehaviour
     [Header("Economy")]
     [SerializeField] private int currentMoney = 0;
     [SerializeField] private int totalDebt = 1000000000;
+    [SerializeField] AudioClip moneySFX;
 
     [Header("Spawning")]
     [SerializeField] private GameObject pfArtifact;
@@ -223,6 +224,7 @@ public class GameManager : MonoBehaviour
         currentMoney += amount;
         totalDebt -= amount;
         onMoneyChanged?.Invoke(currentMoney, totalDebt);
+        AudioEventBus.RequestSFX(new SFXEvent(moneySFX, volume: 1f, pitch: Random.Range(0.8f, 1.2f), pos: transform.position));
     }
 
 

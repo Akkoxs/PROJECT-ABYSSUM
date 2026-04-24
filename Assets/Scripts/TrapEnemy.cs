@@ -37,7 +37,7 @@ public class TrapEnemy : MonoBehaviour, IRadarDetectable
     [SerializeField] private float invulnerabilityDuration = 2f;
 
     [Header("Audio")]
-    [SerializeField] private AudioClip hurtSFX;
+    [SerializeField] private AudioClip attackSFX;
     [SerializeField] private AudioClip deathSFX;
 
     private Rigidbody2D rb;
@@ -168,7 +168,7 @@ public class TrapEnemy : MonoBehaviour, IRadarDetectable
             mainTransform = playerTransform;
         else if (subInRange)
             mainTransform = subTransform;
-        // neither in range — leave mainTransform unchanged so enemy finishes current chase
+        // neither in range ï¿½ leave mainTransform unchanged so enemy finishes current chase
     }
 
     void FixedUpdate()
@@ -246,6 +246,7 @@ public class TrapEnemy : MonoBehaviour, IRadarDetectable
 
         Vector2 directionToTarget = (mainTransform.position - transform.position).normalized;
         targetVelocity = directionToTarget * chargeSpeed;
+        AudioEventBus.RequestSFX(new SFXEvent(attackSFX, volume: 1f, pitch: Random.Range(0.8f, 1.2f), pos: transform.position));
 
         if (spriteRenderer != null)
             spriteRenderer.flipX = directionToTarget.x > 0;
@@ -300,7 +301,7 @@ public class TrapEnemy : MonoBehaviour, IRadarDetectable
             isInvulnerable = true;
             invulnerabilityTimer = invulnerabilityDuration;
             if (animator != null) animator.SetTrigger("hurt");
-            AudioEventBus.RequestSFX(new SFXEvent(hurtSFX, volume: 1f, pitch: Random.Range(0.8f, 1.2f), pos: transform.position));
+            //AudioEventBus.RequestSFX(new SFXEvent(hurtSFX, volume: 1f, pitch: Random.Range(0.8f, 1.2f), pos: transform.position));
             currentState = TrapState.Patrol;
         }
 
