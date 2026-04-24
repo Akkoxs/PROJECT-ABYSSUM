@@ -24,7 +24,8 @@ public class CreditsScroller : MonoBehaviour
 
     private readonly List<CreditEntry> credits = new List<CreditEntry>
     {
-        new CreditEntry { name = "Kai Stewart",            role = "Programming & Art"         },
+        new CreditEntry { name = "Dedicated to Chuck Marschuetz", role = "Loving Father"},
+        new CreditEntry { name = "Kai Stewart",            role = "Programming, Design & Art"         },
         new CreditEntry { name = "Zein Al-Bahrani",        role = "Programming"               },
         new CreditEntry { name = "Mark Paul",              role = "Programming, Level Design, Art"},
         new CreditEntry { name = "Tristan Meyer-Odell",    role = "Hardware & Design"         },
