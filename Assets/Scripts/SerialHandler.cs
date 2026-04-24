@@ -40,6 +40,9 @@ public class SerialHandler : MonoBehaviour
     public float joy2X; //sub look X 
     public float joy2Y; //sub look Y 
 
+    [Header("Testing")]
+    [SerializeField] private int rawJoy2X; 
+
     [Header("Filtering")]
     [SerializeField] private int averageWindowSize = 8;
     [SerializeField] private float deadzone = 0.08f;
@@ -49,6 +52,8 @@ public class SerialHandler : MonoBehaviour
     //float joyMin = 800f;
     //float joyMax = 750f;
     float potentiometerMult = 1023f;
+    public event System.Action OnJoy2Clicked;
+    private bool joy2ClickWasHeld = false;
 
     private MovingAverage joy1XFilter;
     private MovingAverage joy1YFilter;
@@ -160,7 +165,18 @@ public class SerialHandler : MonoBehaviour
             shoot = serial_catch[14] == 1;
             joy1X = -1*ApplyDeadzone(joy1XFilter.Add(NormalizeJoystick(serial_catch[15], 270, 750)));
             joy1Y = ApplyDeadzone(joy1YFilter.Add(NormalizeJoystick(raw: serial_catch[16], 250, 770)));
-            joy2X = ApplyDeadzone(joy2XFilter.Add(NormalizeJoystick(serial_catch[17], 250, 770)));
+
+            //check if click in for pause 
+            rawJoy2X = serial_catch[17];
+            bool joy2ClickHeld = rawJoy2X == 1023;
+            if (joy2ClickHeld && !joy2ClickWasHeld)
+            {
+                OnJoy2Clicked?.Invoke();
+            }
+            joy2ClickWasHeld = joy2ClickHeld;
+
+
+            joy2X = ApplyDeadzone(joy2XFilter.Add(NormalizeJoystick(rawJoy2X, 250, 770)));
             joy2Y = ApplyDeadzone(joy2YFilter.Add(NormalizeJoystick(serial_catch[18], 235, 785)));
             // joy1X = (serial_catch[15]);
             // joy1Y = (serial_catch[16]);
