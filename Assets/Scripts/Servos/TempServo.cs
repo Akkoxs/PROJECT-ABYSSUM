@@ -30,7 +30,7 @@ public class TempServo : MonoBehaviour
 
         if (SerialHandler.Instance != null && SerialHandler.Instance.IsSerialReady)
         {
-            SerialHandler.Instance.SendSerialData("TEMP:0");
+            SerialHandler.Instance.SendSerialData("TEMP:180");
         }
     }
 
@@ -38,7 +38,7 @@ public class TempServo : MonoBehaviour
     {
         if (SerialHandler.Instance != null && SerialHandler.Instance.IsSerialReady)
         {
-            SerialHandler.Instance.SendSerialData("TEMP:0");
+            SerialHandler.Instance.SendSerialData("TEMP:180");
         }
     }
 
@@ -50,8 +50,9 @@ public class TempServo : MonoBehaviour
             if (SerialHandler.Instance != null)
             {
                 float t = Mathf.Clamp01(submarineTemp.CurrentTemp / submarineTemp.MaxTemp);
-                int angle = Mathf.RoundToInt(Mathf.Lerp(180f, 0f, t));
-                SerialHandler.Instance.SendSerialData($"TEMP:{angle}");
+                int angle = Mathf.RoundToInt(Mathf.Lerp(0f, 180f, t));
+                int angle2 = 180 - angle;
+                SerialHandler.Instance.SendSerialData($"TEMP:{angle2}");
             }
 
             yield return new WaitForSeconds(updateInterval);
