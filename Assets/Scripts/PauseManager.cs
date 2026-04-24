@@ -18,7 +18,6 @@ public class PauseManager : MonoBehaviour
     private bool isPaused = false;
 
     // Serial edge detection — done manually since SerialHandler.Update stops at timeScale=0
-    private bool joy2WasPressed = false;
     private bool shootWasPressed = false;
 
     void Start()
@@ -33,19 +32,25 @@ public class PauseManager : MonoBehaviour
             pauseAction?.Enable();
             restartAction?.Enable();
         }
+
+        if (SerialHandler.Instance != null)
+            SerialHandler.Instance.OnJoy2Clicked += TogglePause;
     }
 
     void OnDisable()
     {
         pauseAction?.Disable();
         restartAction?.Disable();
+
+        if (SerialHandler.Instance != null)
+            SerialHandler.Instance.OnJoy2Clicked -= TogglePause;
     }
 
     void Update()
     {
         HandleGamepadPause();
-        HandleSerialPause();
         HandleRestart();
+        //HandleSerialPause();
     }
 
     void HandleGamepadPause()
@@ -56,18 +61,18 @@ public class PauseManager : MonoBehaviour
             TogglePause();
     }
 
-    void HandleSerialPause()
-    {
-        if (SerialHandler.Instance == null || !SerialHandler.Instance.IsSerialReady) return;
+    //void HandleSerialPause()
+    //{
+    //    if (SerialHandler.Instance == null || !SerialHandler.Instance.IsSerialReady) return;
 
 
-        bool joy2Pressed = SerialHandler.Instance.joy2X > 0.9f;
+    //    bool joy2Pressed = SerialHandler.Instance.joy2X > 0.9f;
 
-        if (joy2Pressed && !joy2WasPressed)
-            TogglePause();
+    //    if (joy2Pressed && !joy2WasPressed)
+    //        TogglePause();
 
-        joy2WasPressed = joy2Pressed;
-    }
+    //    joy2WasPressed = joy2Pressed;
+    //}
 
     void HandleRestart()
     {
@@ -78,14 +83,14 @@ public class PauseManager : MonoBehaviour
         }
 
         // Gamepad restart
-        if (restartAction != null && restartAction.WasPressedThisFrame())
+        if (restartAction != null && restartAction.WasPressedThisFrame() && isPaused)
         {
             RestartScene();
             return;
         }
 
         // Serial restart — submarine shoot button while paused
-        if (SerialHandler.Instance != null && SerialHandler.Instance.IsSerialReady)
+        if (SerialHandler.Instance != null && SerialHandler.Instance.IsSerialReady && isPaused)
         {
             bool shootPressed = SerialHandler.Instance.shoot;
             if (shootPressed && !shootWasPressed)

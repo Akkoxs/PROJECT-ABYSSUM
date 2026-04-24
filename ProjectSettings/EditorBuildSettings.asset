@@ -15,6 +15,9 @@ EditorBuildSettings:
     path: Assets/Scenes/MInigames/MinigameSCene.unity
     guid: a9528c68f62a2604d8741de46921999d
   - enabled: 1
+    path: Assets/Scenes/TitleScreen.unity
+    guid: 5ea257e5c9837fa4eb6e06a135dfeb75
+  - enabled: 1
     path: Assets/Scenes/FinalMaster.unity
     guid: 2757ce184eecd17418ad879bdaab867d
   m_configObjects:

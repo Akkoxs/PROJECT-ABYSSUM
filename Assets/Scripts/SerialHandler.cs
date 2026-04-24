@@ -107,6 +107,14 @@ public class SerialHandler : MonoBehaviour
     void Update()
     {
         ReceiveSerialData();
+
+        bool joy2ClickHeld = rawJoy2X >= 1018 && rawJoy2X <= 1028;
+        if (joy2ClickHeld && !joy2ClickWasHeld)
+        {
+            OnJoy2Clicked?.Invoke();
+            Debug.Log("Joy 2 clicked!");
+        }
+        joy2ClickWasHeld = joy2ClickHeld;
     }
 
     //REMINDER: Might have to Mathf.clamp it between 0 and 180 
@@ -168,12 +176,7 @@ public class SerialHandler : MonoBehaviour
 
             //check if click in for pause 
             rawJoy2X = serial_catch[17];
-            bool joy2ClickHeld = rawJoy2X == 1023;
-            if (joy2ClickHeld && !joy2ClickWasHeld)
-            {
-                OnJoy2Clicked?.Invoke();
-            }
-            joy2ClickWasHeld = joy2ClickHeld;
+
 
 
             joy2X = -1*ApplyDeadzone(joy2XFilter.Add(NormalizeJoystick(rawJoy2X, 250, 770)));
