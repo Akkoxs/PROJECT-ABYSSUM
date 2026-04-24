@@ -32,7 +32,7 @@ public class GameStats : ScriptableObject
 
         subMaxHealth = 750f;
         subMaxOxygen = 1000f;
-        subMoveSpeed = 30f;
+        subMoveSpeed = 50f;
         scanSpeed = 135f;
 
         harpDamage = 10f;
