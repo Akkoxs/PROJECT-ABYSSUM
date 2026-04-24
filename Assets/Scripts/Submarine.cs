@@ -36,6 +36,11 @@ public class Submarine : MonoBehaviour
     [SerializeField] private float minSpeedForDamage = 3f;
     [SerializeField] private float damageAmount = 10f;
 
+    [Header("Audio")]
+    [SerializeField] private AudioClip doorOpenSound;
+    [SerializeField] private AudioClip doorCloseSound;
+
+
     private PlayerController playerController;
     private SpriteRenderer playerSprite;
     private EnterExitSubmarine ees;
@@ -136,6 +141,7 @@ public class Submarine : MonoBehaviour
                 subAnimator.SetBool("door", true);
                 doorOpen = true;
                 controlCue.SetActive(true);
+                AudioEventBus.RequestSFX(new SFXEvent{Clip = doorOpenSound, Volume = 1f, Pitch = 1f});
             }
         } else if (!SerialHandler.Instance.door)
         {
@@ -144,6 +150,7 @@ public class Submarine : MonoBehaviour
                 subAnimator.SetBool("door", false);
                 doorOpen = false;
                 controlCue.SetActive(false);
+                AudioEventBus.RequestSFX(new SFXEvent{Clip = doorCloseSound, Volume = 1f, Pitch = 1f});
             }
 
         }

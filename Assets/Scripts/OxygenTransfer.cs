@@ -16,6 +16,9 @@ public class OxygenTransfer : MonoBehaviour
     [SerializeField] private GameObject l2Button;
     [SerializeField] private GameObject l3Button;
 
+    [Header("Audio")]
+    [SerializeField] private AudioClip transferSound;
+
     private bool l1WasPressed; 
     private bool l2WasPressed; 
     private bool l3WasPressed; 
@@ -46,6 +49,7 @@ public class OxygenTransfer : MonoBehaviour
             wasPressed = true;
             float actuallyGiven = subOxy.RequestOxygen(amount);
             playerOxy.ReceiveOxygen(actuallyGiven);
+            AudioEventBus.RequestSFX(new SFXEvent{Clip = transferSound, Volume = 1f, Pitch = 1f});
         }
         else if (!buttonDown)
         {
