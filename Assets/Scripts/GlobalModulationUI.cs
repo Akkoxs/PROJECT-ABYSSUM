@@ -9,6 +9,10 @@ public class GlobalModulationUI : MonoBehaviour
     public GameObject[] channelWarningOverlays = new GameObject[4]; 
     public RectTransform[] playerMarkers = new RectTransform[4];
 
+    [Header("UI References")]
+    [SerializeField] AudioClip admActiveSFX;
+    [SerializeField] AudioClip admSuccessSFX;
+
     [Header("Layout")]
     public float sliderHalfWidth = 150f;
     public float rotaryMinDeg = -135f;
@@ -26,6 +30,7 @@ public class GlobalModulationUI : MonoBehaviour
     public void ActivateUI()
     {
         minigameRoot.SetActive(true);
+        AudioEventBus.RequestSFX(new SFXEvent(admActiveSFX, volume: 1f, pitch: Random.Range(0.8f, 1.2f), pos: transform.position));
         
         foreach(var overlay in channelWarningOverlays) 
         {

@@ -163,7 +163,7 @@ public class SerialHandler : MonoBehaviour
             headSlider = serial_catch[12] / potentiometerMult;
             floodSlider = serial_catch[13] / potentiometerMult;
             shoot = serial_catch[14] == 1;
-            joy1X = -1*ApplyDeadzone(joy1XFilter.Add(NormalizeJoystick(serial_catch[15], 270, 750)));
+            joy1X = ApplyDeadzone(joy1XFilter.Add(NormalizeJoystick(serial_catch[15], 270, 750)));
             joy1Y = ApplyDeadzone(joy1YFilter.Add(NormalizeJoystick(raw: serial_catch[16], 250, 770)));
 
             //check if click in for pause 

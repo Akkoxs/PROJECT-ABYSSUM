@@ -40,6 +40,9 @@ public class GameManager : MonoBehaviour
     private Health playerHealth; 
     private Health subHealth;
 
+    [Header("Scenes")]
+    [SerializeField] private string titleSceneName = "TitleMenu";
+
     private Dictionary<GameObject, ArtifactSpawnPoint> artifactsActive = new Dictionary<GameObject, ArtifactSpawnPoint>();
 
     //Expose 
@@ -225,6 +228,11 @@ public class GameManager : MonoBehaviour
         totalDebt -= amount;
         onMoneyChanged?.Invoke(currentMoney, totalDebt);
         AudioEventBus.RequestSFX(new SFXEvent(moneySFX, volume: 1f, pitch: Random.Range(0.8f, 1.2f), pos: transform.position));
+
+        if (totalDebt <= 0)
+        {
+            WinGame();
+        }
     }
 
 
@@ -235,15 +243,15 @@ public class GameManager : MonoBehaviour
     {
         //aint no way you're winning lmao
         Debug.Log("You Win!");
-        RestartGame();
+        SceneManager.LoadScene(titleSceneName);
     }
 
     private void EndGame()
     {
         //plcaeholder crap
-        Time.timeScale = 0f;
-        Debug.Log("Game Over!");
-        RestartGame();
+        Time.timeScale = 1f;
+        SceneManager.LoadScene(titleSceneName);
+
     } 
 
     private void RestartGame()
