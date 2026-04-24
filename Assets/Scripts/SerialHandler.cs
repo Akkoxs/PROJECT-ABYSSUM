@@ -176,7 +176,7 @@ public class SerialHandler : MonoBehaviour
             joy2ClickWasHeld = joy2ClickHeld;
 
 
-            joy2X = ApplyDeadzone(joy2XFilter.Add(NormalizeJoystick(rawJoy2X, 250, 770)));
+            joy2X = -1*ApplyDeadzone(joy2XFilter.Add(NormalizeJoystick(rawJoy2X, 250, 770)));
             joy2Y = ApplyDeadzone(joy2YFilter.Add(NormalizeJoystick(serial_catch[18], 235, 785)));
             // joy1X = (serial_catch[15]);
             // joy1Y = (serial_catch[16]);
