@@ -96,7 +96,7 @@ public class TitleScreenManager : MonoBehaviour
 
         confirmAction = new UnityEngine.InputSystem.InputAction(
             type: UnityEngine.InputSystem.InputActionType.Button,
-            binding: "<Gamepad>/buttonEast");
+            binding: "<Gamepad>/buttonSouth"); //changed frome East
         confirmAction.Enable();
     }
 
