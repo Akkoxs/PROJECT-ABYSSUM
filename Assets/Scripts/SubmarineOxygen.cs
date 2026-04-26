@@ -70,7 +70,7 @@ public class SubmarineOxygen : MonoBehaviour
     public void SetMaxOxygen(float newMax)
     {
         maxOxygen = newMax; 
-        currentOxygen = Mathf.Min(currentOxygen, maxOxygen); //clamp
+        currentOxygen = maxOxygen; //clamp
         oxygenChanged?.Invoke(currentOxygen, maxOxygen);
     }
 

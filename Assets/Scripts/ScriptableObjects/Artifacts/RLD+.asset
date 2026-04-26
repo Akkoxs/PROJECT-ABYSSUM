@@ -19,10 +19,11 @@ MonoBehaviour:
   spawnLevels: 030000000400000005000000
   statEffects:
   - stat: 9
-    value: 0.2
+    value: 0.5
   replenishPlayerHealth: 0
   replenishSubHealth: 0
   replenishPlayerOxygen: 0
   replenishSubOxygen: 0
   replenishTorpedo: 0
   grantExtraTorpedo: 0
+  replenishCoolant: 0

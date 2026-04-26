@@ -68,7 +68,7 @@ public class Submarine : MonoBehaviour
         ees = enterExitPoint.GetComponent<EnterExitSubmarine>();
         rb = this.GetComponent<Rigidbody2D>();
         subHealth = this.GetComponent<Health>();
-        speed = 5f;
+        //speed = 5f;
         rb.linearDamping = 0f;
         rb.angularDamping = 0f;
     }

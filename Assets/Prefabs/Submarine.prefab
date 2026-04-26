@@ -291,6 +291,7 @@ Transform:
   m_Children:
   - {fileID: 474895001864094582}
   - {fileID: 1938639078601820871}
+  - {fileID: 8860321222517206175}
   m_Father: {fileID: 2343720130038067033}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &9098653874409453462
@@ -441,7 +442,6 @@ Transform:
   - {fileID: 2059896760135411221}
   - {fileID: 1726034583748796276}
   - {fileID: 7679920097613461720}
-  - {fileID: 8860321222517206175}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &6693476613336186745
@@ -524,6 +524,8 @@ MonoBehaviour:
   waterDrag: 0.95
   minSpeedForDamage: 3
   damageAmount: 10
+  doorOpenSound: {fileID: 0}
+  doorCloseSound: {fileID: 0}
   playerInside: 0
   doorOpen: 0
   enteredSubmarine:
@@ -1044,7 +1046,7 @@ Transform:
   m_GameObject: {fileID: 6497886273176012459}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0.398, y: 0.604, z: 0}
+  m_LocalPosition: {x: 0.398, y: 0.219, z: 0}
   m_LocalScale: {x: 0.2062, y: 2.0119, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -1206,13 +1208,13 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 9192555751892158956}
   serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0.362, y: -0.288, z: 0}
-  m_LocalScale: {x: 0.0725585, y: 0.0747164, z: 0.08930219}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0.36080003, y: -0.574, z: 0}
+  m_LocalScale: {x: 0.07255849, y: 0.0747164, z: 0.0893022}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 7774791693078455387}
-  m_Father: {fileID: 2343720130038067033}
+  m_Father: {fileID: 7679920097613461720}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!212 &6638616071289583269
 SpriteRenderer:

@@ -44,7 +44,7 @@ private void Update()
     {
         float rotationThisFrame = scanSpeed * Time.deltaTime;
         totalRotation += rotationThisFrame;
-        sweepTransform.eulerAngles -= new Vector3(0, 0, rotationThisFrame);
+        sweepTransform.eulerAngles += new Vector3(0, 0, rotationThisFrame);
 
     if (totalRotation - lastClearRotation >= 360f) //clear once per rot.
     {
@@ -52,7 +52,7 @@ private void Update()
         detectedInstanceIDs.Clear();
     }
 
-        float currentAngle = sweepTransform.eulerAngles.z;
+        float currentAngle = -sweepTransform.eulerAngles.z; 
 
         DetectTerrain(currentAngle);
         DetectPOIArc(lastSweepAngle, currentAngle);

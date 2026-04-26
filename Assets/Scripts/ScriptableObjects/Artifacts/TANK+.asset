@@ -18,11 +18,12 @@ MonoBehaviour:
   sellValue: 4500
   spawnLevels: 010000000200000003000000
   statEffects:
-  - stat: 0
-    value: 0
+  - stat: 1
+    value: 100
   replenishPlayerHealth: 0
   replenishSubHealth: 0
   replenishPlayerOxygen: 1
   replenishSubOxygen: 0
   replenishTorpedo: 0
   grantExtraTorpedo: 0
+  replenishCoolant: 0

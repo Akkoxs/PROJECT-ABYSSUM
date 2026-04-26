@@ -102,7 +102,7 @@ private void ApplyArtifactStats(StatType stat, float value)
             break;
 
             case StatType.HarpoonReload:
-            gameStats.harpReloadSpeed += value;
+            gameStats.harpReloadSpeed -= value;
             break;
 
             case StatType.DiverSpeed:

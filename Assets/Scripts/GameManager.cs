@@ -76,13 +76,14 @@ public class GameManager : MonoBehaviour
         artifactApp = GetComponent<ArtifactApplicator>();
         spManager = GetComponent<SpawnPointManager>();
         AddMoney(currentMoney);
+        gameStats.ResetStats();
     }
 
     private void Start()
     {
         SpawnInitialArtifacts();
         upgradeTracker.ResetAll();
-        gameStats.ResetStats();
+        //gameStats.ResetStats();
         artifactApp.RefreshStats();
 
     }

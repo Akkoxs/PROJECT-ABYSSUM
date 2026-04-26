@@ -48,7 +48,7 @@ public void ApplyStats()
 
          if (controller != null)
         {
-        controller.SetMoveSpeed(stats.subMoveSpeed);
+            controller.SetMoveSpeed(stats.subMoveSpeed);
         }
     }
 
