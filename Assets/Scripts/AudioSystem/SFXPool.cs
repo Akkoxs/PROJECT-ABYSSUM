@@ -4,6 +4,7 @@ using UnityEngine;
 public class SFXPool
 {
     private readonly Queue<AudioSource> _pool = new();
+    private readonly Dictionary<string, AudioSource> trackedSFX = new(); //added too track active SFX by id
     private readonly Transform          _parent;
 
     public SFXPool(Transform parent, int initialSize)
@@ -21,6 +22,7 @@ public class SFXPool
         src.volume      = e.Volume * masterVolume;
         src.pitch       = e.Pitch;
         src.spatialBlend = e.WorldPosition.HasValue ? 1f : 0f;
+        src.loop = e.Loop;
 
         if (e.WorldPosition.HasValue)
             src.transform.position = e.WorldPosition.Value;
@@ -28,10 +30,33 @@ public class SFXPool
         src.gameObject.SetActive(true);
         src.Play();
 
-        // Return to pool after clip finishes
-        // (Uses a simple polling approach via AudioManager's Update,
-        //  or you can do a coroutine — shown below as a static helper)
-        ReturnWhenDone(src, e.Clip.length / Mathf.Abs(e.Pitch));
+        // if this SFX has an ID, then track it in the dictionary to stop later.
+        if (!string.IsNullOrEmpty(e.Id))
+        {
+            // ---> ADDED: If an ID was provided, track it manually in the dictionary.
+            trackedSFX[e.Id] = src;
+        }
+        else
+        {
+            //if no id provided, just stop it when its over like normal.
+            ReturnWhenDone(src, e.Clip.length / Mathf.Abs(e.Pitch));
+        }
+    }
+
+    public void StopTracked(string id)
+    {
+        //look in dictionary for the id, if found, stop sound and return to pool
+        if (trackedSFX.TryGetValue(id, out AudioSource src))
+        {
+            if (src != null)
+            {
+                src.Stop();
+                src.gameObject.SetActive(false);
+                _pool.Enqueue(src);
+            }
+            //remove from tracked dictionary 
+            trackedSFX.Remove(id);
+        }
     }
 
     private async void ReturnWhenDone(AudioSource src, float delay)

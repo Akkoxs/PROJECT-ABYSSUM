@@ -48,6 +48,8 @@ public class TitleScreenManager : MonoBehaviour
     // ───────────────────────────────────────────────
     [Header("Music")]
     [SerializeField] private AudioClip titleMusic;
+    //[SerializeField] private AudioClip wavesAmbience;
+    //[SerializeField] private AudioClip windAmbience;
 
     // ───────────────────────────────────────────────
     //  PRIVATE STATE

@@ -23,6 +23,7 @@ public class AudioMasterManager : MonoBehaviour
 
         // Subscribe to the bus
         AudioEventBus.OnSFXRequested   += HandleSFX;
+        AudioEventBus.OnSFXStopRequested += HandleStopSFX;
         AudioEventBus.OnMusicRequested += HandleMusic;
         AudioEventBus.OnMusicStopped   += HandleStopMusic;
     }
@@ -30,6 +31,7 @@ public class AudioMasterManager : MonoBehaviour
     void OnDestroy()
     {
         AudioEventBus.OnSFXRequested   -= HandleSFX;
+        AudioEventBus.OnSFXStopRequested -= HandleStopSFX;
         AudioEventBus.OnMusicRequested -= HandleMusic;
         AudioEventBus.OnMusicStopped   -= HandleStopMusic;
     }
@@ -39,6 +41,12 @@ public class AudioMasterManager : MonoBehaviour
     {
         if (e.Clip == null) return;
         _sfxPool.Play(e, masterSFXVol);
+    }
+
+    private void HandleStopSFX(string clipName)
+    {
+        if (string.IsNullOrEmpty(clipName)) return;
+        _sfxPool.StopTracked(clipName);
     }
 
     private void HandleMusic(MusicEvent e)

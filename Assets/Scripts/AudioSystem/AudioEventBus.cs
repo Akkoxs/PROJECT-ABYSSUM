@@ -5,6 +5,7 @@ public static class AudioEventBus
 {
     // SFX
     public static event Action<SFXEvent> OnSFXRequested;
+    public static event Action<string> OnSFXStopRequested; 
 
     // Music
     public static event Action<MusicEvent> OnMusicRequested;
@@ -15,6 +16,7 @@ public static class AudioEventBus
     public static event Action OnCombatEnded;
 
     public static void RequestSFX(SFXEvent e) => OnSFXRequested?.Invoke(e);
+    public static void StopSFX(string clipName) => OnSFXStopRequested?.Invoke(clipName);
     public static void RequestMusic(MusicEvent e) => OnMusicRequested?.Invoke(e);
     public static void StopMusic() => OnMusicStopped?.Invoke();
     public static void StartCombat(CombatEvent e) => OnCombatStarted?.Invoke(e);
@@ -29,12 +31,18 @@ public struct SFXEvent
     public float Pitch;
     public Vector3? WorldPosition;
 
-    public SFXEvent(AudioClip clip, float volume = 1f, float pitch = 1f, Vector3? pos = null)
+    //vars for SFX stopping: 
+    public string Id; 
+    public bool Loop;
+
+    public SFXEvent(AudioClip clip, float volume = 1f, float pitch = 1f, Vector3? pos = null, string id = "", bool loop = false)
     {
         Clip = clip;
         Volume = volume;
         Pitch = pitch;
         WorldPosition = pos;
+        Id = id;
+        Loop = loop;
     }
 }
 
