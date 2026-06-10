@@ -25,19 +25,20 @@ public class CreditsScroller : MonoBehaviour
     private readonly List<CreditEntry> credits = new List<CreditEntry>
     {
         new CreditEntry { name = "Dedicated to Chuck Marschuetz", role = "Loving Father"},
-        new CreditEntry { name = "Kai Stewart",            role = "Programming, Design & Art"         },
+        new CreditEntry { name = "Kai Stewart",            role = "Programming, Design & Art" },
         new CreditEntry { name = "Zein Al-Bahrani",        role = "Programming"               },
         new CreditEntry { name = "Mark Paul",              role = "Programming, Level Design, Art"},
-        new CreditEntry { name = "Tristan Meyer-Odell",    role = "Hardware & Design"         },
+        new CreditEntry { name = "Tristan Meyer-Odell",    role = "Hardware, Design & Fabrication"},
         new CreditEntry { name = "Lukas Marschuetz",       role = "Art"                       },
         new CreditEntry { name = "Jordan Davis",           role = "Art"                       },
         new CreditEntry { name = "Justin Valdez",          role = "Programming & Art"         },
         new CreditEntry { name = "Rochelle Suarez-Tapanes",role = "Art"                       },
+        new CreditEntry { name = "Bruno Shimabukuro"      ,role = "Brand Design"              },
         new CreditEntry { name = "Connie Hang",            role = "Art (Chud)"                },
         new CreditEntry { name = "Michael Yan",            role = "Art (Chud)"                },
-        new CreditEntry { name = "Carl Jeong",             role = "Music & SFX"               },
+        new CreditEntry { name = "Carl Jeong",             role = "SFX"                       },
         new CreditEntry { name = "Michael Barker",         role = "Music"                     },
-        new CreditEntry { name = ":3",                     role = "BANANA BRICK!"                     },
+        new CreditEntry { name = ":3",                     role = "BANANA BRICK!"             },
     };
 
     private float totalHeight;
