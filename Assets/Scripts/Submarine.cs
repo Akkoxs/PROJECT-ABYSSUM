@@ -36,6 +36,9 @@ public class Submarine : MonoBehaviour
     [SerializeField] private float minSpeedForDamage = 3f;
     [SerializeField] private float damageAmount = 10f;
 
+    [Header("Pipe Repair")]
+    [SerializeField] private PipeRepairSystem pipeRepair;
+
     [Header("Audio")]
     [SerializeField] private AudioClip doorOpenSound;
     [SerializeField] private AudioClip doorCloseSound;
@@ -238,6 +241,7 @@ public class Submarine : MonoBehaviour
             {
                 subHealth.TakeDamage(damageAmount);
                 flashHit.TriggerFlash();
+                if (pipeRepair != null) pipeRepair.OnSubmarineDamaged();
                 Debug.Log($"Sub hit terrain at speed {currentSpeed:F2}, took {damageAmount} damage");
             }
         }
