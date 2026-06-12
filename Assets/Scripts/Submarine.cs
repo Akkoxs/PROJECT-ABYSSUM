@@ -232,19 +232,21 @@ public class Submarine : MonoBehaviour
 
     private void OnCollisionEnter2D(Collision2D collision)
     {
-        if (LayerMask.LayerToName(collision.gameObject.layer) == "Terrain")
-        {
-            float inputMagnitude = new Vector2(horizontal, vertical).magnitude;
-            float currentSpeed = inputMagnitude * speed;
+        if (LayerMask.LayerToName(collision.gameObject.layer) != "Terrain") return;
 
-            if (currentSpeed >= minSpeedForDamage)
-            {
-                subHealth.TakeDamage(damageAmount);
-                flashHit.TriggerFlash();
-                if (pipeRepair != null) pipeRepair.OnSubmarineDamaged();
-                Debug.Log($"Sub hit terrain at speed {currentSpeed:F2}, took {damageAmount} damage");
-            }
-        }
+        float inputMagnitude = new Vector2(horizontal, vertical).magnitude;
+        float currentSpeed = inputMagnitude * speed;
+        if (currentSpeed < minSpeedForDamage) return;
+
+        if (subHealth != null) subHealth.TakeDamage(damageAmount);
+
+        //pipe burst before the flash so nothing below can block it. Fall back to the
+        //PipeRepairSystem singleton if the inspector field isn't wired (handles submarines
+        //spawned at runtime, which editor wiring can't reach).
+        PipeRepairSystem pr = pipeRepair != null ? pipeRepair : PipeRepairSystem.Instance;
+        if (pr != null) pr.OnSubmarineDamaged();
+
+        if (flashHit != null) flashHit.TriggerFlash();
     }
 
     public void ExitSubmarine()

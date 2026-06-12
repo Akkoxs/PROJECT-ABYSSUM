@@ -10,12 +10,18 @@ public class FlashHit : MonoBehaviour
     void Start()
     {
         objectRenderer = GetComponent<Renderer>();
+        if (objectRenderer == null)
+        {
+            Debug.LogWarning($"FlashHit on '{name}' has no Renderer — flash disabled.", this);
+            return;
+        }
         material = objectRenderer.material;
         originalColor = material.color;
     }
 
     public void TriggerFlash()
     {
+        if (material == null) return; // no renderer/material to flash; don't throw
         StartCoroutine(FlashRed());
     }
 

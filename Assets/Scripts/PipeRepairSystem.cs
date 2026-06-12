@@ -47,6 +47,17 @@ public class PipeRepairSystem : MonoBehaviour
     // 0 = rotary, 1 = horizontal slider, 2 = vertical slider (matches ModulationMinigame layout)
     private readonly int[] channelModes = { 0, 1, 0, 2 };
 
+    [Header("Channel Names (for logs)")]
+    [Tooltip("Human-readable name for each pipe/valve, used in the burst/repair console logs. Rename to match your panel labels.")]
+    [SerializeField]
+    private string[] channelNames =
+    {
+        "Knob A valve (playerPot_a)",
+        "Horizontal slider pipe (playerSlider_h)",
+        "Knob B valve (playerPot_k)",
+        "Vertical slider pipe (playerSlider_c)"
+    };
+
     private readonly bool[] burst = new bool[4];
     private readonly float[] repairProgress = new float[4]; // accumulated movement time, never reset by pausing
     private readonly float[] lastValue = new float[4];      // previous frame's control value, for movement detection
@@ -86,12 +97,33 @@ public class PipeRepairSystem : MonoBehaviour
         }
     }
 
+    //DEBUG: right-click the PipeRepairSystem component header (in Play mode) and pick this to force a
+    //burst, bypassing the ram/chance/gating. Lets you test the repair loop without a terrain collision.
+    [ContextMenu("DEBUG: Force a random pipe burst")]
+    public void DebugForceBurst()
+    {
+        int healthyCount = 0;
+        for (int i = 0; i < 4; i++)
+            if (!burst[i]) healthyCount++;
+
+        if (healthyCount == 0) { Debug.Log("[PipeRepair] DebugForceBurst: all pipes are already burst."); return; }
+
+        int pick = Random.Range(0, healthyCount);
+        for (int i = 0; i < 4; i++)
+        {
+            if (burst[i]) continue;
+            if (pick == 0) { BurstElement(i); return; }
+            pick--;
+        }
+    }
+
     private void BurstElement(int i)
     {
         burst[i] = true;
         repairProgress[i] = 0f;
         lastValue[i] = GetCurrentValues()[i]; // baseline so the next frame measures real movement
 
+        Debug.Log($"[PipeRepair] BURST: {ChannelName(i)} (channel {i}) — move its control to repair.");
         SpawnFloatingText(burstMessage);
     }
 
@@ -145,6 +177,7 @@ public class PipeRepairSystem : MonoBehaviour
         burst[i] = false;
         repairProgress[i] = 0f;
 
+        Debug.Log($"[PipeRepair] REPAIRED: {ChannelName(i)} (channel {i}).");
         if (ui != null) ui.PlayRepairDoneSFX();
         SpawnFloatingText(repairMessage);
     }
@@ -156,6 +189,14 @@ public class PipeRepairSystem : MonoBehaviour
         if (ui == null) return;
         if (visible) ui.ActivateUI();
         else ui.DeactivateUI();
+    }
+
+    //safe lookup into the (editable) channel name list for logging.
+    private string ChannelName(int i)
+    {
+        if (channelNames != null && i >= 0 && i < channelNames.Length && !string.IsNullOrEmpty(channelNames[i]))
+            return channelNames[i];
+        return $"Pipe {i}";
     }
 
     //true while an artifact modulation minigame is happening; the repair mechanic stays frozen.
