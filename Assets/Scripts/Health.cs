@@ -7,10 +7,6 @@ public class Health : MonoBehaviour, IDamageable, IHealable
     [SerializeField] private float maxHealth = 100f;
     [SerializeField] private float currentHealth;
 
-    [Header("Audio")]
-    [SerializeField] private AudioClip deathSFX;        // assign per object (enemy death, player death, etc.)
-    [SerializeField] private float deathVolume = 0.6f;
-
     //[SerializeField] private SubmarineTemp submarineTemp;
 
     //public read only 
@@ -57,11 +53,6 @@ public class Health : MonoBehaviour, IDamageable, IHealable
     {
         currentHealth = 0;
         isDead = true;
-
-        // Play death sound through the AudioEventBus (same pattern as your other SFX)
-        if (deathSFX != null)
-            AudioEventBus.RequestSFX(new SFXEvent(deathSFX, volume: deathVolume));
-
         died?.Invoke();
     }
 
