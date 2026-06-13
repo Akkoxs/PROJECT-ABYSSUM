@@ -5,15 +5,21 @@ using System.Collections;
 
 public class PlayerOxygen : MonoBehaviour
 {
-    [SerializeField] private float currentOxygen; 
+    [SerializeField] private float currentOxygen;
     [SerializeField] private float maxOxygen = 100f;
     [SerializeField] private float depletionRate = 0.5f; //ticks per second
     [SerializeField] private float depletionTickDamage = 5f; //per second 
-    [SerializeField] private float depletionTickRate = 1f; 
+    [SerializeField] private float depletionTickRate = 1f;
     [SerializeField] private GameObject submarine;
 
+    [Header("Audio")]
+    [SerializeField] private AudioClip suffocationTickSFX;   // plays each damage tick while out of air
+    [SerializeField] private float suffocationTickVolume = 0.6f;
+    [SerializeField] private AudioClip lowOxygenWarningSFX;  // optional: plays once when air first hits zero
+    [SerializeField] private float lowOxygenWarningVolume = 0.7f;
+
     private bool isUnderwater;
-    private bool isInsideSub; 
+    private bool isInsideSub;
 
     private Health playerHealth;
     private Submarine sub;
@@ -24,7 +30,7 @@ public class PlayerOxygen : MonoBehaviour
     public float MaxOxygen => maxOxygen;
 
     //Events 
-    public UnityEvent <float, float> oxygenChanged;
+    public UnityEvent<float, float> oxygenChanged;
     public UnityEvent oxygenDepleted;
 
     Coroutine oxyTick = null;
@@ -142,7 +148,13 @@ public class PlayerOxygen : MonoBehaviour
             }
 
             if (currentOxygen <= 0f && oxyDepleted == null)
+            {
+                // One-time warning the moment air runs out
+                if (lowOxygenWarningSFX != null)
+                    AudioEventBus.RequestSFX(new SFXEvent(lowOxygenWarningSFX, volume: lowOxygenWarningVolume));
+
                 oxyDepleted = StartCoroutine(OxygenDepletedDamage());
+            }
 
             yield return null;
         }
@@ -153,6 +165,11 @@ public class PlayerOxygen : MonoBehaviour
         while (isUnderwater && !isInsideSub && currentOxygen <= 0f)
         {
             oxygenDepleted?.Invoke();
+
+            // Suffocation sound each damage tick
+            if (suffocationTickSFX != null && playerHealth != null && !playerHealth.isDead)
+                AudioEventBus.RequestSFX(new SFXEvent(suffocationTickSFX, volume: suffocationTickVolume));
+
             if (playerHealth != null && !playerHealth.isDead)
                 playerHealth.TakeDamage(depletionTickDamage);
 

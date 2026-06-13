@@ -2,10 +2,12 @@ using System.Collections;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
+using UnityEngine.InputSystem;
 using TMPro;
 
 // Attach this to the Canvas GameObject in your TitleScreen scene.
-// Manages Main and Credits panels with keyboard navigation and fade to gameplay.
+// Manages Main, Credits, and Controls panels with keyboard + gamepad navigation and fade to gameplay.
+// Controls panel cycles through separate image GameObjects (one active at a time).
 
 public class TitleScreenManager : MonoBehaviour
 {
@@ -15,6 +17,7 @@ public class TitleScreenManager : MonoBehaviour
     [Header("Panels")]
     public GameObject mainPanel;
     public GameObject creditsPanel;
+    public GameObject controlsPanel;
 
     // ───────────────────────────────────────────────
     //  MAIN MENU BUTTONS  — assign in Inspector
@@ -22,12 +25,25 @@ public class TitleScreenManager : MonoBehaviour
     [Header("Main Menu Buttons")]
     public Button startButton;
     public Button creditsButton;
+    public Button controlsButton;
 
     // ───────────────────────────────────────────────
     //  BACK BUTTONS  — assign in Inspector
     // ───────────────────────────────────────────────
     [Header("Back Buttons")]
     public Button creditsBackButton;
+    public Button controlsBackButton;
+
+    // ───────────────────────────────────────────────
+    //  CONTROLS PANEL IMAGE CYCLING  — assign in Inspector
+    //  Drag your four image GameObjects here, in order.
+    // ───────────────────────────────────────────────
+    [Header("Controls Panel")]
+    public GameObject[] controlImageObjects;  // DiverImage, CaptainImage, SonarImage, CipherImage
+    public Button controlsNextButton;
+    public Button controlsPrevButton;
+    public bool controlsWrapAround = true;
+    private int controlsIndex = 0;
 
     // ───────────────────────────────────────────────
     //  BUTTON HIGHLIGHT  — glowing selected state
@@ -48,8 +64,6 @@ public class TitleScreenManager : MonoBehaviour
     // ───────────────────────────────────────────────
     [Header("Music")]
     [SerializeField] private AudioClip titleMusic;
-    //[SerializeField] private AudioClip wavesAmbience;
-    //[SerializeField] private AudioClip windAmbience;
 
     // ───────────────────────────────────────────────
     //  PRIVATE STATE
@@ -58,10 +72,9 @@ public class TitleScreenManager : MonoBehaviour
     private int selectedIndex = 0;
     private bool navigating = false;
 
-    // Replace the two actions with four directional button actions
-    private UnityEngine.InputSystem.InputAction dpadUpAction;
-    private UnityEngine.InputSystem.InputAction dpadDownAction;
-    private UnityEngine.InputSystem.InputAction confirmAction;
+    private InputAction dpadUpAction;
+    private InputAction dpadDownAction;
+    private InputAction confirmAction;
 
 
     // ───────────────────────────────────────────────
@@ -69,11 +82,16 @@ public class TitleScreenManager : MonoBehaviour
     // ───────────────────────────────────────────────
     void Start()
     {
-        mainButtons = new Button[] { startButton, creditsButton };
+        mainButtons = new Button[] { startButton, creditsButton, controlsButton };
 
         startButton.onClick.AddListener(OnStart);
         creditsButton.onClick.AddListener(OnCredits);
+        controlsButton.onClick.AddListener(OnControls);
         creditsBackButton.onClick.AddListener(OnBack);
+        controlsBackButton.onClick.AddListener(OnBack);
+
+        if (controlsNextButton != null) controlsNextButton.onClick.AddListener(NextControl);
+        if (controlsPrevButton != null) controlsPrevButton.onClick.AddListener(PrevControl);
 
         ShowPanel(mainPanel);
 
@@ -85,20 +103,13 @@ public class TitleScreenManager : MonoBehaviour
         if (titleMusic != null)
             AudioEventBus.RequestMusic(new MusicEvent(titleMusic, fadeDuration: 1f, loop: true));
 
-        // Set up gamepad input directly without needing an InputActionAsset
-        dpadUpAction = new UnityEngine.InputSystem.InputAction(
-            type: UnityEngine.InputSystem.InputActionType.Button,
-            binding: "<Gamepad>/dpad/up");
+        dpadUpAction = new InputAction(type: InputActionType.Button, binding: "<Gamepad>/dpad/up");
         dpadUpAction.Enable();
 
-        dpadDownAction = new UnityEngine.InputSystem.InputAction(
-            type: UnityEngine.InputSystem.InputActionType.Button,
-            binding: "<Gamepad>/dpad/down");
+        dpadDownAction = new InputAction(type: InputActionType.Button, binding: "<Gamepad>/dpad/down");
         dpadDownAction.Enable();
 
-        confirmAction = new UnityEngine.InputSystem.InputAction(
-            type: UnityEngine.InputSystem.InputActionType.Button,
-            binding: "<Gamepad>/buttonSouth"); //changed frome East
+        confirmAction = new InputAction(type: InputActionType.Button, binding: "<Gamepad>/buttonSouth");
         confirmAction.Enable();
     }
 
@@ -110,7 +121,49 @@ public class TitleScreenManager : MonoBehaviour
     }
 
     // ───────────────────────────────────────────────
-    //  UPDATE — gamepad navigation
+    //  KEYBOARD + GAMEPAD HELPERS
+    // ───────────────────────────────────────────────
+    bool UpPressed()
+    {
+        var kb = Keyboard.current;
+        bool key = kb != null && (kb.wKey.wasPressedThisFrame || kb.upArrowKey.wasPressedThisFrame);
+        return key || (dpadUpAction != null && dpadUpAction.WasPressedThisFrame());
+    }
+
+    bool DownPressed()
+    {
+        var kb = Keyboard.current;
+        bool key = kb != null && (kb.sKey.wasPressedThisFrame || kb.downArrowKey.wasPressedThisFrame);
+        return key || (dpadDownAction != null && dpadDownAction.WasPressedThisFrame());
+    }
+
+    bool LeftPressed()
+    {
+        var kb = Keyboard.current;
+        bool key = kb != null && (kb.aKey.wasPressedThisFrame || kb.leftArrowKey.wasPressedThisFrame);
+        var gp = Gamepad.current;
+        bool pad = gp != null && gp.dpad.left.wasPressedThisFrame;
+        return key || pad;
+    }
+
+    bool RightPressed()
+    {
+        var kb = Keyboard.current;
+        bool key = kb != null && (kb.dKey.wasPressedThisFrame || kb.rightArrowKey.wasPressedThisFrame);
+        var gp = Gamepad.current;
+        bool pad = gp != null && gp.dpad.right.wasPressedThisFrame;
+        return key || pad;
+    }
+
+    bool ConfirmPressed()
+    {
+        var kb = Keyboard.current;
+        bool key = kb != null && (kb.enterKey.wasPressedThisFrame || kb.spaceKey.wasPressedThisFrame);
+        return key || (confirmAction != null && confirmAction.WasPressedThisFrame());
+    }
+
+    // ───────────────────────────────────────────────
+    //  UPDATE
     // ───────────────────────────────────────────────
     void Update()
     {
@@ -118,26 +171,33 @@ public class TitleScreenManager : MonoBehaviour
 
         if (creditsPanel.activeSelf)
         {
-            if (confirmAction.WasPressedThisFrame())
+            if (ConfirmPressed())
                 OnBack();
+            return;
+        }
+
+        if (controlsPanel != null && controlsPanel.activeSelf)
+        {
+            if (RightPressed()) NextControl();
+            if (LeftPressed()) PrevControl();
+            if (ConfirmPressed()) OnBack();
             return;
         }
 
         if (!mainPanel.activeSelf) return;
 
-        // Read dpad
-        if (dpadUpAction.WasPressedThisFrame())
+        if (UpPressed())
         {
             selectedIndex = (selectedIndex - 1 + mainButtons.Length) % mainButtons.Length;
             UpdateButtonHighlights();
         }
-        else if (dpadDownAction.WasPressedThisFrame())
+        else if (DownPressed())
         {
             selectedIndex = (selectedIndex + 1) % mainButtons.Length;
             UpdateButtonHighlights();
         }
 
-        if (confirmAction.WasPressedThisFrame())
+        if (ConfirmPressed())
             mainButtons[selectedIndex].onClick.Invoke();
     }
 
@@ -156,10 +216,49 @@ public class TitleScreenManager : MonoBehaviour
         ShowPanel(creditsPanel);
     }
 
+    void OnControls()
+    {
+        controlsIndex = 0;
+        ShowCurrentControl();
+        ShowPanel(controlsPanel);
+    }
+
     void OnBack()
     {
         ShowPanel(mainPanel);
         UpdateButtonHighlights();
+    }
+
+    // ───────────────────────────────────────────────
+    //  CONTROLS IMAGE CYCLING  (active GameObject swap)
+    // ───────────────────────────────────────────────
+    void NextControl()
+    {
+        if (controlImageObjects == null || controlImageObjects.Length == 0) return;
+        controlsIndex++;
+        if (controlsIndex >= controlImageObjects.Length)
+            controlsIndex = controlsWrapAround ? 0 : controlImageObjects.Length - 1;
+        ShowCurrentControl();
+    }
+
+    void PrevControl()
+    {
+        if (controlImageObjects == null || controlImageObjects.Length == 0) return;
+        controlsIndex--;
+        if (controlsIndex < 0)
+            controlsIndex = controlsWrapAround ? controlImageObjects.Length - 1 : 0;
+        ShowCurrentControl();
+    }
+
+    void ShowCurrentControl()
+    {
+        if (controlImageObjects == null) return;
+        // Turn on only the current one, turn off the rest.
+        for (int i = 0; i < controlImageObjects.Length; i++)
+        {
+            if (controlImageObjects[i] != null)
+                controlImageObjects[i].SetActive(i == controlsIndex);
+        }
     }
 
     // ───────────────────────────────────────────────
@@ -169,6 +268,8 @@ public class TitleScreenManager : MonoBehaviour
     {
         mainPanel.SetActive(panel == mainPanel);
         creditsPanel.SetActive(panel == creditsPanel);
+        if (controlsPanel != null)
+            controlsPanel.SetActive(panel == controlsPanel);
     }
 
     // ───────────────────────────────────────────────
