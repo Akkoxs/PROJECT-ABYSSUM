@@ -4,6 +4,10 @@ public class GlobalModulationUI : MonoBehaviour
 {
     public static GlobalModulationUI Instance { get; private set; } // singleton
 
+    //true while an artifact modulation minigame is showing on the Diver Control screen.
+    //single source of truth used by PipeRepairSystem to gate the pipe-burst repair mechanic.
+    public bool IsActive { get; private set; }
+
     [Header("UI References")]
     public GameObject minigameRoot;    
     public GameObject[] channelWarningOverlays = new GameObject[4]; 
@@ -29,6 +33,7 @@ public class GlobalModulationUI : MonoBehaviour
 
     public void ActivateUI()
     {
+        IsActive = true;
         minigameRoot.SetActive(true);
         AudioEventBus.RequestSFX(new SFXEvent(admActiveSFX, volume: 1f, pitch: Random.Range(0.8f, 1.2f), pos: transform.position));
         
@@ -38,7 +43,11 @@ public class GlobalModulationUI : MonoBehaviour
         }
     }
 
-    public void DeactivateUI() => minigameRoot.SetActive(false);
+    public void DeactivateUI()
+    {
+        IsActive = false;
+        minigameRoot.SetActive(false);
+    }
 
     //called by modulation minigame Update()
     public void UpdateVisuals(float[] currentValues, bool[] inRange, int[] modes)
