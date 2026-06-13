@@ -42,8 +42,6 @@ public class GameManager : MonoBehaviour
 
     [Header("Scenes")]
     [SerializeField] private string titleSceneName = "TitleMenu";
-    [SerializeField] private string loseSceneName = "DeathScene";
-    [SerializeField] private string winSceneName = "WinScene";
 
     private Dictionary<GameObject, ArtifactSpawnPoint> artifactsActive = new Dictionary<GameObject, ArtifactSpawnPoint>();
 
@@ -246,14 +244,14 @@ public class GameManager : MonoBehaviour
     {
         //aint no way you're winning lmao
         Debug.Log("You Win!");
-        SceneManager.LoadScene(winSceneName);
+        SceneManager.LoadScene(titleSceneName);
     }
 
     private void EndGame()
     {
         //plcaeholder crap
         Time.timeScale = 1f;
-        SceneManager.LoadScene("DeathScene 1");
+        SceneManager.LoadScene(titleSceneName);
 
     } 
 

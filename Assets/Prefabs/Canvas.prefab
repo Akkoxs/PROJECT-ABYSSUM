@@ -57,6 +57,7 @@ MonoBehaviour:
   fastScrollSpeed: 90
   headerSpacing: 40
   nameSpacing: 28
+  sectionGap: 20
 --- !u!1 &699755777505760101
 GameObject:
   m_ObjectHideFlags: 0
@@ -818,21 +819,16 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::TitleScreenManager
   mainPanel: {fileID: 2417055516384643587}
   creditsPanel: {fileID: 540918659394764513}
-  controlsPanel: {fileID: 0}
+  optionsPanel: {fileID: 699755777505760101}
   startButton: {fileID: 8007915823292580871}
+  optionsButton: {fileID: 2836743846904444216}
   creditsButton: {fileID: 8535067337100263200}
-  controlsButton: {fileID: 0}
   creditsBackButton: {fileID: 8608820898996901581}
-  controlsBackButton: {fileID: 0}
-  controlImageObjects: []
-  controlsNextButton: {fileID: 0}
-  controlsPrevButton: {fileID: 0}
-  controlsWrapAround: 1
+  optionsBackButton: {fileID: 2077650383697282718}
   normalColor: {r: 1, g: 1, b: 1, a: 0.6}
   selectedColor: {r: 1, g: 0.85, b: 0, a: 1}
   fadeOverlay: {fileID: 9116696031066152639}
   fadeDuration: 1.2
-  titleMusic: {fileID: 0}
 --- !u!1 &4458019659019272842
 GameObject:
   m_ObjectHideFlags: 0
