@@ -23,7 +23,7 @@ public class ArtifactEnemySpawner : MonoBehaviour
 
     IEnumerator SpawnEnemies()
     {
-        int enemiesToSpawn = Random.Range(1, 5);
+        int enemiesToSpawn = Random.Range(1, 6);
         List<Vector2> spawnedPositions = new List<Vector2>();
 
         for (int i = 0; i < enemiesToSpawn; i++)

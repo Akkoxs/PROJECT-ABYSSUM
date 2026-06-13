@@ -41,6 +41,7 @@ public class PipeRepairSystem : MonoBehaviour
     [SerializeField] private float drainPerSecond = 5f;
     [Tooltip("Seconds between ratchet noises while a control is being moved.")]
     [SerializeField] private float sfxInterval = 0.15f;
+    [SerializeField] private float healPerRepair = 50f;
 
     // index -> control: 0 = playerPot_a (rotary), 1 = playerSlider_h (h-slider),
     //                   2 = playerPot_k (rotary), 3 = playerSlider_c (v-slider)
@@ -130,13 +131,13 @@ public class PipeRepairSystem : MonoBehaviour
     private void Update()
     {
         //freeze entirely while an artifact modulation minigame owns the screen
-        if (IsGated())
-        {
-            SetUIVisible(false);
-            return;
-        }
+        // if (IsGated())
+        // {
+        //     SetUIVisible(false);
+        //     return;
+        // }
 
-        SetUIVisible(true);
+        //SetUIVisible(true);
 
         float[] current = GetCurrentValues();
         bool anyMoving = false;
@@ -178,18 +179,34 @@ public class PipeRepairSystem : MonoBehaviour
         repairProgress[i] = 0f;
 
         Debug.Log($"[PipeRepair] REPAIRED: {ChannelName(i)} (channel {i}).");
+
+        if (subHealth != null)
+        {
+            // First check if the subHealth script itself implements IHealable
+            if (subHealth is IHealable healableSub)
+            {
+                healableSub.Heal(healPerRepair);
+            }
+            // Fallback: Check if any other component on that same GameObject implements it
+            else if (subHealth.TryGetComponent(out IHealable attachedHealable))
+            {
+                attachedHealable.Heal(healPerRepair);
+            }
+        }
+
+
         if (ui != null) ui.PlayRepairDoneSFX();
         SpawnFloatingText(repairMessage);
     }
 
-    private void SetUIVisible(bool visible)
-    {
-        if (visible == uiVisible) return; // only toggle on transitions, mirrors ADM Activate/Deactivate
-        uiVisible = visible;
-        if (ui == null) return;
-        if (visible) ui.ActivateUI();
-        else ui.DeactivateUI();
-    }
+    // private void SetUIVisible(bool visible)
+    // {
+    //     if (visible == uiVisible) return; // only toggle on transitions, mirrors ADM Activate/Deactivate
+    //     uiVisible = visible;
+    //     if (ui == null) return;
+    //     if (visible) ui.ActivateUI();
+    //     else ui.DeactivateUI();
+    // }
 
     //safe lookup into the (editable) channel name list for logging.
     private string ChannelName(int i)

@@ -114,7 +114,7 @@ MonoBehaviour:
   - {fileID: 2395534887309443490, guid: 9ba5502fa59f88b4ebe8c87f5f792950, type: 3}
   - {fileID: 2043485153893007799, guid: d7583456002d79f4dae7373f74262b9d, type: 3}
   minSpawnRadius: 10
-  maxSpawnRadius: 15
+  maxSpawnRadius: 25
   terrain:
     serializedVersion: 2
     m_Bits: 256

@@ -1,5 +1,5 @@
 fileFormatVersion: 2
-guid: cf7721fc5ac5c6246916d9db576d0bea
+guid: 751be27003ca6014ca5bc92cf094cfd5
 ScriptedImporter:
   internalIDToNameTable: []
   externalObjects: {}
@@ -102,7 +102,7 @@ ScriptedImporter:
     generateIndividualEvents: 1
     generateSpriteAtlas: 1
   importFileNodeState: 1
-  platformSettingsDirtyTick: 639169283927614173
+  platformSettingsDirtyTick: 639169290926526674
   textureAssetName: 
   singleSpriteImportData:
   - name: 
@@ -127,7 +127,7 @@ ScriptedImporter:
     tessellationDetail: 0
     uvTransform: {x: 0, y: 0}
   animatedSpriteImportData:
-  - name: RI_Valve
+  - name: Cam03 Mask
     originalName: 
     pivot: {x: 0.5, y: 0.5}
     alignment: 9
@@ -137,9 +137,9 @@ ScriptedImporter:
       serializedVersion: 2
       x: 4
       y: 4
-      width: 13
-      height: 12
-    spriteID: 12d4be99635fe8b4bb28e002bf2506a9
+      width: 111
+      height: 50
+    spriteID: 74616fb61cb9f9b4d80edec18cb0cd92
     spriteBone: []
     spriteOutline: []
     vertices: []
@@ -153,25 +153,25 @@ ScriptedImporter:
   asepriteLayers:
   - layerIndex: 0
     uuid:
-      value0: 2975876894
+      value0: 1696153468
       value1: 0
       value2: 0
       value3: 0
     guid: 0
-    name: RI_Valve
+    name: Cam03 Mask
     layerFlags: 0
     layerType: 0
     blendMode: 0
     cells:
-    - name: RI_Valve
+    - name: Cam03 Mask
       frameIndex: 0
       additiveSortOrder: 0
       cellRect:
         x: 0
         y: 0
-        width: 13
-        height: 12
-      spriteId: 12d4be99635fe8b4bb28e002bf2506a9
+        width: 111
+        height: 50
+      spriteId: 74616fb61cb9f9b4d80edec18cb0cd92
     linkedCells: []
     tileCells: []
     tileSetIndex: 0
@@ -229,5 +229,5 @@ ScriptedImporter:
   generatePhysicsShape: 0
   secondarySpriteTextures: []
   spritePackingTag: 
-  canvasSize: {x: 13, y: 12}
-  previousTextureSize: {x: 32, y: 32}
+  canvasSize: {x: 111, y: 50}
+  previousTextureSize: {x: 128, y: 64}
